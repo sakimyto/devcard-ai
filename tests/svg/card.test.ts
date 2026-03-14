@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { renderCard } from '~/svg/card'
+import { renderCard, renderErrorCard } from '~/svg/card'
 import type { CardData } from '~/analyzers/types'
 
 const mockData: CardData = {
@@ -34,5 +34,18 @@ describe('renderCard', () => {
     expect(svg).toContain('Claude Code')
     expect(svg).toContain('AI Co-Authored')
     expect(svg).toContain('AI Readiness')
+  })
+})
+
+describe('renderErrorCard', () => {
+  it('renders user not found message', () => {
+    const svg = renderErrorCard('User not found', 'light')
+    expect(svg).toContain('<svg')
+    expect(svg).toContain('User not found')
+  })
+
+  it('supports dark theme', () => {
+    const svg = renderErrorCard('Error', 'dark')
+    expect(svg).toContain('#0d1117')
   })
 })
