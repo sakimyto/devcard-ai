@@ -39,4 +39,4 @@ export const USER_REPOS_QUERY = `
       }
     }
   }
-`
+`;

@@ -1,51 +1,63 @@
-import { describe, it, expect } from 'vitest'
-import { renderCard, renderErrorCard } from '~/svg/card'
-import type { CardData } from '~/analyzers/types'
+import { describe, expect, it } from "vitest";
+import type { CardData } from "~/analyzers/types";
+import { renderCard, renderErrorCard } from "~/svg/card";
 
 const mockData: CardData = {
-  username: 'testuser',
-  coauthor: { totalCommits: 100, aiCommits: 42, rate: 0.42 },
-  tools: { tools: [{ id: 'claude', name: 'Claude Code', repoCount: 3 }] },
-  score: { grade: 'A', points: 65, breakdown: { hasAiConfig: true, multipleTools: false, activeAiCommits: true, recentActivity: true } },
-}
+	username: "testuser",
+	coauthor: { totalCommits: 100, aiCommits: 42, rate: 0.42 },
+	tools: { tools: [{ id: "claude", name: "Claude Code", repoCount: 3 }] },
+	score: {
+		grade: "A",
+		points: 65,
+		breakdown: {
+			hasAiConfig: true,
+			multipleTools: false,
+			activeAiCommits: true,
+			recentActivity: true,
+		},
+	},
+};
 
-describe('renderCard', () => {
-  it('returns valid SVG', () => {
-    const svg = renderCard(mockData, { theme: 'light', modules: ['tools', 'coauthor', 'score'] })
-    expect(svg).toContain('<svg')
-    expect(svg).toContain('</svg>')
-    expect(svg).toContain('testuser')
-  })
+describe("renderCard", () => {
+	it("returns valid SVG", () => {
+		const svg = renderCard(mockData, {
+			theme: "light",
+			modules: ["tools", "coauthor", "score"],
+		});
+		expect(svg).toContain("<svg");
+		expect(svg).toContain("</svg>");
+		expect(svg).toContain("testuser");
+	});
 
-  it('respects module selection', () => {
-    const svg = renderCard(mockData, { theme: 'light', modules: ['tools'] })
-    expect(svg).toContain('Claude Code')
-    expect(svg).not.toContain('AI Co-Authored')
-    expect(svg).not.toContain('AI Readiness')
-  })
+	it("respects module selection", () => {
+		const svg = renderCard(mockData, { theme: "light", modules: ["tools"] });
+		expect(svg).toContain("Claude Code");
+		expect(svg).not.toContain("AI Co-Authored");
+		expect(svg).not.toContain("AI Readiness");
+	});
 
-  it('supports dark theme', () => {
-    const svg = renderCard(mockData, { theme: 'dark', modules: ['tools'] })
-    expect(svg).toContain('#0d1117')
-  })
+	it("supports dark theme", () => {
+		const svg = renderCard(mockData, { theme: "dark", modules: ["tools"] });
+		expect(svg).toContain("#0d1117");
+	});
 
-  it('renders all default modules when none specified', () => {
-    const svg = renderCard(mockData, { theme: 'light', modules: [] })
-    expect(svg).toContain('Claude Code')
-    expect(svg).toContain('AI Co-Authored')
-    expect(svg).toContain('AI Readiness')
-  })
-})
+	it("renders all default modules when none specified", () => {
+		const svg = renderCard(mockData, { theme: "light", modules: [] });
+		expect(svg).toContain("Claude Code");
+		expect(svg).toContain("AI Co-Authored");
+		expect(svg).toContain("AI Readiness");
+	});
+});
 
-describe('renderErrorCard', () => {
-  it('renders user not found message', () => {
-    const svg = renderErrorCard('User not found', 'light')
-    expect(svg).toContain('<svg')
-    expect(svg).toContain('User not found')
-  })
+describe("renderErrorCard", () => {
+	it("renders user not found message", () => {
+		const svg = renderErrorCard("User not found", "light");
+		expect(svg).toContain("<svg");
+		expect(svg).toContain("User not found");
+	});
 
-  it('supports dark theme', () => {
-    const svg = renderErrorCard('Error', 'dark')
-    expect(svg).toContain('#0d1117')
-  })
-})
+	it("supports dark theme", () => {
+		const svg = renderErrorCard("Error", "dark");
+		expect(svg).toContain("#0d1117");
+	});
+});
