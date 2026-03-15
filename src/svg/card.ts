@@ -12,7 +12,7 @@ export interface CardOptions {
 	modules: string[];
 }
 
-const DEFAULT_MODULES = ["tools", "coauthor", "score"];
+const DEFAULT_MODULES = ["style", "tools", "coauthor", "score", "heatmap"];
 const CARD_WIDTH = 340;
 const MODULE_HEIGHT = 36;
 const HEADER_HEIGHT = 56;

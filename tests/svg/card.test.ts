@@ -16,6 +16,12 @@ const mockData: CardData = {
 			recentActivity: true,
 		},
 	},
+	style: { styles: ["TDD Architect"] },
+	heatmap: {
+		hourly: Array.from({ length: 24 }, () => 0),
+		peakHour: 14,
+		totalAiCommits: 42,
+	},
 };
 
 describe("renderCard", () => {

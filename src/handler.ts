@@ -1,5 +1,7 @@
 import { analyzeCoauthor } from "./analyzers/coauthor";
+import { analyzeHeatmap } from "./analyzers/heatmap";
 import { analyzeScore } from "./analyzers/score";
+import { analyzeStyle } from "./analyzers/style";
 import { analyzeTools } from "./analyzers/tools";
 import type { CardData } from "./analyzers/types";
 import { fetchUserData } from "./github/client";
@@ -70,12 +72,16 @@ export async function handleRequest(
 		}
 
 		const score = analyzeScore(coauthor, tools, hasRecentActivity);
+		const style = analyzeStyle(allCommits, coauthor, tools);
+		const heatmap = analyzeHeatmap(allCommits);
 
 		const cardData: CardData = {
 			username: userData.login,
 			coauthor,
 			tools,
 			score,
+			style,
+			heatmap,
 		};
 
 		const svg = renderCard(cardData, { theme, modules });
