@@ -6,6 +6,8 @@ export interface Theme {
 	barBg: string;
 	barFill: string;
 	accent: string;
+	headerBg: string;
+	badgeBg: string;
 }
 
 export const themes: Record<string, Theme> = {
@@ -17,6 +19,8 @@ export const themes: Record<string, Theme> = {
 		barBg: "#eaecef",
 		barFill: "#6f42c1",
 		accent: "#6f42c1",
+		headerBg: "#f6f8fa",
+		badgeBg: "#ddf4ff",
 	},
 	dark: {
 		bg: "#0d1117",
@@ -26,6 +30,8 @@ export const themes: Record<string, Theme> = {
 		barBg: "#21262d",
 		barFill: "#a371f7",
 		accent: "#a371f7",
+		headerBg: "#161b22",
+		badgeBg: "#1f2937",
 	},
 };
 
