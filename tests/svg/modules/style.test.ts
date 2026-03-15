@@ -20,19 +20,19 @@ describe("renderStyleModule", () => {
 	it("applies Vibe Coder purple color", () => {
 		const data: StyleAnalysis = { styles: ["Vibe Coder"] };
 		const svg = renderStyleModule(data, themes.light, 0);
-		expect(svg).toContain("#6f42c1");
+		expect(svg).toContain("#8b5cf6");
 	});
 
 	it("applies Orchestrator blue color", () => {
 		const data: StyleAnalysis = { styles: ["Orchestrator"] };
 		const svg = renderStyleModule(data, themes.light, 0);
-		expect(svg).toContain("#0969da");
+		expect(svg).toContain("#58a6ff");
 	});
 
 	it("applies Minimalist gray color", () => {
 		const data: StyleAnalysis = { styles: ["Minimalist"] };
 		const svg = renderStyleModule(data, themes.light, 0);
-		expect(svg).toContain("#6e7781");
+		expect(svg).toContain("#8b949e");
 	});
 
 	it("shows fallback text when no styles", () => {

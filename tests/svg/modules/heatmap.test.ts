@@ -38,7 +38,7 @@ describe("renderHeatmapModule", () => {
 			totalAiCommits: 10,
 		};
 		const svg = renderHeatmapModule(data, themes.light, 0);
-		expect(svg).toContain("Peak: 14:00");
+		expect(svg).toContain("Peak 14:00");
 	});
 
 	it("respects yOffset for positioning", () => {

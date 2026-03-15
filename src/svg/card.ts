@@ -12,12 +12,20 @@ export interface CardOptions {
 	modules: string[];
 }
 
-const DEFAULT_MODULES = ["style", "tools", "coauthor", "score", "heatmap"];
-const CARD_WIDTH = 340;
-const MODULE_HEIGHT = 36;
-const HEADER_HEIGHT = 56;
-const PADDING_BOTTOM = 16;
-const FOOTER_HEIGHT = 20;
+const DEFAULT_MODULES = ["style", "tools", "coauthor", "heatmap"];
+const CARD_WIDTH = 400;
+const MODULE_HEIGHT = 44;
+const HEADER_HEIGHT = 72;
+const PADDING_BOTTOM = 20;
+const FOOTER_HEIGHT = 24;
+
+const GRADE_COLORS: Record<string, string> = {
+	S: "#a371f7",
+	A: "#3fb950",
+	B: "#58a6ff",
+	C: "#d29922",
+	D: "#6e7781",
+};
 
 export function renderCard(data: CardData, options: CardOptions): string {
 	const theme = getTheme(options.theme);
@@ -50,8 +58,8 @@ export function renderCard(data: CardData, options: CardOptions): string {
 
 	const cardHeight = yOffset + PADDING_BOTTOM + FOOTER_HEIGHT;
 
-	// Gradient separator line (dashed accent)
-	const separatorY = HEADER_HEIGHT - 4;
+	const gradeColor = GRADE_COLORS[data.score.grade] ?? theme.textSecondary;
+	const gradeBadgeSize = 36;
 
 	return `<svg xmlns="http://www.w3.org/2000/svg" width="${CARD_WIDTH}" height="${cardHeight}" viewBox="0 0 ${CARD_WIDTH} ${cardHeight}">
   <defs>
@@ -60,30 +68,43 @@ export function renderCard(data: CardData, options: CardOptions): string {
       <stop offset="100%" stop-color="${theme.bg}" />
     </linearGradient>
     <linearGradient id="sepGrad" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="${theme.accent}" stop-opacity="0.8" />
+      <stop offset="0%" stop-color="${theme.accent}" stop-opacity="0.6" />
+      <stop offset="50%" stop-color="${theme.accent}" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="${theme.accent}" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="footerGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="${theme.accent}" stop-opacity="0" />
+      <stop offset="50%" stop-color="${theme.accent}" stop-opacity="0.15" />
       <stop offset="100%" stop-color="${theme.accent}" stop-opacity="0" />
     </linearGradient>
   </defs>
 
   <!-- Card background -->
-  ${svgRect(0, 0, CARD_WIDTH, cardHeight, { fill: theme.bg, rx: 10 })}
+  ${svgRect(0, 0, CARD_WIDTH, cardHeight, { fill: theme.bg, rx: 12 })}
 
-  <!-- Outer border (double-line effect: slightly offset inner) -->
-  <rect x="1" y="1" width="${CARD_WIDTH - 2}" height="${cardHeight - 2}" fill="none" stroke="${theme.border}" stroke-width="2" rx="9" />
-  <rect x="3.5" y="3.5" width="${CARD_WIDTH - 7}" height="${cardHeight - 7}" fill="none" stroke="${theme.border}" stroke-width="0.5" rx="7" opacity="0.5" />
+  <!-- Border with accent glow -->
+  <rect x="0.5" y="0.5" width="${CARD_WIDTH - 1}" height="${cardHeight - 1}" fill="none" stroke="${theme.border}" stroke-width="1" rx="12" />
+  <rect x="2" y="2" width="${CARD_WIDTH - 4}" height="${cardHeight - 4}" fill="none" stroke="${theme.border}" stroke-width="0.5" rx="10" opacity="0.3" />
 
-  <!-- Colored header bar -->
-  <rect x="2" y="2" width="${CARD_WIDTH - 4}" height="${HEADER_HEIGHT - 8}" fill="url(#headerGrad)" rx="8" />
+  <!-- Header background -->
+  <rect x="2" y="2" width="${CARD_WIDTH - 4}" height="${HEADER_HEIGHT - 8}" fill="url(#headerGrad)" rx="10" />
 
-  <!-- Username with robot emoji -->
-  ${svgText(20, 30, "🤖 " + data.username, { fontSize: 16, fill: theme.text, fontWeight: "bold" })}
-  ${svgText(20, 46, "devcard", { fontSize: 9, fill: theme.textSecondary })}
+  <!-- Username -->
+  ${svgText(24, 32, data.username, { fontSize: 18, fill: theme.text, fontWeight: "bold" })}
+  ${svgText(24, 50, "AI Dev Card", { fontSize: 11, fill: theme.textSecondary })}
 
-  <!-- Stylish gradient separator -->
-  <line x1="20" y1="${separatorY}" x2="${CARD_WIDTH - 20}" y2="${separatorY}" stroke="url(#sepGrad)" stroke-width="1.5" />
+  <!-- Grade badge (top-right, like card rarity) -->
+  <rect x="${CARD_WIDTH - gradeBadgeSize - 16}" y="12" width="${gradeBadgeSize}" height="${gradeBadgeSize}" fill="${gradeColor}" rx="8" />
+  ${svgText(CARD_WIDTH - gradeBadgeSize / 2 - 16, 38, data.score.grade, { fontSize: 20, fill: "#ffffff", fontWeight: "bold", anchor: "middle" })}
+
+  <!-- Separator -->
+  <line x1="24" y1="${HEADER_HEIGHT - 4}" x2="${CARD_WIDTH - 24}" y2="${HEADER_HEIGHT - 4}" stroke="url(#sepGrad)" stroke-width="1" />
 
   ${modulesSvg.join("\n")}
-  ${svgText(CARD_WIDTH / 2, cardHeight - 8, "Powered by devcard-ai", { fontSize: 9, fill: theme.textSecondary, anchor: "middle" })}
+
+  <!-- Footer separator -->
+  <line x1="24" y1="${cardHeight - FOOTER_HEIGHT - 4}" x2="${CARD_WIDTH - 24}" y2="${cardHeight - FOOTER_HEIGHT - 4}" stroke="url(#footerGrad)" stroke-width="1" />
+  ${svgText(CARD_WIDTH / 2, cardHeight - 10, "devcard-ai", { fontSize: 9, fill: theme.textSecondary, anchor: "middle" })}
 </svg>`;
 }
 
@@ -92,8 +113,8 @@ export function renderErrorCard(message: string, themeName: string): string {
 	const height = 80;
 
 	return `<svg xmlns="http://www.w3.org/2000/svg" width="${CARD_WIDTH}" height="${height}" viewBox="0 0 ${CARD_WIDTH} ${height}">
-  ${svgRect(0, 0, CARD_WIDTH, height, { fill: theme.bg, rx: 8 })}
-  <rect x="0.5" y="0.5" width="${CARD_WIDTH - 1}" height="${height - 1}" fill="none" stroke="${theme.border}" rx="8" />
+  ${svgRect(0, 0, CARD_WIDTH, height, { fill: theme.bg, rx: 12 })}
+  <rect x="0.5" y="0.5" width="${CARD_WIDTH - 1}" height="${height - 1}" fill="none" stroke="${theme.border}" rx="12" />
   ${svgText(CARD_WIDTH / 2, 35, message, { fontSize: 14, fill: theme.textSecondary, anchor: "middle" })}
   ${svgText(CARD_WIDTH / 2, 58, "devcard-ai", { fontSize: 10, fill: theme.textSecondary, anchor: "middle" })}
 </svg>`;

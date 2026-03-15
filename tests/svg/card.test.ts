@@ -51,7 +51,12 @@ describe("renderCard", () => {
 		const svg = renderCard(mockData, { theme: "light", modules: [] });
 		expect(svg).toContain("Claude Code");
 		expect(svg).toContain("AI Co-Authored");
-		expect(svg).toContain("AI Readiness");
+		expect(svg).toContain("Activity");
+	});
+
+	it("renders grade badge in header", () => {
+		const svg = renderCard(mockData, { theme: "light", modules: ["tools"] });
+		expect(svg).toContain(">A</text>");
 	});
 });
 

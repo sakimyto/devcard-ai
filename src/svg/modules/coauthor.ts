@@ -8,15 +8,15 @@ export function renderCoauthorModule(
 	yOffset: number,
 ): string {
 	const pct = Math.round(data.rate * 100);
-	const barWidth = 160;
-	const fillWidth = Math.round(barWidth * data.rate);
+	const barWidth = 200;
+	const fillWidth = Math.max(Math.round(barWidth * data.rate), data.rate > 0 ? 4 : 0);
 
 	return `
     <g transform="translate(0, ${yOffset})">
-      ${svgText(20, 16, "AI Co-Authored", { fontSize: 12, fill: theme.textSecondary })}
-      ${svgText(310, 16, `${pct}%`, { fontSize: 14, fill: theme.text, fontWeight: "bold", anchor: "end" })}
-      ${svgRect(145, 4, barWidth, 14, { fill: theme.barBg, rx: 7 })}
-      ${svgRect(145, 4, fillWidth, 14, { fill: theme.barFill, rx: 7 })}
+      ${svgText(24, 22, "AI Co-Authored", { fontSize: 11, fill: theme.textSecondary })}
+      ${svgText(370, 22, `${pct}%`, { fontSize: 14, fill: theme.text, fontWeight: "bold", anchor: "end" })}
+      ${svgRect(150, 10, barWidth, 16, { fill: theme.barBg, rx: 8 })}
+      ${svgRect(150, 10, fillWidth, 16, { fill: theme.barFill, rx: 8 })}
     </g>
   `;
 }

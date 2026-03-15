@@ -4,9 +4,9 @@ import { svgRect, svgText } from "../utils";
 
 const STYLE_COLORS: Record<StyleType, string> = {
 	"TDD Architect": "#2ea44f",
-	"Vibe Coder": "#6f42c1",
-	Orchestrator: "#0969da",
-	Minimalist: "#6e7781",
+	"Vibe Coder": "#8b5cf6",
+	Orchestrator: "#58a6ff",
+	Minimalist: "#8b949e",
 };
 
 export function renderStyleModule(
@@ -14,27 +14,22 @@ export function renderStyleModule(
 	theme: Theme,
 	yOffset: number,
 ): string {
-	const label = svgText(20, 16, "Style", {
-		fontSize: 12,
-		fill: theme.textSecondary,
-	});
-
 	if (data.styles.length === 0) {
 		return `
     <g transform="translate(0, ${yOffset})">
-      ${label}
-      ${svgText(76, 16, "Exploring...", { fontSize: 12, fill: theme.textSecondary })}
+      ${svgText(24, 20, "Style", { fontSize: 11, fill: theme.textSecondary })}
+      ${svgText(90, 20, "Exploring...", { fontSize: 12, fill: theme.textSecondary })}
     </g>
   `;
 	}
 
-	let badgeX = 76;
+	let badgeX = 90;
 	const badges = data.styles.map((style) => {
 		const color = STYLE_COLORS[style] ?? theme.textSecondary;
-		const textWidth = style.length * 7 + 16;
+		const textWidth = style.length * 7.5 + 20;
 		const badge = `
-      ${svgRect(badgeX, 0, textWidth, 22, { fill: color, rx: 11 })}
-      ${svgText(badgeX + 8, 15, style, { fontSize: 11, fill: "#ffffff" })}
+      ${svgRect(badgeX, 4, textWidth, 26, { fill: color, rx: 13 })}
+      ${svgText(badgeX + 10, 22, style, { fontSize: 12, fill: "#ffffff", fontWeight: "bold" })}
     `;
 		badgeX += textWidth + 8;
 		return badge;
@@ -42,7 +37,7 @@ export function renderStyleModule(
 
 	return `
     <g transform="translate(0, ${yOffset})">
-      ${label}
+      ${svgText(24, 22, "Style", { fontSize: 11, fill: theme.textSecondary })}
       ${badges.join("")}
     </g>
   `;
