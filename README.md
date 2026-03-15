@@ -2,14 +2,14 @@
 
 AI coding style trading cards for your GitHub profile. Auto-generated from your public activity.
 
-![Example Card](https://devcard-ai.vercel.app/api?user=sakimyto&theme=dark)
+![Example Card](https://devcard-ai.sakimyto.workers.dev/api?user=sakimyto&theme=dark)
 
 ## Usage
 
 Add this to your GitHub profile README:
 
 ```markdown
-![AI Dev Card](https://devcard-ai.vercel.app/api?user=YOUR_USERNAME)
+![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/api?user=YOUR_USERNAME)
 ```
 
 ## Parameters
@@ -25,13 +25,13 @@ Add this to your GitHub profile README:
 Dark theme, tools only:
 
 ```markdown
-![AI Dev Card](https://devcard-ai.vercel.app/api?user=YOUR_USERNAME&theme=dark&modules=tools)
+![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/api?user=YOUR_USERNAME&theme=dark&modules=tools)
 ```
 
 Score and co-author rate:
 
 ```markdown
-![AI Dev Card](https://devcard-ai.vercel.app/api?user=YOUR_USERNAME&modules=score,coauthor)
+![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/api?user=YOUR_USERNAME&modules=score,coauthor)
 ```
 
 ## What it detects
