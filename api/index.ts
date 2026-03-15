@@ -1,51 +1,49 @@
-import { App } from "octokit";
-import type { GitHubQueryResponse } from "../src/github/types";
-import { handleRequest } from "../src/handler";
+import { App } from 'octokit'
+import type { GitHubQueryResponse } from '../src/github/types'
+import { handleRequest } from '../src/handler'
 
-export const config = {
-	runtime: "edge",
-};
-
-let app: App | null = null;
-
-function getApp(): App {
-	if (!app) {
-		const appId = process.env.GITHUB_APP_ID;
-		const privateKey = process.env.GITHUB_APP_PRIVATE_KEY;
-		if (!appId || !privateKey) {
-			throw new Error("Missing required GitHub App environment variables");
-		}
-		app = new App({ appId, privateKey });
-	}
-	return app;
+interface Env {
+  GITHUB_APP_ID: string
+  GITHUB_APP_PRIVATE_KEY: string
+  GITHUB_APP_INSTALLATION_ID: string
 }
 
-export default async function handler(req: Request): Promise<Response> {
-	const url = new URL(req.url);
-	const user = url.searchParams.get("user") ?? "";
-	const modules = (url.searchParams.get("modules") ?? "")
-		.split(",")
-		.filter(Boolean);
-	const theme = url.searchParams.get("theme") ?? "light";
-	// lang param reserved for Phase 2 i18n
-	// const _lang = url.searchParams.get('lang') ?? 'en'
+let app: App | null = null
 
-	const githubApp = getApp();
-	const octokit = await githubApp.getInstallationOctokit(
-		Number(process.env.GITHUB_APP_INSTALLATION_ID),
-	);
+function getApp(env: Env): App {
+  if (!app) {
+    if (!env.GITHUB_APP_ID || !env.GITHUB_APP_PRIVATE_KEY) {
+      throw new Error('Missing required GitHub App environment variables')
+    }
+    app = new App({ appId: env.GITHUB_APP_ID, privateKey: env.GITHUB_APP_PRIVATE_KEY })
+  }
+  return app
+}
 
-	const graphql = async (query: string, variables: Record<string, unknown>) => {
-		return octokit.graphql<GitHubQueryResponse>(query, variables);
-	};
+export default {
+  async fetch(req: Request, env: Env): Promise<Response> {
+    const url = new URL(req.url)
+    const user = url.searchParams.get('user') ?? ''
+    const modules = (url.searchParams.get('modules') ?? '').split(',').filter(Boolean)
+    const theme = url.searchParams.get('theme') ?? 'light'
 
-	const result = await handleRequest({ user, modules, theme }, graphql);
+    const githubApp = getApp(env)
+    const octokit = await githubApp.getInstallationOctokit(
+      Number(env.GITHUB_APP_INSTALLATION_ID),
+    )
 
-	return new Response(result.svg, {
-		status: result.status,
-		headers: {
-			"Content-Type": "image/svg+xml",
-			"Cache-Control": "public, max-age=3600, s-maxage=3600",
-		},
-	});
+    const graphql = async (query: string, variables: Record<string, unknown>) => {
+      return octokit.graphql<GitHubQueryResponse>(query, variables)
+    }
+
+    const result = await handleRequest({ user, modules, theme }, graphql)
+
+    return new Response(result.svg, {
+      status: result.status,
+      headers: {
+        'Content-Type': 'image/svg+xml',
+        'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+      },
+    })
+  },
 }

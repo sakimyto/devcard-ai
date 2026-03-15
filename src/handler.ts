@@ -80,7 +80,8 @@ export async function handleRequest(
 
 		const svg = renderCard(cardData, { theme, modules });
 		return { svg, status: 200 };
-	} catch {
+	} catch (error) {
+		console.error("handleRequest error:", error);
 		return {
 			svg: renderErrorCard("Temporarily unavailable", theme),
 			status: 200,

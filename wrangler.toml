@@ -1,0 +1,4 @@
+name = "devcard-ai"
+main = "api/index.ts"
+compatibility_date = "2025-01-01"
+account_id = "da4df285476cff0b942707a93dcb1954"
