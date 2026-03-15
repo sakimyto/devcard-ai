@@ -14,10 +14,18 @@ export interface CardOptions {
 
 const DEFAULT_MODULES = ["style", "tools", "coauthor", "heatmap"];
 const CARD_WIDTH = 400;
-const MODULE_HEIGHT = 44;
 const HEADER_HEIGHT = 72;
-const PADDING_BOTTOM = 20;
+const PADDING_BOTTOM = 12;
 const FOOTER_HEIGHT = 24;
+
+// Module heights vary by content type
+const MODULE_HEIGHTS: Record<string, number> = {
+	style: 40,
+	tools: 40,
+	coauthor: 48,
+	score: 40,
+	heatmap: 50,
+};
 
 const GRADE_COLORS: Record<string, string> = {
 	S: "#a371f7",
@@ -53,13 +61,12 @@ export function renderCard(data: CardData, options: CardOptions): string {
 				modulesSvg.push(renderHeatmapModule(data.heatmap, theme, yOffset));
 				break;
 		}
-		yOffset += MODULE_HEIGHT;
+		yOffset += MODULE_HEIGHTS[mod] ?? 40;
 	}
 
 	const cardHeight = yOffset + PADDING_BOTTOM + FOOTER_HEIGHT;
 
 	const gradeColor = GRADE_COLORS[data.score.grade] ?? theme.textSecondary;
-	const gradeBadgeSize = 36;
 
 	return `<svg xmlns="http://www.w3.org/2000/svg" width="${CARD_WIDTH}" height="${cardHeight}" viewBox="0 0 ${CARD_WIDTH} ${cardHeight}">
   <defs>
@@ -69,11 +76,6 @@ export function renderCard(data: CardData, options: CardOptions): string {
     </linearGradient>
     <linearGradient id="sepGrad" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0%" stop-color="${theme.accent}" stop-opacity="0.6" />
-      <stop offset="50%" stop-color="${theme.accent}" stop-opacity="0.2" />
-      <stop offset="100%" stop-color="${theme.accent}" stop-opacity="0" />
-    </linearGradient>
-    <linearGradient id="footerGrad" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="${theme.accent}" stop-opacity="0" />
       <stop offset="50%" stop-color="${theme.accent}" stop-opacity="0.15" />
       <stop offset="100%" stop-color="${theme.accent}" stop-opacity="0" />
     </linearGradient>
@@ -82,28 +84,27 @@ export function renderCard(data: CardData, options: CardOptions): string {
   <!-- Card background -->
   ${svgRect(0, 0, CARD_WIDTH, cardHeight, { fill: theme.bg, rx: 12 })}
 
-  <!-- Border with accent glow -->
+  <!-- Border -->
   <rect x="0.5" y="0.5" width="${CARD_WIDTH - 1}" height="${cardHeight - 1}" fill="none" stroke="${theme.border}" stroke-width="1" rx="12" />
-  <rect x="2" y="2" width="${CARD_WIDTH - 4}" height="${cardHeight - 4}" fill="none" stroke="${theme.border}" stroke-width="0.5" rx="10" opacity="0.3" />
 
   <!-- Header background -->
-  <rect x="2" y="2" width="${CARD_WIDTH - 4}" height="${HEADER_HEIGHT - 8}" fill="url(#headerGrad)" rx="10" />
+  <rect x="1" y="1" width="${CARD_WIDTH - 2}" height="${HEADER_HEIGHT - 8}" fill="url(#headerGrad)" rx="11" />
 
   <!-- Username -->
-  ${svgText(24, 32, data.username, { fontSize: 18, fill: theme.text, fontWeight: "bold" })}
-  ${svgText(24, 50, "AI Dev Card", { fontSize: 11, fill: theme.textSecondary })}
+  ${svgText(24, 34, data.username, { fontSize: 18, fill: theme.text, fontWeight: "bold" })}
+  ${svgText(24, 52, "AI Dev Card", { fontSize: 10, fill: theme.textSecondary })}
 
-  <!-- Grade badge (top-right, like card rarity) -->
-  <rect x="${CARD_WIDTH - gradeBadgeSize - 16}" y="12" width="${gradeBadgeSize}" height="${gradeBadgeSize}" fill="${gradeColor}" rx="8" />
-  ${svgText(CARD_WIDTH - gradeBadgeSize / 2 - 16, 38, data.score.grade, { fontSize: 20, fill: "#ffffff", fontWeight: "bold", anchor: "middle" })}
+  <!-- Grade badge (top-right) -->
+  <rect x="${CARD_WIDTH - 52}" y="10" width="38" height="38" fill="${gradeColor}" rx="10" />
+  <rect x="${CARD_WIDTH - 52}" y="10" width="38" height="38" fill="none" stroke="#ffffff" stroke-width="0.5" stroke-opacity="0.2" rx="10" />
+  ${svgText(CARD_WIDTH - 33, 36, data.score.grade, { fontSize: 22, fill: "#ffffff", fontWeight: "bold", anchor: "middle" })}
 
   <!-- Separator -->
   <line x1="24" y1="${HEADER_HEIGHT - 4}" x2="${CARD_WIDTH - 24}" y2="${HEADER_HEIGHT - 4}" stroke="url(#sepGrad)" stroke-width="1" />
 
   ${modulesSvg.join("\n")}
 
-  <!-- Footer separator -->
-  <line x1="24" y1="${cardHeight - FOOTER_HEIGHT - 4}" x2="${CARD_WIDTH - 24}" y2="${cardHeight - FOOTER_HEIGHT - 4}" stroke="url(#footerGrad)" stroke-width="1" />
+  <!-- Footer -->
   ${svgText(CARD_WIDTH / 2, cardHeight - 10, "devcard-ai", { fontSize: 9, fill: theme.textSecondary, anchor: "middle" })}
 </svg>`;
 }

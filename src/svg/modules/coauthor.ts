@@ -8,15 +8,21 @@ export function renderCoauthorModule(
 	yOffset: number,
 ): string {
 	const pct = Math.round(data.rate * 100);
-	const barWidth = 200;
-	const fillWidth = Math.max(Math.round(barWidth * data.rate), data.rate > 0 ? 4 : 0);
+	const barX = 150;
+	const barWidth = 190;
+	const fillWidth = Math.max(
+		Math.round(barWidth * data.rate),
+		data.rate > 0 ? 6 : 0,
+	);
+	const countLabel = `${data.aiCommits} / ${data.totalCommits} commits`;
 
 	return `
     <g transform="translate(0, ${yOffset})">
-      ${svgText(24, 22, "AI Co-Authored", { fontSize: 11, fill: theme.textSecondary })}
-      ${svgText(370, 22, `${pct}%`, { fontSize: 14, fill: theme.text, fontWeight: "bold", anchor: "end" })}
-      ${svgRect(150, 10, barWidth, 16, { fill: theme.barBg, rx: 8 })}
-      ${svgRect(150, 10, fillWidth, 16, { fill: theme.barFill, rx: 8 })}
+      ${svgText(24, 20, "AI Co-Authored", { fontSize: 11, fill: theme.textSecondary })}
+      ${svgRect(barX, 8, barWidth, 14, { fill: theme.barBg, rx: 7 })}
+      ${svgRect(barX, 8, fillWidth, 14, { fill: theme.barFill, rx: 7 })}
+      ${svgText(barX + barWidth + 8, 20, `${pct}%`, { fontSize: 13, fill: theme.text, fontWeight: "bold" })}
+      ${svgText(barX, 36, countLabel, { fontSize: 9, fill: theme.textSecondary })}
     </g>
   `;
 }
