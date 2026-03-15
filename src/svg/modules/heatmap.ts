@@ -2,7 +2,7 @@ import type { HeatmapAnalysis } from "~/analyzers/types";
 import type { Theme } from "../themes";
 import { svgText } from "../utils";
 
-const CELL_SIZE = 12;
+const CELL_SIZE = 10;
 const CELL_GAP = 2;
 const HEATMAP_START_X = 90;
 
