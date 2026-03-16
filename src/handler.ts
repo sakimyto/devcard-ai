@@ -54,12 +54,11 @@ export async function handleRequest(
 			(r) => r.defaultBranchRef?.target.history.nodes ?? [],
 		);
 
-		const hasRecentActivity = repos.some((r) => {
-			const pushed = new Date(r.pushedAt);
-			const thirtyDaysAgo = new Date();
-			thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-			return pushed >= thirtyDaysAgo;
-		});
+		const thirtyDaysAgo = new Date();
+		thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+		const hasRecentActivity = repos.some(
+			(r) => new Date(r.pushedAt) >= thirtyDaysAgo,
+		);
 
 		const coauthor = analyzeCoauthor(allCommits);
 		const tools = analyzeTools(repos);
@@ -87,10 +86,13 @@ export async function handleRequest(
 		const svg = renderCard(cardData, { theme, modules });
 		return { svg, status: 200 };
 	} catch (error) {
-		console.error("handleRequest error:", error);
-		return {
-			svg: renderErrorCard("Temporarily unavailable", theme),
-			status: 200,
-		};
+		const isRateLimit =
+			error instanceof Error && error.message.includes("rate limit");
+		const errorType = isRateLimit ? "rate_limit" : "unknown";
+		console.error(`handleRequest error [${errorType}]:`, error);
+		const message = isRateLimit
+			? "GitHub API rate limit exceeded"
+			: "Temporarily unavailable";
+		return { svg: renderErrorCard(message, theme), status: 200 };
 	}
 }

@@ -15,7 +15,8 @@ export function analyzeHeatmap(commits: GitHubCommit[]): HeatmapAnalysis {
 		totalAiCommits++;
 	}
 
-	const peakHour = totalAiCommits === 0 ? 0 : hourly.indexOf(Math.max(...hourly));
+	const maxCount = hourly.reduce((a, b) => Math.max(a, b), 0);
+	const peakHour = totalAiCommits === 0 ? 0 : hourly.indexOf(maxCount);
 
 	return { hourly, peakHour, totalAiCommits };
 }

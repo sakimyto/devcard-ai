@@ -16,6 +16,13 @@ const TOOL_COLORS: Record<string, string> = {
 	"agents-md": "#3fb950",
 };
 
+const TOOL_BADGE_WIDTHS: Record<string, number> = {
+	Claude: 80,
+	Cursor: 80,
+	Copilot: 82,
+	"Agents.md": 100,
+};
+
 export function renderToolsModule(
 	data: ToolsAnalysis,
 	theme: Theme,
@@ -34,7 +41,7 @@ export function renderToolsModule(
 	const badges = data.tools.map((tool) => {
 		const color = TOOL_COLORS[tool.id] ?? theme.accent;
 		const icon = TOOL_ICONS[tool.id] ?? "●";
-		const textWidth = tool.name.length * 7.2 + 28;
+		const textWidth = TOOL_BADGE_WIDTHS[tool.name] ?? tool.name.length * 7.2 + 28;
 		const badge = `
       ${svgRect(badgeX, 4, textWidth, 26, { fill: theme.barBg, rx: 13 })}
       ${svgText(badgeX + 10, 22, icon, { fontSize: 10, fill: color })}

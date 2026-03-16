@@ -35,6 +35,8 @@ export const themes: Record<string, Theme> = {
 	},
 };
 
+// SECURITY: Theme is resolved by key lookup only — never accept raw color values
+// from user input. All theme values are hardcoded above.
 export function getTheme(name: string): Theme {
 	return themes[name] ?? themes.light;
 }

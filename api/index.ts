@@ -8,23 +8,29 @@ interface Env {
   GITHUB_APP_INSTALLATION_ID: string
 }
 
-let app: App | null = null
+let cachedApp: { app: App; appId: string } | null = null
 
 function getApp(env: Env): App {
-  if (!app) {
-    if (!env.GITHUB_APP_ID || !env.GITHUB_APP_PRIVATE_KEY) {
-      throw new Error('Missing required GitHub App environment variables')
-    }
-    app = new App({ appId: env.GITHUB_APP_ID, privateKey: env.GITHUB_APP_PRIVATE_KEY })
+  if (!env.GITHUB_APP_ID || !env.GITHUB_APP_PRIVATE_KEY) {
+    throw new Error('Missing required GitHub App environment variables')
   }
+  if (cachedApp && cachedApp.appId === env.GITHUB_APP_ID) {
+    return cachedApp.app
+  }
+  const app = new App({ appId: env.GITHUB_APP_ID, privateKey: env.GITHUB_APP_PRIVATE_KEY })
+  cachedApp = { app, appId: env.GITHUB_APP_ID }
   return app
 }
+
+const VALID_MODULES = new Set(['style', 'tools', 'coauthor', 'heatmap', 'score'])
 
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url)
     const user = url.searchParams.get('user') ?? ''
-    const modules = (url.searchParams.get('modules') ?? '').split(',').filter(Boolean)
+    const modules = (url.searchParams.get('modules') ?? '')
+      .split(',')
+      .filter((m) => VALID_MODULES.has(m))
     const theme = url.searchParams.get('theme') ?? 'light'
 
     const githubApp = getApp(env)

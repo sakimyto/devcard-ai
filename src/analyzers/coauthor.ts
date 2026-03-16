@@ -4,7 +4,7 @@ import type { CoauthorAnalysis } from "./types";
 const AI_COAUTHOR_PATTERNS = [
 	/co-authored-by:\s.*\b(claude|copilot|cursor|aider|codeium|tabnine|amazon-q)\b/i,
 	/co-authored-by:\s.*@anthropic\.com/i,
-	/co-authored-by:\s.*@github\.com/i,
+	/co-authored-by:\s.*\d+\+[^@]+@users\.noreply\.github\.com/i,
 	/co-authored-by:\s.*noreply@/i,
 ];
 

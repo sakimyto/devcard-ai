@@ -129,6 +129,8 @@ describe("handleRequest", () => {
 					{
 						...mockUser.repositories.nodes[0],
 						defaultBranchRef: null,
+						claudeMd: null,
+						claudeDir: null,
 					},
 				],
 			},
@@ -139,11 +141,22 @@ describe("handleRequest", () => {
 			mockGraphql,
 		);
 		expect(result.svg).toContain("<svg");
+		expect(result.svg).toContain("No AI activity detected yet");
 		expect(result.status).toBe(200);
 	});
 
-	it("returns error SVG on API failure", async () => {
-		mockGraphql.mockRejectedValue(new Error("rate limited"));
+	it("returns rate limit message on rate limit error", async () => {
+		mockGraphql.mockRejectedValue(new Error("rate limit exceeded"));
+		const result = await handleRequest(
+			{ user: "testuser", modules: [], theme: "light" },
+			mockGraphql,
+		);
+		expect(result.svg).toContain("GitHub API rate limit exceeded");
+		expect(result.status).toBe(200);
+	});
+
+	it("returns generic error on unknown failure", async () => {
+		mockGraphql.mockRejectedValue(new Error("network error"));
 		const result = await handleRequest(
 			{ user: "testuser", modules: [], theme: "light" },
 			mockGraphql,
