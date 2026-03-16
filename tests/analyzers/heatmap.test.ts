@@ -20,12 +20,11 @@ const makeAiCommit = (committedDate: string): GitHubCommit =>
 
 describe("analyzeHeatmap", () => {
 	describe("hourly bucketing", () => {
-		it("correctly buckets AI commits by UTC hour", () => {
+		it("correctly buckets commits by UTC hour", () => {
 			const commits = [
 				makeAiCommit("2026-03-14T09:00:00Z"), // hour 9
 				makeAiCommit("2026-03-14T09:30:00Z"), // hour 9
 				makeAiCommit("2026-03-14T14:15:00Z"), // hour 14
-				makeCommit("docs: manual", "2026-03-14T09:00:00Z"), // not AI
 			];
 			const result = analyzeHeatmap(commits);
 			expect(result.hourly).toHaveLength(24);
@@ -34,12 +33,8 @@ describe("analyzeHeatmap", () => {
 			expect(result.hourly[0]).toBe(0);
 		});
 
-		it("non-AI commits are not counted", () => {
-			const commits = [
-				makeCommit("feat: manual A", "2026-03-14T10:00:00Z"),
-				makeCommit("feat: manual B", "2026-03-14T10:30:00Z"),
-			];
-			const result = analyzeHeatmap(commits);
+		it("returns zeros for empty input", () => {
+			const result = analyzeHeatmap([]);
 			expect(result.totalAiCommits).toBe(0);
 			expect(result.hourly.every((v) => v === 0)).toBe(true);
 		});
@@ -64,12 +59,11 @@ describe("analyzeHeatmap", () => {
 	});
 
 	describe("totalAiCommits", () => {
-		it("counts total AI commits correctly", () => {
+		it("counts all provided commits", () => {
 			const commits = [
 				makeAiCommit("2026-03-14T09:00:00Z"),
 				makeAiCommit("2026-03-14T10:00:00Z"),
 				makeAiCommit("2026-03-14T11:00:00Z"),
-				makeCommit("docs: manual", "2026-03-14T12:00:00Z"),
 			];
 			const result = analyzeHeatmap(commits);
 			expect(result.totalAiCommits).toBe(3);

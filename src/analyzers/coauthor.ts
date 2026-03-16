@@ -32,14 +32,19 @@ export function isAiCommit(
 	return AI_MESSAGE_PATTERNS.some((p) => p.test(message));
 }
 
-export function analyzeCoauthor(commits: GitHubCommit[]): CoauthorAnalysis {
+export function analyzeCoauthor(
+	commits: GitHubCommit[],
+	precomputedAiCount?: number,
+): CoauthorAnalysis {
 	const totalCommits = commits.length;
 	if (totalCommits === 0) {
 		return { totalCommits: 0, aiCommits: 0, rate: 0 };
 	}
-	const aiCommits = commits.filter((c) =>
-		isAiCommit(c.message, c.author?.user?.login ?? null),
-	).length;
+	const aiCommits =
+		precomputedAiCount ??
+		commits.filter((c) =>
+			isAiCommit(c.message, c.author?.user?.login ?? null),
+		).length;
 	return {
 		totalCommits,
 		aiCommits,

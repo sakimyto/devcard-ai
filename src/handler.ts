@@ -1,4 +1,4 @@
-import { analyzeCoauthor } from "./analyzers/coauthor";
+import { analyzeCoauthor, isAiCommit } from "./analyzers/coauthor";
 import { analyzeHeatmap } from "./analyzers/heatmap";
 import { analyzeScore } from "./analyzers/score";
 import { analyzeStyle } from "./analyzers/style";
@@ -60,7 +60,10 @@ export async function handleRequest(
 			(r) => new Date(r.pushedAt) >= thirtyDaysAgo,
 		);
 
-		const coauthor = analyzeCoauthor(allCommits);
+		const aiCommits = allCommits.filter((c) =>
+			isAiCommit(c.message, c.author?.user?.login ?? null),
+		);
+		const coauthor = analyzeCoauthor(allCommits, aiCommits.length);
 		const tools = analyzeTools(repos);
 
 		if (coauthor.aiCommits === 0 && tools.tools.length === 0) {
@@ -72,7 +75,7 @@ export async function handleRequest(
 
 		const score = analyzeScore(coauthor, tools, hasRecentActivity);
 		const style = analyzeStyle(allCommits, coauthor, tools);
-		const heatmap = analyzeHeatmap(allCommits);
+		const heatmap = analyzeHeatmap(aiCommits);
 
 		const cardData: CardData = {
 			username: userData.login,

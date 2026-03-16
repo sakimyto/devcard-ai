@@ -18,8 +18,8 @@ const HEADER_HEIGHT = 72;
 const PADDING_BOTTOM = 12;
 const FOOTER_HEIGHT = 24;
 
-// Module heights vary by content type
-const MODULE_HEIGHTS: Record<string, number> = {
+// Module heights vary by content type — keys are the canonical module names
+export const MODULE_HEIGHTS: Record<string, number> = {
 	style: 40,
 	tools: 40,
 	coauthor: 48,

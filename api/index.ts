@@ -1,6 +1,7 @@
 import { App } from 'octokit'
 import type { GitHubQueryResponse } from '../src/github/types'
 import { handleRequest } from '../src/handler'
+import { MODULE_HEIGHTS } from '../src/svg/card'
 
 interface Env {
   GITHUB_APP_ID: string
@@ -22,7 +23,7 @@ function getApp(env: Env): App {
   return app
 }
 
-const VALID_MODULES = new Set(['style', 'tools', 'coauthor', 'heatmap', 'score'])
+const VALID_MODULES = new Set(Object.keys(MODULE_HEIGHTS))
 
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
