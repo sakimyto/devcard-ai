@@ -39,6 +39,7 @@ describe('renderUsageModule', () => {
   it('renders center commit count', () => {
     const svg = renderUsageModule(usage, languages, theme, 130)
     expect(svg).toContain('>10<')
+    expect(svg).toContain('recent')
     expect(svg).toContain('commits')
   })
 

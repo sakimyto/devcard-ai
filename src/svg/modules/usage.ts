@@ -50,7 +50,8 @@ export function renderUsageModule(
   // Center text
   const centerText = `
     ${svgText(DONUT_CX, donutCy - 2, String(usage.totalCommits), { fontSize: 14, fill: theme.text, fontWeight: 'bold', anchor: 'middle' })}
-    ${svgText(DONUT_CX, donutCy + 10, 'commits', { fontSize: 8, fill: theme.textSecondary, anchor: 'middle' })}
+    ${svgText(DONUT_CX, donutCy + 10, 'recent', { fontSize: 8, fill: theme.textSecondary, anchor: 'middle' })}
+    ${svgText(DONUT_CX, donutCy + 19, 'commits', { fontSize: 8, fill: theme.textSecondary, anchor: 'middle' })}
   `
 
   // Legend (right of donut)
