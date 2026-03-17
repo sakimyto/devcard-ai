@@ -6,6 +6,11 @@ const TOOL_NAMES: Record<string, string> = {
   codex: 'Codex',
   copilot: 'Copilot',
   cursor: 'Cursor',
+  windsurf: 'Windsurf',
+  aider: 'Aider',
+  cody: 'Cody',
+  amazonq: 'Amazon Q',
+  gemini: 'Gemini',
   devin: 'Devin',
   sweep: 'Sweep',
   unknown: 'Other',
@@ -29,6 +34,11 @@ function attributeTool(commit: GitHubCommit): string {
   if (msg.includes('@openai.com') || /co-authored-by:.*\bcodex\b/i.test(msg)) return 'codex'
   if (/co-authored-by:.*\bcopilot\b/i.test(msg)) return 'copilot'
   if (/co-authored-by:.*\bcursor\b/i.test(msg)) return 'cursor'
+  if (/co-authored-by:.*\b(windsurf|codeium)\b/i.test(msg)) return 'windsurf'
+  if (msg.includes('@aider.chat') || /co-authored-by:.*\baider\b/i.test(msg)) return 'aider'
+  if (/co-authored-by:.*\b(cody|sourcegraph)\b/i.test(msg)) return 'cody'
+  if (/co-authored-by:.*\b(amazon-?q|amazonq)\b/i.test(msg)) return 'amazonq'
+  if (msg.includes('@google.com') || /co-authored-by:.*\bgemini\b/i.test(msg)) return 'gemini'
 
   return 'unknown'
 }
