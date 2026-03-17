@@ -35,6 +35,7 @@ export const USER_REPOS_QUERY = `
           cursorrulesDir: object(expression: "HEAD:.cursor/rules") { id }
           githubCopilot: object(expression: "HEAD:.github/copilot-instructions.md") { id }
           claudeDir: object(expression: "HEAD:.claude") { id }
+          primaryLanguage { name color }
         }
       }
     }

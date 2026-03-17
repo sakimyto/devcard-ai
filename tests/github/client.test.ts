@@ -32,6 +32,7 @@ describe("fetchUserData", () => {
 							cursorrulesDir: null,
 							githubCopilot: null,
 							claudeDir: { id: "def" },
+							primaryLanguage: { name: 'TypeScript', color: '#3178c6' },
 						},
 					],
 				},

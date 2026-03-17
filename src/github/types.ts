@@ -22,6 +22,7 @@ export interface GitHubRepo {
 	cursorrulesDir: FileCheck | null;
 	githubCopilot: FileCheck | null;
 	claudeDir: FileCheck | null;
+	primaryLanguage: { name: string; color: string } | null;
 }
 
 interface FileCheck {
