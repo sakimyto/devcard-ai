@@ -19,13 +19,8 @@ const repo = (
 })
 
 describe('analyzeLanguages', () => {
-  it('returns empty for no AI repos', () => {
+  it('returns language from any repo', () => {
     const result = analyzeLanguages([repo({ name: 'TypeScript', color: '#3178c6' }, false)])
-    expect(result.languages).toEqual([])
-  })
-
-  it('returns language from AI-configured repo', () => {
-    const result = analyzeLanguages([repo({ name: 'TypeScript', color: '#3178c6' }, true)])
     expect(result.languages).toHaveLength(1)
     expect(result.languages[0].name).toBe('TypeScript')
   })
