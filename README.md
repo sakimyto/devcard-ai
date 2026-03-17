@@ -1,56 +1,57 @@
 # devcard-ai
 
-AI coding style trading cards for your GitHub profile. Auto-generated from your public activity.
+AI Dev Card for your GitHub profile. Shows what AI tools you use, how you use them, and in what languages.
 
-![Example Card](https://devcard-ai.sakimyto.workers.dev/api?user=sakimyto&theme=dark)
+[![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/?user=sakimyto&theme=dark)](https://devcard-ai.sakimyto.workers.dev/?user=sakimyto)
 
-## Usage
+## Add to your README
 
-Add this to your GitHub profile README:
+Copy this into your GitHub profile README and replace `YOUR_USERNAME`:
 
 ```markdown
-![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/api?user=YOUR_USERNAME)
+[![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME&theme=dark)](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME)
 ```
+
+<details>
+<summary>Light theme</summary>
+
+```markdown
+[![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME&theme=light)](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME)
+```
+
+</details>
+
+## What it shows
+
+| Section | Description |
+|---------|-------------|
+| **Tools** | Which AI tools you use (Claude, Copilot, Cursor, etc.) detected from `Co-Authored-By` trailers |
+| **Usage** | What you use AI for — Feature, Bug Fix, Test, Refactor — from conventional commit prefixes |
+| **Languages** | Your top 3 programming languages across repos |
+| **Pattern** | Your collaboration style: AI Native, Pair Programmer, Delegator, or Selective User |
+| **Grade** | S/A/B/C/D score based on tool diversity, AI activity, and recent commits |
+
+> Based on latest activity across your repositories.
 
 ## Parameters
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `user` | GitHub username (required) | - |
-| `modules` | Comma-separated: `tools`, `coauthor`, `score` | `tools,coauthor,score` |
 | `theme` | `light` or `dark` | `light` |
-
-## Examples
-
-Dark theme, tools only:
-
-```markdown
-![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/api?user=YOUR_USERNAME&theme=dark&modules=tools)
-```
-
-Score and co-author rate:
-
-```markdown
-![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/api?user=YOUR_USERNAME&modules=score,coauthor)
-```
-
-## What it detects
-
-- **Tools**: Claude Code (CLAUDE.md), Cursor (.cursorrules), GitHub Copilot (.github/copilot), AGENTS.md
-- **AI Co-Authored**: Commits with `Co-Authored-By` trailers from known AI tools, `[AI]` tags, known AI bot authors
-- **AI Readiness Score**: S/A/B/C/D grade based on AI config presence, tool diversity, and commit activity
-
-> Note: Only publicly detectable AI activity is shown. Detection coverage varies by tool.
 
 ## Self-hosting
 
 1. Fork this repo
 2. Create a GitHub App with `Repository contents: read` permission
-3. Install the App on your own account to get an Installation ID
-4. Deploy to Vercel with environment variables from `.env.example`:
-   - `GITHUB_APP_ID`
-   - `GITHUB_APP_PRIVATE_KEY`
-   - `GITHUB_APP_INSTALLATION_ID`
+3. Install the App on your account
+4. Deploy to Cloudflare Workers:
+
+```bash
+bun install
+cp .env.example .env  # Set GITHUB_APP_ID, GITHUB_APP_PRIVATE_KEY, GITHUB_APP_INSTALLATION_ID
+bunx wrangler deploy
+```
 
 ## Development
 
