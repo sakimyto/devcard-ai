@@ -3,9 +3,8 @@ export const USER_REPOS_QUERY = `
     user(login: $login) {
       login
       repositories(
-        first: 20
+        first: 50
         orderBy: { field: PUSHED_AT, direction: DESC }
-        privacy: PUBLIC
         isFork: false
       ) {
         nodes {
@@ -14,7 +13,7 @@ export const USER_REPOS_QUERY = `
           defaultBranchRef {
             target {
               ... on Commit {
-                history(first: 100) {
+                history(first: 200) {
                   nodes {
                     message
                     committedDate
