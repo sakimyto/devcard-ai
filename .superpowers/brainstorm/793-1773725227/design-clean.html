@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>devcard-ai Design</title>
+<style>
+  body { background: #1a1a2e; display: flex; flex-direction: column; align-items: center; padding: 40px; font-family: -apple-system, sans-serif; color: #c9d1d9; }
+  h2 { margin-bottom: 8px; }
+  .subtitle { color: #8b949e; margin-bottom: 32px; }
+  .cards { display: flex; gap: 40px; flex-wrap: wrap; justify-content: center; }
+  .card-wrap { text-align: center; }
+  .card-wrap p { color: #8b949e; font-size: 13px; margin-top: 12px; }
+  .label { font-size: 11px; color: #6e7681; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+
+<h2>新デザイン（実SVG）</h2>
+<p class="subtitle">左: 現在のカード → 右: 新デザイン案</p>
+
+<div class="cards">
+
+<div class="card-wrap">
+<p class="label">現在</p>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="286" viewBox="0 0 400 286">
+  <defs>
+    <linearGradient id="hg1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#161b22" />
+      <stop offset="100%" stop-color="#0d1117" />
+    </linearGradient>
+    <linearGradient id="sg1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#a371f7" stop-opacity="0.6" />
+      <stop offset="50%" stop-color="#a371f7" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#a371f7" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="400" height="286" fill="#0d1117" rx="12" />
+  <rect x="0.5" y="0.5" width="399" height="285" fill="none" stroke="#30363d" stroke-width="1" rx="12" />
+  <rect x="1" y="1" width="398" height="64" fill="url(#hg1)" rx="11" />
+  <text x="24" y="34" font-size="18" fill="#c9d1d9" font-weight="bold" font-family="-apple-system, sans-serif">sakimyto</text>
+  <text x="24" y="52" font-size="10" fill="#8b949e" font-family="-apple-system, sans-serif">AI Dev Card</text>
+  <rect x="348" y="10" width="38" height="38" fill="#58a6ff" rx="10" />
+  <text x="367" y="36" font-size="22" fill="#fff" font-weight="bold" text-anchor="middle" font-family="-apple-system, sans-serif">B</text>
+  <line x1="24" y1="68" x2="376" y2="68" stroke="url(#sg1)" stroke-width="1" />
+
+  <!-- Style -->
+  <text x="24" y="94" font-size="11" fill="#8b949e" font-family="-apple-system, sans-serif">Style</text>
+  <rect x="90" y="78" width="95" height="26" fill="#8b949e" rx="13" />
+  <text x="100" y="96" font-size="12" fill="#fff" font-weight="bold" font-family="-apple-system, sans-serif">Minimalist</text>
+
+  <!-- Tools -->
+  <text x="24" y="132" font-size="11" fill="#8b949e" font-family="-apple-system, sans-serif">Tools</text>
+  <rect x="90" y="116" width="107" height="26" fill="#21262d" rx="13" />
+  <text x="100" y="134" font-size="10" fill="#d4a574" font-family="-apple-system, sans-serif">●</text>
+  <text x="112" y="134" font-size="12" fill="#c9d1d9" font-family="-apple-system, sans-serif">Claude Code</text>
+
+  <!-- Coauthor -->
+  <text x="24" y="172" font-size="11" fill="#8b949e" font-family="-apple-system, sans-serif">AI Co-Authored</text>
+  <rect x="150" y="160" width="190" height="14" fill="#21262d" rx="7" />
+  <rect x="150" y="160" width="34" height="14" fill="#a371f7" rx="7" />
+  <text x="348" y="172" font-size="13" fill="#c9d1d9" font-weight="bold" font-family="-apple-system, sans-serif">18%</text>
+  <text x="150" y="188" font-size="9" fill="#8b949e" font-family="-apple-system, sans-serif">25 / 140 commits</text>
+
+  <!-- Heatmap -->
+  <text x="24" y="214" font-size="11" fill="#8b949e" font-family="-apple-system, sans-serif">Activity</text>
+  <rect x="90" y="204" width="10" height="10" fill="#21262d" rx="2" />
+  <rect x="102" y="204" width="10" height="10" fill="#a371f7" rx="2" />
+  <rect x="114" y="204" width="10" height="10" fill="#21262d" rx="2" />
+  <rect x="126" y="204" width="10" height="10" fill="#a371f7" opacity="0.15" rx="2" />
+  <rect x="138" y="204" width="10" height="10" fill="#21262d" rx="2" />
+  <rect x="150" y="204" width="10" height="10" fill="#a371f7" opacity="0.15" rx="2" />
+  <rect x="162" y="204" width="10" height="10" fill="#21262d" rx="2" />
+  <rect x="174" y="204" width="10" height="10" fill="#a371f7" opacity="0.35" rx="2" />
+  <rect x="186" y="204" width="10" height="10" fill="#21262d" rx="2" />
+  <rect x="198" y="204" width="10" height="10" fill="#a371f7" opacity="0.35" rx="2" />
+  <rect x="210" y="204" width="10" height="10" fill="#a371f7" opacity="0.35" rx="2" />
+  <rect x="222" y="204" width="10" height="10" fill="#a371f7" opacity="0.15" rx="2" />
+  <rect x="234" y="204" width="10" height="10" fill="#21262d" rx="2" />
+  <rect x="246" y="204" width="10" height="10" fill="#21262d" rx="2" />
+  <rect x="258" y="204" width="10" height="10" fill="#a371f7" opacity="0.35" rx="2" />
+  <rect x="270" y="204" width="10" height="10" fill="#a371f7" opacity="0.35" rx="2" />
+  <rect x="282" y="204" width="10" height="10" fill="#a371f7" opacity="0.35" rx="2" />
+  <rect x="294" y="204" width="10" height="10" fill="#21262d" rx="2" />
+  <rect x="306" y="204" width="10" height="10" fill="#21262d" rx="2" />
+  <rect x="318" y="204" width="10" height="10" fill="#21262d" rx="2" />
+  <rect x="330" y="204" width="10" height="10" fill="#21262d" rx="2" />
+  <rect x="342" y="204" width="10" height="10" fill="#21262d" rx="2" />
+  <rect x="354" y="204" width="10" height="10" fill="#21262d" rx="2" />
+  <rect x="366" y="204" width="10" height="10" fill="#21262d" rx="2" />
+  <text x="24" y="240" font-size="9" fill="#8b949e" font-family="-apple-system, sans-serif">Peak 01:00 UTC</text>
+
+  <text x="200" y="276" font-size="9" fill="#8b949e" text-anchor="middle" font-family="-apple-system, sans-serif">devcard-ai</text>
+</svg>
+</div>
+
+<div class="card-wrap">
+<p class="label">新デザイン</p>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="286" viewBox="0 0 400 286">
+  <defs>
+    <linearGradient id="hg2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#161b22" />
+      <stop offset="100%" stop-color="#0d1117" />
+    </linearGradient>
+    <linearGradient id="sg2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#a371f7" stop-opacity="0.6" />
+      <stop offset="50%" stop-color="#a371f7" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#a371f7" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="tg-claude" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#d4a574" />
+      <stop offset="100%" stop-color="#c4956a" />
+    </linearGradient>
+    <linearGradient id="tg-cursor" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00b4d8" />
+      <stop offset="100%" stop-color="#0096b7" />
+    </linearGradient>
+  </defs>
+
+  <!-- Card background -->
+  <rect x="0" y="0" width="400" height="286" fill="#0d1117" rx="12" />
+  <rect x="0.5" y="0.5" width="399" height="285" fill="none" stroke="#30363d" stroke-width="1" rx="12" />
+
+  <!-- Header background -->
+  <rect x="1" y="1" width="398" height="64" fill="url(#hg2)" rx="11" />
+
+  <!-- Username + Pattern -->
+  <text x="24" y="34" font-size="18" fill="#e6edf3" font-weight="bold" font-family="-apple-system, sans-serif">sakimyto</text>
+  <text x="24" y="52" font-size="10" fill="#8b949e" font-family="-apple-system, sans-serif">AI Dev Card</text>
+  <text x="88" y="52" font-size="10" fill="#6e7681" font-family="-apple-system, sans-serif">·</text>
+  <text x="96" y="52" font-size="10" fill="#a371f7" font-weight="500" font-family="-apple-system, sans-serif">Pair Programmer</text>
+
+  <!-- Grade badge -->
+  <rect x="348" y="10" width="38" height="38" fill="#a371f7" rx="10" />
+  <rect x="348" y="10" width="38" height="38" fill="none" stroke="#fff" stroke-width="0.5" stroke-opacity="0.2" rx="10" />
+  <text x="367" y="36" font-size="22" fill="#fff" font-weight="bold" text-anchor="middle" font-family="-apple-system, sans-serif">A</text>
+
+  <!-- Separator -->
+  <line x1="24" y1="68" x2="376" y2="68" stroke="url(#sg2)" stroke-width="1" />
+
+  <!-- === TOOLS (y=80) === -->
+  <text x="24" y="92" font-size="10" fill="#6e7681" font-family="-apple-system, sans-serif" letter-spacing="0.5">TOOLS</text>
+
+  <!-- Stacked bar -->
+  <clipPath id="bar-clip">
+    <rect x="24" y="100" width="352" height="20" rx="10" />
+  </clipPath>
+  <rect x="24" y="100" width="352" height="20" fill="#21262d" rx="10" />
+  <g clip-path="url(#bar-clip)">
+    <rect x="24" y="100" width="253" height="20" fill="url(#tg-claude)" />
+    <rect x="277" y="100" width="99" height="20" fill="url(#tg-cursor)" />
+  </g>
+  <text x="150" y="114" font-size="10" fill="#0d1117" font-weight="600" text-anchor="middle" font-family="-apple-system, sans-serif">Claude  72%</text>
+  <text x="326" y="114" font-size="10" fill="#0d1117" font-weight="600" text-anchor="middle" font-family="-apple-system, sans-serif">Cursor  28%</text>
+
+  <!-- === USAGE (y=134) === -->
+  <text x="24" y="146" font-size="10" fill="#6e7681" font-family="-apple-system, sans-serif" letter-spacing="0.5">USAGE</text>
+
+  <!-- Donut chart -->
+  <!-- circumference = 2 * pi * 32 = 201.06 -->
+  <!-- feat 42% = 84.45, fix 25% = 50.27, test 20% = 40.21, refactor 13% = 26.14 -->
+  <circle cx="76" cy="192" r="32" fill="none" stroke="#161b22" stroke-width="10"/>
+
+  <!-- feat: starts at top (offset = circumference/4 = 50.27) -->
+  <circle cx="76" cy="192" r="32" fill="none" stroke="#3fb950" stroke-width="10"
+    stroke-dasharray="84.45 201.06" stroke-dashoffset="50.27"
+    stroke-linecap="butt"/>
+
+  <!-- fix: starts after feat (offset = 50.27 - 84.45 = -34.18) -->
+  <circle cx="76" cy="192" r="32" fill="none" stroke="#f47067" stroke-width="10"
+    stroke-dasharray="50.27 201.06" stroke-dashoffset="-34.18"
+    stroke-linecap="butt"/>
+
+  <!-- test: starts after fix (offset = -34.18 - 50.27 = -84.45) -->
+  <circle cx="76" cy="192" r="32" fill="none" stroke="#d29922" stroke-width="10"
+    stroke-dasharray="40.21 201.06" stroke-dashoffset="-84.45"
+    stroke-linecap="butt"/>
+
+  <!-- refactor: starts after test (offset = -84.45 - 40.21 = -124.66) -->
+  <circle cx="76" cy="192" r="32" fill="none" stroke="#58a6ff" stroke-width="10"
+    stroke-dasharray="26.14 201.06" stroke-dashoffset="-124.66"
+    stroke-linecap="butt"/>
+
+  <!-- Center label -->
+  <text x="76" y="189" font-size="14" fill="#e6edf3" font-weight="bold" text-anchor="middle" font-family="-apple-system, sans-serif">25</text>
+  <text x="76" y="201" font-size="8" fill="#8b949e" text-anchor="middle" font-family="-apple-system, sans-serif">commits</text>
+
+  <!-- Legend (right of donut) -->
+  <circle cx="134" cy="166" r="4" fill="#3fb950"/>
+  <text x="144" y="170" font-size="11" fill="#c9d1d9" font-family="-apple-system, sans-serif">Feature</text>
+  <text x="260" y="170" font-size="12" fill="#3fb950" font-weight="600" text-anchor="end" font-family="-apple-system, sans-serif">42%</text>
+
+  <circle cx="134" cy="186" r="4" fill="#f47067"/>
+  <text x="144" y="190" font-size="11" fill="#c9d1d9" font-family="-apple-system, sans-serif">Bug Fix</text>
+  <text x="260" y="190" font-size="12" fill="#f47067" font-weight="600" text-anchor="end" font-family="-apple-system, sans-serif">25%</text>
+
+  <circle cx="134" cy="206" r="4" fill="#d29922"/>
+  <text x="144" y="210" font-size="11" fill="#c9d1d9" font-family="-apple-system, sans-serif">Test</text>
+  <text x="260" y="210" font-size="12" fill="#d29922" font-weight="600" text-anchor="end" font-family="-apple-system, sans-serif">20%</text>
+
+  <circle cx="134" cy="226" r="4" fill="#58a6ff"/>
+  <text x="144" y="230" font-size="11" fill="#c9d1d9" font-family="-apple-system, sans-serif">Refactor</text>
+  <text x="260" y="230" font-size="12" fill="#58a6ff" font-weight="600" text-anchor="end" font-family="-apple-system, sans-serif">13%</text>
+
+  <!-- === LANGUAGES (right of legend) === -->
+  <text x="284" y="146" font-size="10" fill="#6e7681" font-family="-apple-system, sans-serif" letter-spacing="0.5">LANGUAGES</text>
+
+  <rect x="284" y="156" width="86" height="22" fill="#21262d" rx="11" />
+  <text x="296" y="171" font-size="11" fill="#3178c6" font-family="-apple-system, sans-serif">TypeScript</text>
+
+  <rect x="284" y="184" width="50" height="22" fill="#21262d" rx="11" />
+  <text x="296" y="199" font-size="11" fill="#00add8" font-family="-apple-system, sans-serif">Go</text>
+
+  <rect x="284" y="212" width="62" height="22" fill="#21262d" rx="11" />
+  <text x="296" y="227" font-size="11" fill="#3572a5" font-family="-apple-system, sans-serif">Python</text>
+
+  <!-- Footer -->
+  <text x="200" y="272" font-size="9" fill="#6e7681" text-anchor="middle" font-family="-apple-system, sans-serif">devcard-ai</text>
+</svg>
+</div>
+
+</div>
+
+<div style="max-width: 840px; margin: 32px auto 0; padding: 20px; background: #161b22; border-radius: 8px; border: 1px solid #30363d;">
+  <h3 style="margin: 0 0 12px; font-size: 14px;">変更点</h3>
+  <table style="width:100%; border-collapse:collapse; font-size: 13px;">
+    <tr style="border-bottom:1px solid #21262d;">
+      <td style="padding:6px 8px; color:#8b949e; width:100px;">Header</td>
+      <td style="padding:6px 8px; color:#3fb950;">+ 協働パターン (Pair Programmer)</td>
+    </tr>
+    <tr style="border-bottom:1px solid #21262d;">
+      <td style="padding:6px 8px; color:#8b949e;">Style</td>
+      <td style="padding:6px 8px; color:#f47067;">→ 削除（パターンに統合）</td>
+    </tr>
+    <tr style="border-bottom:1px solid #21262d;">
+      <td style="padding:6px 8px; color:#8b949e;">Tools</td>
+      <td style="padding:6px 8px; color:#3fb950;">→ 比率スタックバーに進化</td>
+    </tr>
+    <tr style="border-bottom:1px solid #21262d;">
+      <td style="padding:6px 8px; color:#8b949e;">Coauthor</td>
+      <td style="padding:6px 8px; color:#f47067;">→ 削除（Toolsバーに統合）</td>
+    </tr>
+    <tr style="border-bottom:1px solid #21262d;">
+      <td style="padding:6px 8px; color:#8b949e;">Heatmap</td>
+      <td style="padding:6px 8px; color:#f47067;">→ 削除</td>
+    </tr>
+    <tr style="border-bottom:1px solid #21262d;">
+      <td style="padding:6px 8px; color:#8b949e;">Usage</td>
+      <td style="padding:6px 8px; color:#58a6ff;">+ 新規：ドーナツ + 凡例</td>
+    </tr>
+    <tr>
+      <td style="padding:6px 8px; color:#8b949e;">Languages</td>
+      <td style="padding:6px 8px; color:#58a6ff;">+ 新規：言語バッジ</td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>

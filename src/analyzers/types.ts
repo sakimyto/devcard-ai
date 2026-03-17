@@ -1,29 +1,7 @@
 export interface CoauthorAnalysis {
-	totalCommits: number;
-	aiCommits: number;
-	rate: number; // 0-1
-}
-
-export interface DetectedTool {
-	id: string;
-	name: string;
-	repoCount: number;
-}
-
-export interface ToolsAnalysis {
-	tools: DetectedTool[];
-}
-
-export type StyleType = "TDD Architect" | "Vibe Coder" | "Orchestrator" | "Minimalist";
-
-export interface StyleAnalysis {
-	styles: StyleType[];
-}
-
-export interface HeatmapAnalysis {
-	hourly: number[]; // 24 elements, count of AI commits per hour (0-23)
-	peakHour: number;
-	totalAiCommits: number;
+  totalCommits: number
+  aiCommits: number
+  rate: number // 0-1
 }
 
 // === Score ===
