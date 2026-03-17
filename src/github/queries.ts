@@ -13,7 +13,7 @@ export const USER_REPOS_QUERY = `
           defaultBranchRef {
             target {
               ... on Commit {
-                history(first: 200) {
+                history(first: 100) {
                   nodes {
                     message
                     committedDate
