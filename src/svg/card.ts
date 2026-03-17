@@ -90,7 +90,7 @@ export function renderCard(data: CardData, options: CardOptions): string {
   ${modulesSvg.join('\n')}
 
   <!-- Footer -->
-  ${svgText(CARD_WIDTH / 2, cardHeight - 10, 'devcard-ai', { fontSize: 9, fill: theme.textSecondary, anchor: 'middle' })}
+  ${svgText(CARD_WIDTH / 2, cardHeight - 10, 'devcard-ai \u00B7 based on latest activity', { fontSize: 9, fill: theme.textSecondary, anchor: 'middle' })}
 </svg>`
 }
 
