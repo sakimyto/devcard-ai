@@ -30,6 +30,7 @@ export const themes: Record<string, Theme> = {
 		badgeBg: "#ddf4ff",
 		toolColors: {
 			claude: ['#d4a574', '#c4956a'],
+			codex: ['#10a37f', '#0d8c6d'],
 			copilot: ['#6e7681', '#5a6069'],
 			cursor: ['#00b4d8', '#0096b7'],
 			devin: ['#a371f7', '#8957e5'],
@@ -55,6 +56,7 @@ export const themes: Record<string, Theme> = {
 		badgeBg: "#1f2937",
 		toolColors: {
 			claude: ['#d4a574', '#c4956a'],
+			codex: ['#10a37f', '#0d8c6d'],
 			copilot: ['#6e7681', '#5a6069'],
 			cursor: ['#00b4d8', '#0096b7'],
 			devin: ['#a371f7', '#8957e5'],

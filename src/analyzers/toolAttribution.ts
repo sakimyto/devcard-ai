@@ -3,6 +3,7 @@ import type { ToolAttribution, ToolAttributionAnalysis } from './types'
 
 const TOOL_NAMES: Record<string, string> = {
   claude: 'Claude',
+  codex: 'Codex',
   copilot: 'Copilot',
   cursor: 'Cursor',
   devin: 'Devin',
@@ -25,6 +26,7 @@ function attributeTool(commit: GitHubCommit): string {
   if (login.endsWith('[bot]')) return 'unknown'
 
   if (msg.includes('@anthropic.com') || /co-authored-by:.*\bclaude\b/i.test(msg)) return 'claude'
+  if (msg.includes('@openai.com') || /co-authored-by:.*\bcodex\b/i.test(msg)) return 'codex'
   if (/co-authored-by:.*\bcopilot\b/i.test(msg)) return 'copilot'
   if (/co-authored-by:.*\bcursor\b/i.test(msg)) return 'cursor'
 
