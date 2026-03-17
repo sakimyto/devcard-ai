@@ -14,12 +14,14 @@ const mockUser: GitHubUser = {
             history: {
               nodes: [
                 {
+                  oid: 'abc123',
                   message:
                     'feat: add\n\nCo-Authored-By: Claude <noreply@anthropic.com>',
                   committedDate: '2026-03-14T00:00:00Z',
                   author: { user: { login: 'testuser' } },
                 },
                 {
+                  oid: 'def456',
                   message: 'fix: bug',
                   committedDate: '2026-03-13T00:00:00Z',
                   author: { user: { login: 'testuser' } },
@@ -100,6 +102,7 @@ describe('handleRequest', () => {
                 history: {
                   nodes: [
                     {
+                      oid: 'ghi789',
                       message: 'fix: bug',
                       committedDate: '2026-03-14T00:00:00Z',
                       author: { user: { login: 'testuser' } },

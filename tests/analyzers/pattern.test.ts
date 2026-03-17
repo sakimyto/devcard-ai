@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { analyzePattern } from '~/analyzers/pattern'
 import type { GitHubCommit } from '~/github/types'
 
+let oidCounter = 0
 const commit = (isAi: boolean, date: string): GitHubCommit => ({
+  oid: `sha-${++oidCounter}`,
   message: isAi ? 'feat: x\n\nCo-Authored-By: Claude <noreply@anthropic.com>' : 'manual commit',
   committedDate: date,
   author: { user: { login: 'user' } },

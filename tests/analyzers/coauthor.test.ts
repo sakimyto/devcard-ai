@@ -48,10 +48,12 @@ describe("isAiCommit", () => {
 });
 
 describe("analyzeCoauthor", () => {
+	let oidCounter = 0;
 	const makeCommit = (
 		message: string,
 		login: string | null = "testuser",
 	): GitHubCommit => ({
+		oid: `sha-${++oidCounter}`,
 		message,
 		committedDate: "2026-03-14T00:00:00Z",
 		author: { user: login ? { login } : null },

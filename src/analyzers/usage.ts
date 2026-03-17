@@ -18,13 +18,20 @@ function classifyCommit(message: string): UsageCategory {
 
 const ALL_CATEGORIES: UsageCategory[] = ['feature', 'bugfix', 'test', 'refactor']
 
-export function analyzeUsage(aiCommits: GitHubCommit[]): UsageAnalysis {
+export function analyzeUsage(
+  aiCommits: GitHubCommit[],
+  testCommitShas?: Set<string>,
+): UsageAnalysis {
   const counts = new Map<UsageCategory, number>(
     ALL_CATEGORIES.map((c) => [c, 0]),
   )
 
   for (const commit of aiCommits) {
-    const cat = classifyCommit(commit.message)
+    const prefixCat = classifyCommit(commit.message)
+    // If commit touches test files but prefix says otherwise, count as test
+    const cat = prefixCat !== 'test' && testCommitShas?.has(commit.oid)
+      ? 'test'
+      : prefixCat
     counts.set(cat, (counts.get(cat) ?? 0) + 1)
   }
 

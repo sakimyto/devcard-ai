@@ -30,11 +30,13 @@ interface FileCheck {
 }
 
 export interface GitHubCommit {
+	oid: string;
 	message: string;
 	committedDate: string;
 	author: {
 		user: { login: string } | null;
 	};
+	repoFullName?: string;
 }
 
 export interface GitHubQueryResponse {

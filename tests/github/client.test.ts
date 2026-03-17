@@ -16,6 +16,7 @@ describe("fetchUserData", () => {
 									history: {
 										nodes: [
 											{
+												oid: "abc123",
 												message:
 													"feat: add feature\n\nCo-Authored-By: Claude <noreply@anthropic.com>",
 												committedDate: "2026-03-14T00:00:00Z",

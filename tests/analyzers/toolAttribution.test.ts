@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { analyzeToolAttribution } from '~/analyzers/toolAttribution'
 import type { GitHubCommit } from '~/github/types'
 
+let oidCounter = 0
 const commit = (message: string, login: string | null = 'user'): GitHubCommit => ({
+  oid: `sha-${++oidCounter}`,
   message,
   committedDate: '2026-03-14T10:00:00Z',
   author: { user: login ? { login } : null },

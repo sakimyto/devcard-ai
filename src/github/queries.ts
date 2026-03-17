@@ -15,6 +15,7 @@ export const USER_REPOS_QUERY = `
               ... on Commit {
                 history(first: 100) {
                   nodes {
+                    oid
                     message
                     committedDate
                     author {

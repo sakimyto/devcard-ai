@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { analyzeUsage } from '~/analyzers/usage'
 import type { GitHubCommit } from '~/github/types'
 
+let oidCounter = 0
 const commit = (message: string): GitHubCommit => ({
+  oid: `sha-${++oidCounter}`,
   message,
   committedDate: '2026-03-14T10:00:00Z',
   author: { user: { login: 'user' } },
@@ -55,5 +57,18 @@ describe('analyzeUsage', () => {
     const result = analyzeUsage(commits)
     expect(result.categories[0].category).toBe('feature')
     expect(result.categories[1].category).toBe('bugfix')
+  })
+
+  it('reclassifies feat commit as test when SHA is in testCommitShas', () => {
+    const c = commit('feat: add analyzer with tests')
+    const testShas = new Set([c.oid])
+    const result = analyzeUsage([c], testShas)
+    expect(result.categories.find((cat) => cat.category === 'test')?.count).toBe(1)
+    expect(result.categories.find((cat) => cat.category === 'feature')?.count).toBe(0)
+  })
+
+  it('keeps test: prefix classification even without testCommitShas', () => {
+    const result = analyzeUsage([commit('test: unit test')])
+    expect(result.categories.find((cat) => cat.category === 'test')?.count).toBe(1)
   })
 })

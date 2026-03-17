@@ -43,7 +43,12 @@ export default {
       return octokit.graphql<GitHubQueryResponse>(query, variables)
     }
 
-    const result = await handleRequest({ user, modules, theme }, graphql)
+    const fetchCommitFiles = async (owner: string, repo: string, sha: string) => {
+      const { data } = await octokit.rest.repos.getCommit({ owner, repo, ref: sha })
+      return (data.files ?? []).map((f) => f.filename)
+    }
+
+    const result = await handleRequest({ user, modules, theme }, graphql, fetchCommitFiles)
 
     return new Response(result.svg, {
       status: result.status,

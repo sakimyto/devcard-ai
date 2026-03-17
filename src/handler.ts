@@ -25,9 +25,22 @@ type GraphqlFn = (
   variables: Record<string, unknown>,
 ) => Promise<GitHubQueryResponse>
 
+export type FetchCommitFilesFn = (
+  owner: string,
+  repo: string,
+  sha: string,
+) => Promise<string[]>
+
+const TEST_FILE_PATTERN = /(?:^|\/)(?:tests?|__tests__|spec)\/|\.(?:test|spec)\.[^/]+$/i
+
+export function hasTestFiles(files: string[]): boolean {
+  return files.some((f) => TEST_FILE_PATTERN.test(f))
+}
+
 export async function handleRequest(
   params: RequestParams,
   graphql: GraphqlFn,
+  fetchCommitFiles?: FetchCommitFilesFn,
 ): Promise<HandlerResult> {
   const { user, modules, theme } = params
 
@@ -51,8 +64,11 @@ export async function handleRequest(
       return { svg: renderErrorCard('No public repos', theme), status: 200 }
     }
 
-    const allCommits: GitHubCommit[] = repos.flatMap(
-      (r) => r.defaultBranchRef?.target.history.nodes ?? [],
+    const allCommits: GitHubCommit[] = repos.flatMap((r) =>
+      (r.defaultBranchRef?.target.history.nodes ?? []).map((c) => ({
+        ...c,
+        repoFullName: `${user}/${r.name}`,
+      })),
     )
 
     const thirtyDaysAgo = new Date()
@@ -74,7 +90,27 @@ export async function handleRequest(
       }
     }
 
-    const usage = analyzeUsage(aiCommits)
+    // Fetch file info for AI commits to detect test-related commits
+    const testCommitShas = new Set<string>()
+    if (fetchCommitFiles) {
+      const results = await Promise.all(
+        aiCommits.map(async (c) => {
+          const [owner, repo] = (c.repoFullName ?? '').split('/')
+          if (!owner || !repo) return null
+          try {
+            const files = await fetchCommitFiles(owner, repo, c.oid)
+            return hasTestFiles(files) ? c.oid : null
+          } catch {
+            return null
+          }
+        }),
+      )
+      for (const sha of results) {
+        if (sha) testCommitShas.add(sha)
+      }
+    }
+
+    const usage = analyzeUsage(aiCommits, testCommitShas)
     const languages = analyzeLanguages(repos)
     const pattern = analyzePattern(allCommits, aiCommits.length)
     const score = analyzeScore(toolAttribution, usage, hasRecentActivity)
