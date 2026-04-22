@@ -9,3 +9,12 @@ cpu_ms = 100
 
 [observability]
 enabled = true
+
+# Per-IP rate limit on the expensive GitHub-hitting paths. 60 requests per IP
+# per minute is generous for a README image (edge cache absorbs duplicates)
+# and well below the GitHub App's 5000/hr quota.
+[[unsafe.bindings]]
+name = "API_RATELIMIT"
+type = "ratelimit"
+namespace_id = "1001"
+simple = { limit = 60, period = 60 }

@@ -1,14 +1,19 @@
-import { App } from 'octokit'
+import { App } from '@octokit/app'
 import type { GitHubQueryResponse } from '../src/github/types'
 import { handleRequest } from '../src/handler'
 import { renderLandingPage } from '../src/landing'
 import { isBotRequest, renderOgpHtml, svgToPng } from '../src/ogp'
 import { MODULE_HEIGHTS } from '../src/svg/card'
 
+interface RateLimiter {
+  limit(opts: { key: string }): Promise<{ success: boolean }>
+}
+
 interface Env {
   GITHUB_APP_ID: string
   GITHUB_APP_PRIVATE_KEY: string
   GITHUB_APP_INSTALLATION_ID: string
+  API_RATELIMIT?: RateLimiter
 }
 
 let cachedApp: { app: App; appId: string } | null = null
@@ -47,6 +52,18 @@ function createGraphql(octokit: Awaited<ReturnType<App['getInstallationOctokit']
   }
 }
 
+async function rateLimited(req: Request, env: Env): Promise<boolean> {
+  if (!env.API_RATELIMIT) return false
+  const ip = req.headers.get('cf-connecting-ip') ?? 'unknown'
+  const { success } = await env.API_RATELIMIT.limit({ key: ip })
+  return !success
+}
+
+const RATE_LIMITED_RESPONSE = new Response('Rate limit exceeded', {
+  status: 429,
+  headers: { 'Retry-After': '60' },
+})
+
 
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
@@ -55,6 +72,7 @@ export default {
 
     // /og endpoint — returns PNG image
     if (pathname === '/og') {
+      if (await rateLimited(req, env)) return RATE_LIMITED_RESPONSE.clone()
       const { user, modules, theme } = parseParams(url)
 
       const githubApp = getApp(env)
@@ -109,6 +127,7 @@ export default {
     }
 
     // Normal request — return SVG
+    if (await rateLimited(req, env)) return RATE_LIMITED_RESPONSE.clone()
     const githubApp = getApp(env)
     const octokit = await githubApp.getInstallationOctokit(
       Number(env.GITHUB_APP_INSTALLATION_ID),
