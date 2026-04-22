@@ -132,6 +132,37 @@ describe('analyzeBadges', () => {
     expect(result.aiStreakDays).toBe(5)
   })
 
+  it('keeps streak when most recent commit is exactly 1 day ago (UTC boundary)', () => {
+    // NOW = midnight of 2026-03-12 UTC. Most recent commit day = 2026-03-11.
+    // daysSinceMostRecent = 1.0 (not > 1), so streak should NOT be reset.
+    const NOW = new Date('2026-03-12T00:00:00Z')
+    const commits = [
+      makeCommit('2026-03-11'),
+      makeCommit('2026-03-10'),
+      makeCommit('2026-03-09'),
+    ]
+    const tools: ToolAttributionAnalysis = {
+      tools: [{ toolId: 'claude', toolName: 'Claude', commitCount: 3, percentage: 100 }],
+      totalAiCommits: 3, verified: false,
+    }
+    const result = analyzeBadges(commits, tools, baseUsage, emptyVelocity, NOW)
+    expect(result.aiStreakDays).toBe(3)
+  })
+
+  it('resets streak when most recent commit is 2 days ago (just past boundary)', () => {
+    const NOW = new Date('2026-03-13T00:00:00Z')
+    const commits = [
+      makeCommit('2026-03-11'),
+      makeCommit('2026-03-10'),
+    ]
+    const tools: ToolAttributionAnalysis = {
+      tools: [{ toolId: 'claude', toolName: 'Claude', commitCount: 2, percentage: 100 }],
+      totalAiCommits: 2, verified: false,
+    }
+    const result = analyzeBadges(commits, tools, baseUsage, emptyVelocity, NOW)
+    expect(result.aiStreakDays).toBe(0)
+  })
+
   it('reports 0 streak when the most recent AI commit is stale (>1 day ago)', () => {
     // Historical run of 5 consecutive days; "now" is much later, no recent activity.
     const NOW = new Date('2026-04-22T00:00:00Z')
