@@ -2,3 +2,10 @@ name = "devcard-ai"
 main = "api/index.ts"
 compatibility_date = "2025-01-01"
 # account_id is set via CLOUDFLARE_ACCOUNT_ID env var
+
+# Cap CPU so adversarial inputs (e.g. huge SVG → PNG paths) can't burn budget.
+[limits]
+cpu_ms = 100
+
+[observability]
+enabled = true

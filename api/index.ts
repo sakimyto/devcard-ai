@@ -26,13 +26,18 @@ function getApp(env: Env): App {
 }
 
 const VALID_MODULES = new Set(Object.keys(MODULE_HEIGHTS))
+const VALID_THEMES = new Set(['light', 'dark'])
+// GitHub login spec: 1-39 chars, alphanumeric and single hyphens, not starting with hyphen.
+const GH_LOGIN_RE = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/
 
 function parseParams(url: URL) {
-  const user = url.searchParams.get('user') ?? ''
+  const rawUser = url.searchParams.get('user') ?? ''
+  const user = GH_LOGIN_RE.test(rawUser) ? rawUser : ''
   const modules = (url.searchParams.get('modules') ?? '')
     .split(',')
     .filter((m) => VALID_MODULES.has(m))
-  const theme = url.searchParams.get('theme') ?? 'light'
+  const rawTheme = url.searchParams.get('theme') ?? 'light'
+  const theme = VALID_THEMES.has(rawTheme) ? rawTheme : 'light'
   return { user, modules, theme }
 }
 
@@ -95,8 +100,7 @@ export default {
     // No user param → landing page
     const { user, modules, theme } = parseParams(url)
     if (!user && pathname === '/') {
-      const baseUrl = `${url.protocol}//${url.host}`
-      return new Response(renderLandingPage(baseUrl), {
+      return new Response(renderLandingPage(), {
         headers: {
           'Content-Type': 'text/html; charset=utf-8',
           'Cache-Control': 'public, max-age=3600, s-maxage=3600',

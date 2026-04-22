@@ -1,4 +1,4 @@
-export function renderLandingPage(baseUrl: string): string {
+export function renderLandingPage(): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,8 +8,6 @@ export function renderLandingPage(baseUrl: string): string {
   <meta name="description" content="A verifiable AI-builder credential for your GitHub profile. Ship velocity, tool attribution, and archetype — proof you can actually ship with AI." />
   <meta property="og:title" content="devcard-ai — AI Builder Passport" />
   <meta property="og:description" content="A verifiable AI-builder credential for your GitHub profile. Proof you can ship with AI." />
-  <meta property="og:image" content="${baseUrl}/og?user=sakimyto&theme=dark" />
-  <meta name="twitter:card" content="summary_large_image" />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -225,7 +223,7 @@ export function renderLandingPage(baseUrl: string): string {
   </footer>
 
   <script>
-    const BASE = '${baseUrl}'
+    // Same-origin: relative URLs avoid server-side baseUrl interpolation (XSS sink).
     let theme = 'light'
 
     function setTheme(t) {
@@ -239,13 +237,14 @@ export function renderLandingPage(baseUrl: string): string {
     function generate() {
       const user = document.getElementById('username').value.trim()
       if (!user) return
-      const url = BASE + '/?user=' + encodeURIComponent(user) + '&theme=' + theme
+      const relative = '/?user=' + encodeURIComponent(user) + '&theme=' + theme
+      const absolute = location.origin + relative
       const img = document.getElementById('preview')
-      img.src = url
+      img.src = relative
       img.style.display = 'block'
       img.alt = user + "'s AI Builder Passport"
 
-      const snippet = '![AI Builder Passport](' + url + ')'
+      const snippet = '![AI Builder Passport](' + absolute + ')'
       document.getElementById('snippet-text').textContent = snippet
       document.getElementById('snippet').classList.add('visible')
     }

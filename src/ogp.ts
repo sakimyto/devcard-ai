@@ -46,10 +46,14 @@ function escapeHtml(s: string): string {
 // hands us a raw query parameter, and XSS surfaced in tools like this has
 // historically bypassed later validation. Escape at the interpolation boundary.
 export function renderOgpHtml(user: string, baseUrl: string, theme: string): string {
-  const ogImageUrl = `${baseUrl}/og?user=${encodeURIComponent(user)}&theme=${encodeURIComponent(theme)}`
+  const safeImage = escapeHtml(
+    `${baseUrl}/og?user=${encodeURIComponent(user)}&theme=${encodeURIComponent(theme)}`,
+  )
+  // Relative meta-refresh avoids any dependency on the incoming Host header.
+  const safeRedirect = escapeHtml(
+    `/?user=${encodeURIComponent(user)}&theme=${encodeURIComponent(theme)}`,
+  )
   const safeUser = escapeHtml(user)
-  const safeImage = escapeHtml(ogImageUrl)
-  const safeRedirect = escapeHtml(ogImageUrl.replace('/og?', '/?'))
   const title = `${safeUser}&#39;s AI Builder Passport`
   const description = `See how ${safeUser} ships with AI — devcard-ai`
 

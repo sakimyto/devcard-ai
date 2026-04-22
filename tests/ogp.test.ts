@@ -59,4 +59,9 @@ describe('renderOgpHtml', () => {
     expect(html).not.toContain('<img onerror=alert(1)>')
     expect(html).toContain('&lt;img onerror=alert(1)&gt;')
   })
+
+  it('uses a relative URL for meta refresh (independent of host header)', () => {
+    const html = renderOgpHtml('testuser', 'https://evil.example.com', 'dark')
+    expect(html).toMatch(/http-equiv="refresh"[^>]+content="0;url=\/\?user=testuser/)
+  })
 })
