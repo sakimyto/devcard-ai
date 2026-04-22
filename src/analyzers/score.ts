@@ -1,14 +1,17 @@
-import type { ScoreAnalysis, ToolAttributionAnalysis, UsageAnalysis } from './types'
+import type { ScoreAnalysis, ToolAttributionAnalysis } from './types'
 
+// `totalCommitCount` is the denominator for aiRate — the count of ALL commits
+// (AI + non-AI). Passing only AI commits here makes aiRate saturate at 1 and
+// every active user becomes TIER S.
 export function analyzeScore(
   toolAttribution: ToolAttributionAnalysis,
-  usage: UsageAnalysis,
+  totalCommitCount: number,
   hasRecentActivity: boolean,
 ): ScoreAnalysis {
   const hasTools = toolAttribution.tools.length > 0
   const multipleTools = toolAttribution.tools.length >= 2
-  const aiRate = usage.totalCommits > 0
-    ? toolAttribution.totalAiCommits / usage.totalCommits
+  const aiRate = totalCommitCount > 0
+    ? toolAttribution.totalAiCommits / totalCommitCount
     : 0
   const activeAiCommits = aiRate > 0.1
   const recentActivity = hasRecentActivity

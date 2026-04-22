@@ -82,7 +82,7 @@ export async function handleRequest(
     const usage = analyzeUsage(aiCommits)
     const languages = analyzeLanguages(repos)
     const pattern = analyzePattern(allCommits, aiCommits.length)
-    const score = analyzeScore(toolAttribution, usage, hasRecentActivity)
+    const score = analyzeScore(toolAttribution, allCommits.length, hasRecentActivity)
     const velocity = analyzeVelocity(aiCommits)
     const badges = analyzeBadges(aiCommits, toolAttribution, usage, velocity)
 

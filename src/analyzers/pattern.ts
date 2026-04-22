@@ -13,17 +13,19 @@ export function analyzePattern(
 
   const aiRate = aiCommitCount / total
 
-  const sorted = [...allCommits].sort(
-    (a, b) => new Date(a.committedDate).getTime() - new Date(b.committedDate).getTime(),
-  )
+  // Tag once so the alternation walk is O(n), not O(n) × 2 isAiCommit calls.
+  const tagged = allCommits
+    .map((c) => ({
+      ts: Date.parse(c.committedDate),
+      isAi: isAiCommit(c.message, c.author?.user?.login ?? null),
+    }))
+    .sort((a, b) => a.ts - b.ts)
 
   let flips = 0
-  for (let i = 1; i < sorted.length; i++) {
-    const prevIsAi = isAiCommit(sorted[i - 1].message, sorted[i - 1].author?.user?.login ?? null)
-    const currIsAi = isAiCommit(sorted[i].message, sorted[i].author?.user?.login ?? null)
-    if (prevIsAi !== currIsAi) flips++
+  for (let i = 1; i < tagged.length; i++) {
+    if (tagged[i - 1].isAi !== tagged[i].isAi) flips++
   }
-  const alternationScore = sorted.length <= 1 ? 0 : flips / (sorted.length - 1)
+  const alternationScore = tagged.length <= 1 ? 0 : flips / (tagged.length - 1)
 
   let pattern: PatternType
   if (aiRate >= 0.6) {
