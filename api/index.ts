@@ -1,6 +1,8 @@
 import { App } from 'octokit'
 import type { GitHubQueryResponse } from '../src/github/types'
 import { handleRequest } from '../src/handler'
+import { renderLandingPage } from '../src/landing'
+import { isBotRequest, renderOgpHtml, svgToPng } from '../src/ogp'
 import { MODULE_HEIGHTS } from '../src/svg/card'
 
 interface Env {
@@ -25,30 +27,93 @@ function getApp(env: Env): App {
 
 const VALID_MODULES = new Set(Object.keys(MODULE_HEIGHTS))
 
+function parseParams(url: URL) {
+  const user = url.searchParams.get('user') ?? ''
+  const modules = (url.searchParams.get('modules') ?? '')
+    .split(',')
+    .filter((m) => VALID_MODULES.has(m))
+  const theme = url.searchParams.get('theme') ?? 'light'
+  return { user, modules, theme }
+}
+
+function createGraphql(octokit: Awaited<ReturnType<App['getInstallationOctokit']>>) {
+  return async (query: string, variables: Record<string, unknown>) => {
+    return octokit.graphql<GitHubQueryResponse>(query, variables)
+  }
+}
+
+
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url)
-    const user = url.searchParams.get('user') ?? ''
-    const modules = (url.searchParams.get('modules') ?? '')
-      .split(',')
-      .filter((m) => VALID_MODULES.has(m))
-    const theme = url.searchParams.get('theme') ?? 'light'
+    const pathname = url.pathname
 
+    // /og endpoint — returns PNG image
+    if (pathname === '/og') {
+      const { user, modules, theme } = parseParams(url)
+
+      const githubApp = getApp(env)
+      const octokit = await githubApp.getInstallationOctokit(
+        Number(env.GITHUB_APP_INSTALLATION_ID),
+      )
+
+      const result = await handleRequest(
+        { user, modules, theme },
+        createGraphql(octokit),
+      )
+
+      try {
+        const png = await svgToPng(result.svg)
+        return new Response(png as unknown as BodyInit, {
+          headers: {
+            'Content-Type': 'image/png',
+            'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+          },
+        })
+      } catch (error) {
+        console.error('SVG to PNG conversion failed:', error)
+        return new Response('Image generation failed', { status: 500 })
+      }
+    }
+
+    // Bot User-Agent → return OGP HTML
+    const userAgent = req.headers.get('user-agent') ?? ''
+    if (isBotRequest(userAgent)) {
+      const { user, theme } = parseParams(url)
+      if (user) {
+        const baseUrl = `${url.protocol}//${url.host}`
+        const html = renderOgpHtml(user, baseUrl, theme)
+        return new Response(html, {
+          headers: {
+            'Content-Type': 'text/html; charset=utf-8',
+            'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+          },
+        })
+      }
+    }
+
+    // No user param → landing page
+    const { user, modules, theme } = parseParams(url)
+    if (!user && pathname === '/') {
+      const baseUrl = `${url.protocol}//${url.host}`
+      return new Response(renderLandingPage(baseUrl), {
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+        },
+      })
+    }
+
+    // Normal request — return SVG
     const githubApp = getApp(env)
     const octokit = await githubApp.getInstallationOctokit(
       Number(env.GITHUB_APP_INSTALLATION_ID),
     )
 
-    const graphql = async (query: string, variables: Record<string, unknown>) => {
-      return octokit.graphql<GitHubQueryResponse>(query, variables)
-    }
-
-    const fetchCommitFiles = async (owner: string, repo: string, sha: string) => {
-      const { data } = await octokit.rest.repos.getCommit({ owner, repo, ref: sha })
-      return (data.files ?? []).map((f) => f.filename)
-    }
-
-    const result = await handleRequest({ user, modules, theme }, graphql, fetchCommitFiles)
+    const result = await handleRequest(
+      { user, modules, theme },
+      createGraphql(octokit),
+    )
 
     return new Response(result.svg, {
       status: result.status,

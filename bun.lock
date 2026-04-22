@@ -4,6 +4,7 @@
     "": {
       "name": "devcard-ai",
       "dependencies": {
+        "@resvg/resvg-wasm": "^2.6.2",
         "octokit": "^4.1.0",
       },
       "devDependencies": {
@@ -142,6 +143,8 @@
     "@octokit/webhooks": ["@octokit/webhooks@13.9.1", "", { "dependencies": { "@octokit/openapi-webhooks-types": "11.0.0", "@octokit/request-error": "^6.1.7", "@octokit/webhooks-methods": "^5.1.1" } }, "sha512-Nss2b4Jyn4wB3EAqAPJypGuCJFalz/ZujKBQQ5934To7Xw9xjf4hkr/EAByxQY7hp7MKd790bWGz7XYSTsHmaw=="],
 
     "@octokit/webhooks-methods": ["@octokit/webhooks-methods@5.1.1", "", {}, "sha512-NGlEHZDseJTCj8TMMFehzwa9g7On4KJMPVHDSrHxCQumL6uSQR8wIkP/qesv52fXqV1BPf4pTxwtS31ldAt9Xg=="],
+
+    "@resvg/resvg-wasm": ["@resvg/resvg-wasm@2.6.2", "", {}, "sha512-FqALmHI8D4o6lk/LRWDnhw95z5eO+eAa6ORjVg09YRR7BkcM6oPHU9uyC0gtQG5vpFLvgpeU4+zEAz2H8APHNw=="],
 
     "@rollup/rollup-android-arm-eabi": ["@rollup/rollup-android-arm-eabi@4.59.0", "", { "os": "android", "cpu": "arm" }, "sha512-upnNBkA6ZH2VKGcBj9Fyl9IGNPULcjXRlg0LLeaioQWueH30p6IXtJEbKAgvyv+mJaMxSm1l6xwDXYjpEMiLMg=="],
 
