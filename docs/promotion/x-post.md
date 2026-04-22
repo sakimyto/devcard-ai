@@ -1,10 +1,16 @@
-昔流行った GitHub Stats Card の「AI活用版」を作りました 🤖
+2020 年ごろ、みんな GitHub プロフィールに Stats Card 貼ってませんでした？
 
-Co-Authored-By トレイラーを解析して、どのAIツールをどう使っているかをカードにします。
+草の数、スター総数、Top Languages、Streak…
+あの「自分の開発ライフをカードで見せたい」気持ち、AI 時代にもう一回やりたくないですか。
 
-Claude / Codex / Copilot / Cursor / Windsurf / Aider / Cody / Amazon Q / Gemini / Devin / Sweep に対応。
+`devcard-ai` を作りました。あの頃の Stats Card の **AI ツール版** です 🤖
 
-README に貼るだけ👇
-`![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME)`
+Co-Authored-By トレイラを解析して、どの AI ツールでどう出荷してるかをカードにします。
+Claude / Codex / Copilot / Cursor / Windsurf / Aider / Cody / Amazon Q / Gemini / Devin / Sweep 対応。
+
+12 週ぶんの ship cadence sparkline (草の AI 版) や Verified ✓、Builder Archetype チップも入ってます。
+
+README に 1 行 👇
+`![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME&theme=dark)`
 
 https://devcard-ai.sakimyto.workers.dev/?user=sakimyto
