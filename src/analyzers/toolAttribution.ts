@@ -45,7 +45,7 @@ function attributeTool(commit: GitHubCommit): string {
 
 export function analyzeToolAttribution(aiCommits: GitHubCommit[]): ToolAttributionAnalysis {
   if (aiCommits.length === 0) {
-    return { tools: [], totalAiCommits: 0 }
+    return { tools: [], totalAiCommits: 0, verified: false }
   }
 
   const counts = new Map<string, number>()
@@ -64,5 +64,7 @@ export function analyzeToolAttribution(aiCommits: GitHubCommit[]): ToolAttributi
       percentage: Math.round((count / total) * 1000) / 10,
     }))
 
-  return { tools, totalAiCommits: total }
+  const verified = tools.some((t) => t.toolId !== 'unknown' && t.commitCount > 0)
+
+  return { tools, totalAiCommits: total, verified }
 }

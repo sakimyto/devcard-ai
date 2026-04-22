@@ -12,7 +12,7 @@ describe('renderToolsBarModule', () => {
         { toolId: 'claude', toolName: 'Claude', commitCount: 7, percentage: 70 },
         { toolId: 'cursor', toolName: 'Cursor', commitCount: 3, percentage: 30 },
       ],
-      totalAiCommits: 10,
+      totalAiCommits: 10, verified: false,
     }
     const svg = renderToolsBarModule(data, theme, 80)
     expect(svg).toContain('TOOLS')
@@ -25,7 +25,7 @@ describe('renderToolsBarModule', () => {
   it('renders single tool at full width', () => {
     const data: ToolAttributionAnalysis = {
       tools: [{ toolId: 'claude', toolName: 'Claude', commitCount: 5, percentage: 100 }],
-      totalAiCommits: 5,
+      totalAiCommits: 5, verified: false,
     }
     const svg = renderToolsBarModule(data, theme, 80)
     expect(svg).toContain('Claude')
@@ -33,7 +33,7 @@ describe('renderToolsBarModule', () => {
   })
 
   it('handles empty tools', () => {
-    const data: ToolAttributionAnalysis = { tools: [], totalAiCommits: 0 }
+    const data: ToolAttributionAnalysis = { tools: [], totalAiCommits: 0, verified: false }
     const svg = renderToolsBarModule(data, theme, 80)
     expect(svg).toContain('No tools detected')
   })

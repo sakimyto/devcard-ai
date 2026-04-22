@@ -1,9 +1,11 @@
+import { analyzeBadges } from './analyzers/badges'
 import { isAiCommit } from './analyzers/coauthor'
 import { analyzeLanguages } from './analyzers/languages'
 import { analyzePattern } from './analyzers/pattern'
 import { analyzeScore } from './analyzers/score'
 import { analyzeToolAttribution } from './analyzers/toolAttribution'
 import { analyzeUsage } from './analyzers/usage'
+import { analyzeVelocity } from './analyzers/velocity'
 import type { CardData } from './analyzers/types'
 import { fetchUserData } from './github/client'
 import type { GitHubCommit, GitHubQueryResponse } from './github/types'
@@ -25,22 +27,9 @@ type GraphqlFn = (
   variables: Record<string, unknown>,
 ) => Promise<GitHubQueryResponse>
 
-export type FetchCommitFilesFn = (
-  owner: string,
-  repo: string,
-  sha: string,
-) => Promise<string[]>
-
-const TEST_FILE_PATTERN = /(?:^|\/)(?:tests?|__tests__|spec)\/|\.(?:test|spec)\.[^/]+$/i
-
-export function hasTestFiles(files: string[]): boolean {
-  return files.some((f) => TEST_FILE_PATTERN.test(f))
-}
-
 export async function handleRequest(
   params: RequestParams,
   graphql: GraphqlFn,
-  fetchCommitFiles?: FetchCommitFilesFn,
 ): Promise<HandlerResult> {
   const { user, modules, theme } = params
 
@@ -90,30 +79,12 @@ export async function handleRequest(
       }
     }
 
-    // Fetch file info for AI commits to detect test-related commits
-    const testCommitShas = new Set<string>()
-    if (fetchCommitFiles) {
-      const results = await Promise.all(
-        aiCommits.map(async (c) => {
-          const [owner, repo] = (c.repoFullName ?? '').split('/')
-          if (!owner || !repo) return null
-          try {
-            const files = await fetchCommitFiles(owner, repo, c.oid)
-            return hasTestFiles(files) ? c.oid : null
-          } catch {
-            return null
-          }
-        }),
-      )
-      for (const sha of results) {
-        if (sha) testCommitShas.add(sha)
-      }
-    }
-
-    const usage = analyzeUsage(aiCommits, testCommitShas)
+    const usage = analyzeUsage(aiCommits)
     const languages = analyzeLanguages(repos)
     const pattern = analyzePattern(allCommits, aiCommits.length)
     const score = analyzeScore(toolAttribution, usage, hasRecentActivity)
+    const velocity = analyzeVelocity(aiCommits)
+    const badges = analyzeBadges(aiCommits, toolAttribution, usage, velocity)
 
     const cardData: CardData = {
       username: userData.login,
@@ -122,6 +93,8 @@ export async function handleRequest(
       usage,
       languages,
       pattern,
+      badges,
+      velocity,
     }
 
     const svg = renderCard(cardData, { theme, modules })

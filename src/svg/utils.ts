@@ -36,3 +36,32 @@ export function svgRect(
 	const rx = opts.rx ?? 0;
 	return `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="${fill}" rx="${rx}" />`;
 }
+
+export const PILL_CHAR_WIDTH = 5.8;
+export const PILL_PAD_X = 10;
+
+export function pillWidth(label: string, opts: { extra?: number } = {}): number {
+	return PILL_PAD_X * 2 + label.length * PILL_CHAR_WIDTH + (opts.extra ?? 0);
+}
+
+export function renderPill(
+	x: number,
+	y: number,
+	label: string,
+	opts: {
+		width?: number;
+		height?: number;
+		fill: string;
+		textColor: string;
+		fontSize?: number;
+		fontWeight?: string;
+		rx?: number;
+	},
+): string {
+	const h = opts.height ?? 18;
+	const w = opts.width ?? pillWidth(label);
+	const rx = opts.rx ?? h / 2;
+	const fontSize = opts.fontSize ?? 10;
+	return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${opts.fill}" rx="${rx}" />
+${svgText(x + w / 2, y + h - 5, label, { fontSize, fill: opts.textColor, fontWeight: opts.fontWeight ?? 'normal', anchor: 'middle' })}`;
+}

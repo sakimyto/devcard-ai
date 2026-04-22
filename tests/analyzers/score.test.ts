@@ -11,6 +11,7 @@ describe('analyzeScore', () => {
       percentage: 100 / toolCount,
     })),
     totalAiCommits,
+    verified: toolCount > 0,
   })
 
   const makeUsage = (totalCommits: number): UsageAnalysis => ({

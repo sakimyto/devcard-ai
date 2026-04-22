@@ -1,26 +1,30 @@
 import type { CardData } from '~/analyzers/types'
+import { renderBadgesModule } from './modules/badges'
 import { renderToolsBarModule } from './modules/toolsBar'
 import { renderUsageModule } from './modules/usage'
+import { renderVelocityModule } from './modules/velocity'
 import { getTheme } from './themes'
-import { svgRect, svgText } from './utils'
+import { pillWidth, renderPill, svgRect, svgText } from './utils'
 
 export interface CardOptions {
   theme: string
   modules: string[]
 }
 
-const DEFAULT_MODULES = ['toolsBar', 'usage']
+const DEFAULT_MODULES = ['toolsBar', 'velocity', 'badges', 'usage']
 const CARD_WIDTH = 400
-const HEADER_HEIGHT = 72
+const HEADER_HEIGHT = 84
 const PADDING_BOTTOM = 12
 const FOOTER_HEIGHT = 24
 
 export const MODULE_HEIGHTS: Record<string, number> = {
   toolsBar: 50,
+  velocity: 94,
+  badges: 54,
   usage: 110,
 }
 
-const GRADE_COLORS: Record<string, string> = {
+const TIER_COLORS: Record<string, string> = {
   S: '#a371f7',
   A: '#3fb950',
   B: '#58a6ff',
@@ -41,6 +45,12 @@ export function renderCard(data: CardData, options: CardOptions): string {
       case 'toolsBar':
         modulesSvg.push(renderToolsBarModule(data.toolAttribution, theme, yOffset))
         break
+      case 'velocity':
+        modulesSvg.push(renderVelocityModule(data.velocity, theme, yOffset))
+        break
+      case 'badges':
+        modulesSvg.push(renderBadgesModule(data.badges, theme, yOffset))
+        break
       case 'usage':
         modulesSvg.push(renderUsageModule(data.usage, data.languages, theme, yOffset))
         break
@@ -50,8 +60,44 @@ export function renderCard(data: CardData, options: CardOptions): string {
 
   const cardHeight = yOffset + PADDING_BOTTOM + FOOTER_HEIGHT
 
-  const gradeColor = GRADE_COLORS[data.score.grade] ?? theme.textSecondary
-  const subtitle = `AI Dev Card \u00B7 ${data.pattern.pattern}`
+  const tierColor = TIER_COLORS[data.score.grade] ?? theme.textSecondary
+  const archetype = data.pattern.pattern
+  const verified = data.toolAttribution.verified
+
+  const chipY = 56
+  const archetypeX = 24
+  const archetypeW = pillWidth(archetype)
+  const archetypeChip = renderPill(archetypeX, chipY, archetype, {
+    width: archetypeW,
+    fill: theme.badgeBg,
+    textColor: theme.accent,
+    fontWeight: '600',
+  })
+
+  const verifiedX = archetypeX + archetypeW + 6
+  const verifiedChip = verified
+    ? `
+    <rect x="${verifiedX}" y="${chipY}" width="66" height="18" fill="none" stroke="${theme.accent}" stroke-opacity="0.55" rx="9" />
+    <circle cx="${verifiedX + 9}" cy="${chipY + 9}" r="4" fill="${theme.accent}" />
+    ${svgText(verifiedX + 15, chipY + 13, '✓', { fontSize: 9, fill: '#ffffff', fontWeight: 'bold' })}
+    ${svgText(verifiedX + 22, chipY + 13, 'Verified', { fontSize: 9, fill: theme.text, fontWeight: '600' })}
+  `
+    : ''
+
+  const tierBoxSize = 46
+  const tierX = CARD_WIDTH - tierBoxSize - 14
+  const tierY = 10
+
+  const tierBadge = `
+    ${svgRect(tierX, tierY, tierBoxSize, tierBoxSize, { fill: tierColor, rx: 10 })}
+    <rect x="${tierX}" y="${tierY}" width="${tierBoxSize}" height="${tierBoxSize}" fill="none" stroke="#ffffff" stroke-width="0.5" stroke-opacity="0.25" rx="10" />
+    ${svgText(tierX + tierBoxSize / 2, tierY + 18, 'TIER', { fontSize: 7, fill: '#ffffff', fontWeight: 'bold', anchor: 'middle' })}
+    ${svgText(tierX + tierBoxSize / 2, tierY + 38, data.score.grade, { fontSize: 20, fill: '#ffffff', fontWeight: 'bold', anchor: 'middle' })}
+  `
+
+  const issuedDate = (data.velocity.firstAiDate ?? '').slice(0, 7)
+  const footerRight = issuedDate ? `issued ${issuedDate}` : 'verified'
+  const footerText = `AI Builder Passport · ${footerRight}`
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${CARD_WIDTH}" height="${cardHeight}" viewBox="0 0 ${CARD_WIDTH} ${cardHeight}">
   <defs>
@@ -73,16 +119,16 @@ export function renderCard(data: CardData, options: CardOptions): string {
   <rect x="0.5" y="0.5" width="${CARD_WIDTH - 1}" height="${cardHeight - 1}" fill="none" stroke="${theme.border}" stroke-width="1" rx="12" />
 
   <!-- Header background -->
-  <rect x="1" y="1" width="${CARD_WIDTH - 2}" height="${HEADER_HEIGHT - 8}" fill="url(#headerGrad)" rx="11" />
+  <rect x="1" y="1" width="${CARD_WIDTH - 2}" height="${HEADER_HEIGHT - 10}" fill="url(#headerGrad)" rx="11" />
 
-  <!-- Username -->
-  ${svgText(24, 34, data.username, { fontSize: 18, fill: theme.text, fontWeight: 'bold' })}
-  ${svgText(24, 52, subtitle, { fontSize: 10, fill: theme.textSecondary })}
+  <!-- Header: AI Builder eyebrow + username -->
+  ${svgText(24, 24, 'AI BUILDER', { fontSize: 9, fill: theme.textSecondary, fontWeight: '600' })}
+  ${svgText(24, 44, data.username, { fontSize: 18, fill: theme.text, fontWeight: 'bold' })}
+  ${archetypeChip}
+  ${verifiedChip}
 
-  <!-- Grade badge (top-right) -->
-  <rect x="${CARD_WIDTH - 52}" y="10" width="38" height="38" fill="${gradeColor}" rx="10" />
-  <rect x="${CARD_WIDTH - 52}" y="10" width="38" height="38" fill="none" stroke="#ffffff" stroke-width="0.5" stroke-opacity="0.2" rx="10" />
-  ${svgText(CARD_WIDTH - 33, 36, data.score.grade, { fontSize: 22, fill: '#ffffff', fontWeight: 'bold', anchor: 'middle' })}
+  <!-- Tier badge (top-right) -->
+  ${tierBadge}
 
   <!-- Separator -->
   <line x1="24" y1="${HEADER_HEIGHT - 4}" x2="${CARD_WIDTH - 24}" y2="${HEADER_HEIGHT - 4}" stroke="url(#sepGrad)" stroke-width="1" />
@@ -90,7 +136,7 @@ export function renderCard(data: CardData, options: CardOptions): string {
   ${modulesSvg.join('\n')}
 
   <!-- Footer -->
-  ${svgText(CARD_WIDTH / 2, cardHeight - 10, 'devcard-ai \u00B7 based on latest activity', { fontSize: 9, fill: theme.textSecondary, anchor: 'middle' })}
+  ${svgText(CARD_WIDTH / 2, cardHeight - 10, footerText, { fontSize: 9, fill: theme.textSecondary, anchor: 'middle' })}
 </svg>`
 }
 

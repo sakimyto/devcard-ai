@@ -26,6 +26,7 @@ export interface ToolAttribution {
 export interface ToolAttributionAnalysis {
 	tools: ToolAttribution[]
 	totalAiCommits: number
+	verified: boolean
 }
 
 // === Usage ===
@@ -58,6 +59,18 @@ export interface PatternAnalysis {
 	alternationScore: number
 }
 
+// === Velocity ===
+export interface VelocityAnalysis {
+	weeksActive: number          // distinct weeks with AI commits in last 12
+	commitsPerWeek: number       // total-in-window / weeksActive (1 decimal)
+	sparkline: number[]          // length 12, oldest → newest
+	firstAiDate: string | null   // 'YYYY-MM-DD'
+	daysSinceFirst: number       // days from first AI commit to now (UTC days)
+}
+
+// === Badges ===
+export type { Badge, BadgeAnalysis } from './badges'
+
 // === Card Data ===
 export interface CardData {
 	username: string
@@ -66,4 +79,6 @@ export interface CardData {
 	usage: UsageAnalysis
 	languages: LanguageAnalysis
 	pattern: PatternAnalysis
+	badges: import('./badges').BadgeAnalysis
+	velocity: VelocityAnalysis
 }
