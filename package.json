@@ -19,7 +19,7 @@
 		"vitest": "^3.0.0"
 	},
 	"dependencies": {
-		"@resvg/resvg-wasm": "^2.6.2",
-		"octokit": "^4.1.0"
+		"@octokit/app": "^16.1.2",
+		"@resvg/resvg-wasm": "^2.6.2"
 	}
 }
