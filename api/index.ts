@@ -59,10 +59,14 @@ async function rateLimited(req: Request, env: Env): Promise<boolean> {
   return !success
 }
 
-const RATE_LIMITED_RESPONSE = new Response('Rate limit exceeded', {
-  status: 429,
-  headers: { 'Retry-After': '60' },
-})
+function rateLimitedResponse(): Response {
+  // Constructed per-call — `new Response()` at module scope is disallowed
+  // on the Cloudflare Workers runtime (validation error 10021).
+  return new Response('Rate limit exceeded', {
+    status: 429,
+    headers: { 'Retry-After': '60' },
+  })
+}
 
 
 export default {
@@ -72,7 +76,7 @@ export default {
 
     // /og endpoint — returns PNG image
     if (pathname === '/og') {
-      if (await rateLimited(req, env)) return RATE_LIMITED_RESPONSE.clone()
+      if (await rateLimited(req, env)) return rateLimitedResponse()
       const { user, modules, theme } = parseParams(url)
 
       const githubApp = getApp(env)
@@ -127,7 +131,7 @@ export default {
     }
 
     // Normal request — return SVG
-    if (await rateLimited(req, env)) return RATE_LIMITED_RESPONSE.clone()
+    if (await rateLimited(req, env)) return rateLimitedResponse()
     const githubApp = getApp(env)
     const octokit = await githubApp.getInstallationOctokit(
       Number(env.GITHUB_APP_INSTALLATION_ID),
