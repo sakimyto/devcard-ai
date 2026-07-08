@@ -1,6 +1,6 @@
 import type { GitHubCommit } from '~/github/types'
-import type { ToolAttribution, ToolAttributionAnalysis } from './types'
 import { detectAiSignal } from './aiPatterns'
+import type { ToolAttribution, ToolAttributionAnalysis } from './types'
 
 const TOOL_NAMES: Record<string, string> = {
   claude: 'Claude',

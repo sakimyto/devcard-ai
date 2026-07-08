@@ -1,27 +1,27 @@
 {
-	"name": "devcard-ai",
-	"version": "0.1.0",
-	"private": true,
-	"type": "module",
-	"scripts": {
-		"dev": "bunx wrangler dev",
-		"deploy": "bunx wrangler deploy",
-		"test": "vitest run",
-		"test:watch": "vitest",
-		"typecheck": "tsc --noEmit",
-		"lint": "bunx biome check .",
-		"lint:fix": "bunx biome check --write ."
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^1.9.0",
-		"@cloudflare/workers-types": "^4.20250313.0",
-		"@types/pngjs": "^6.0.5",
-		"pngjs": "^7.0.0",
-		"typescript": "^5.7.0",
-		"vitest": "^3.0.0"
-	},
-	"dependencies": {
-		"@octokit/app": "^16.1.2",
-		"@resvg/resvg-wasm": "^2.6.2"
-	}
+  "name": "devcard-ai",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bunx wrangler dev",
+    "deploy": "bunx wrangler deploy",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "bunx biome check .",
+    "lint:fix": "bunx biome check --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "@cloudflare/workers-types": "^4.20250313.0",
+    "@types/pngjs": "^6.0.5",
+    "pngjs": "^7.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "@octokit/app": "^16.1.2",
+    "@resvg/resvg-wasm": "^2.6.2"
+  }
 }

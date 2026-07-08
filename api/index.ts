@@ -120,7 +120,6 @@ function rateLimitedResponse(): Response {
   })
 }
 
-
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url)
@@ -134,9 +133,7 @@ export default {
       if (await rateLimited(req, env)) return rateLimitedResponse()
 
       const githubApp = getApp(env)
-      const octokit = await githubApp.getInstallationOctokit(
-        Number(env.GITHUB_APP_INSTALLATION_ID),
-      )
+      const octokit = await githubApp.getInstallationOctokit(Number(env.GITHUB_APP_INSTALLATION_ID))
 
       const r = await buildCardData({ user, theme }, createGraphql(octokit))
       const svg =

@@ -55,10 +55,7 @@ describe('analyzeVelocity', () => {
 
   it('ignores commits older than the 12-week window for sparkline & weeksActive', () => {
     // 2025-06-01 is well outside 12-week window but should still set firstAiDate
-    const commits = [
-      commit('2025-06-01'),
-      commit('2026-04-20'),
-    ]
+    const commits = [commit('2025-06-01'), commit('2026-04-20')]
     const r = analyzeVelocity(commits, NOW)
     expect(r.weeksActive).toBe(1)
     expect(r.sparkline.reduce((a, b) => a + b, 0)).toBe(1)
@@ -67,11 +64,7 @@ describe('analyzeVelocity', () => {
   })
 
   it('is idempotent: same input → same output', () => {
-    const commits = [
-      commit('2026-04-01'),
-      commit('2026-03-15'),
-      commit('2026-02-10'),
-    ]
+    const commits = [commit('2026-04-01'), commit('2026-03-15'), commit('2026-02-10')]
     const a = analyzeVelocity(commits, NOW)
     const b = analyzeVelocity(commits, NOW)
     expect(a).toEqual(b)
@@ -85,11 +78,7 @@ describe('analyzeVelocity', () => {
   })
 
   it('handles commits on the same day as multiple events in one bin', () => {
-    const commits = [
-      commit('2026-04-20'),
-      commit('2026-04-20'),
-      commit('2026-04-20'),
-    ]
+    const commits = [commit('2026-04-20'), commit('2026-04-20'), commit('2026-04-20')]
     const r = analyzeVelocity(commits, NOW)
     expect(r.sparkline[11]).toBe(3)
     expect(r.weeksActive).toBe(1)

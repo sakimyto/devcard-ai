@@ -1,13 +1,13 @@
-import { analyzeEquipped } from './analyzers/equipped'
 import { isAiCommit } from './analyzers/coauthor'
+import { analyzeEquipped } from './analyzers/equipped'
 import { flavorText } from './analyzers/flavor'
 import { analyzeLanguages } from './analyzers/languages'
 import { analyzePattern } from './analyzers/pattern'
 import { analyzeStats } from './analyzers/stats'
 import { analyzeToolAttribution } from './analyzers/toolAttribution'
+import type { CardDataV2 } from './analyzers/types'
 import { analyzeUsage } from './analyzers/usage'
 import { WINDOW_DAYS, filterToWindow } from './analyzers/window'
-import type { CardDataV2 } from './analyzers/types'
 import { artSeed, cardSerial } from './card/serial'
 import { fetchUserData } from './github/client'
 import type { GitHubCommit, GitHubQueryResponse } from './github/types'
@@ -27,10 +27,7 @@ export interface HandlerResult {
   kind: HandlerKind
 }
 
-type GraphqlFn = (
-  query: string,
-  variables: Record<string, unknown>,
-) => Promise<GitHubQueryResponse>
+type GraphqlFn = (query: string, variables: Record<string, unknown>) => Promise<GitHubQueryResponse>
 
 export interface BuildResult {
   kind: HandlerKind

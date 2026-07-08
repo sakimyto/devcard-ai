@@ -36,7 +36,12 @@ describe('getCachedOrProduce', () => {
     const produce = vi.fn(async () => 'v2')
     await kv.put('k', JSON.stringify({ v: 'v1', at: NOW - 1000 * 60 }))
     const r = await getCachedOrProduce({
-      kv, key: 'k', freshTtlSec: 3600, staleTtlSec: 86400, now: () => NOW, produce,
+      kv,
+      key: 'k',
+      freshTtlSec: 3600,
+      staleTtlSec: 86400,
+      now: () => NOW,
+      produce,
     })
     expect(r).toEqual({ value: 'v1', cacheState: 'fresh' })
     expect(produce).not.toHaveBeenCalled()
@@ -46,7 +51,11 @@ describe('getCachedOrProduce', () => {
     const kv = fakeKv()
     await kv.put('k', JSON.stringify({ v: 'old', at: NOW - 1000 * 60 * 60 * 2 }))
     const r = await getCachedOrProduce({
-      kv, key: 'k', freshTtlSec: 3600, staleTtlSec: 86400, now: () => NOW,
+      kv,
+      key: 'k',
+      freshTtlSec: 3600,
+      staleTtlSec: 86400,
+      now: () => NOW,
       produce: async () => 'new',
     })
     expect(r).toEqual({ value: 'new', cacheState: 'miss' })
@@ -56,7 +65,11 @@ describe('getCachedOrProduce', () => {
     const kv = fakeKv()
     await kv.put('k', JSON.stringify({ v: 'old', at: NOW - 1000 * 60 * 60 * 2 }))
     const r = await getCachedOrProduce({
-      kv, key: 'k', freshTtlSec: 3600, staleTtlSec: 86400, now: () => NOW,
+      kv,
+      key: 'k',
+      freshTtlSec: 3600,
+      staleTtlSec: 86400,
+      now: () => NOW,
       produce: async () => {
         throw new Error('rate limited')
       },
@@ -69,7 +82,11 @@ describe('getCachedOrProduce', () => {
     await kv.put('k', JSON.stringify({ v: 'ancient', at: NOW - 1000 * 60 * 60 * 48 }))
     await expect(
       getCachedOrProduce({
-        kv, key: 'k', freshTtlSec: 3600, staleTtlSec: 86400, now: () => NOW,
+        kv,
+        key: 'k',
+        freshTtlSec: 3600,
+        staleTtlSec: 86400,
+        now: () => NOW,
         produce: async () => {
           throw new Error('down')
         },
@@ -80,7 +97,11 @@ describe('getCachedOrProduce', () => {
   it('shouldCache=false → returned but not stored', async () => {
     const kv = fakeKv()
     const r = await getCachedOrProduce({
-      kv, key: 'k', freshTtlSec: 3600, staleTtlSec: 86400, now: () => NOW,
+      kv,
+      key: 'k',
+      freshTtlSec: 3600,
+      staleTtlSec: 86400,
+      now: () => NOW,
       produce: async () => 'err-card',
       shouldCache: () => false,
     })
@@ -94,7 +115,11 @@ describe('getCachedOrProduce', () => {
       throw new Error('kv write down')
     }
     const r = await getCachedOrProduce({
-      kv, key: 'k', freshTtlSec: 3600, staleTtlSec: 86400, now: () => NOW,
+      kv,
+      key: 'k',
+      freshTtlSec: 3600,
+      staleTtlSec: 86400,
+      now: () => NOW,
       produce: async () => 'good-value',
     })
     expect(r).toEqual({ value: 'good-value', cacheState: 'miss' })
@@ -106,7 +131,11 @@ describe('getCachedOrProduce', () => {
       throw new Error('kv read down')
     }
     const r = await getCachedOrProduce({
-      kv, key: 'k', freshTtlSec: 3600, staleTtlSec: 86400, now: () => NOW,
+      kv,
+      key: 'k',
+      freshTtlSec: 3600,
+      staleTtlSec: 86400,
+      now: () => NOW,
       produce: async () => 'produced',
     })
     expect(r).toEqual({ value: 'produced', cacheState: 'miss' })
@@ -116,7 +145,11 @@ describe('getCachedOrProduce', () => {
     const kv = fakeKv()
     await kv.put('k', '{not json')
     const r = await getCachedOrProduce({
-      kv, key: 'k', freshTtlSec: 3600, staleTtlSec: 86400, now: () => NOW,
+      kv,
+      key: 'k',
+      freshTtlSec: 3600,
+      staleTtlSec: 86400,
+      now: () => NOW,
       produce: async () => 'fresh-value',
     })
     expect(r).toEqual({ value: 'fresh-value', cacheState: 'miss' })

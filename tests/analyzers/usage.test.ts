@@ -50,10 +50,7 @@ describe('analyzeUsage', () => {
   })
 
   it('sorts categories by count descending', () => {
-    const commits = [
-      commit('feat: a'), commit('feat: b'), commit('feat: c'),
-      commit('fix: d'),
-    ]
+    const commits = [commit('feat: a'), commit('feat: b'), commit('feat: c'), commit('fix: d')]
     const result = analyzeUsage(commits)
     expect(result.categories[0].category).toBe('feature')
     expect(result.categories[1].category).toBe('bugfix')

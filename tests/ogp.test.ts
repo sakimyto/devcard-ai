@@ -2,8 +2,8 @@ import { PNG } from 'pngjs'
 import { describe, expect, it } from 'vitest'
 import type { CardDataV2 } from '~/analyzers/types'
 import { isBotRequest, renderOgpHtml, svgToPng } from '~/ogp'
-import { renderOgShare } from '~/svg/v2/ogShare'
 import { themes } from '~/svg/themes'
+import { renderOgShare } from '~/svg/v2/ogShare'
 
 describe('isBotRequest', () => {
   it('detects Twitterbot', () => {
@@ -46,7 +46,7 @@ describe('renderOgpHtml', () => {
 
   it('includes user name in title', () => {
     const html = renderOgpHtml('sakimyto', 'https://example.com', 'light')
-    expect(html).toContain("sakimyto&#39;s AI Builder Passport")
+    expect(html).toContain('sakimyto&#39;s AI Builder Passport')
   })
 
   it('escapes HTML-special characters in user to prevent XSS', () => {
@@ -86,7 +86,15 @@ const OG_USERNAME = { pad: 72, baselineY: 180, fontSize: 56 }
 
 const PROBE_DATA: CardDataV2 = {
   username: 'testuser',
-  stats: { velocity: 82, diversity: 60, consistency: 74, points: 73, grade: 'S', aiCommitsInWindow: 120, activeWeeks: 9 },
+  stats: {
+    velocity: 82,
+    diversity: 60,
+    consistency: 74,
+    points: 73,
+    grade: 'S',
+    aiCommitsInWindow: 120,
+    activeWeeks: 9,
+  },
   toolAttribution: { tools: [], totalAiCommits: 120, verified: true },
   equipped: { equipped: [] },
   usage: { categories: [], totalCommits: 120 },

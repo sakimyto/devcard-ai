@@ -6,10 +6,7 @@ export interface RenderEvent {
 }
 
 // 計測はベストエフォート。失敗してもレンダリングを止めない
-export function recordRender(
-  dataset: AnalyticsEngineDataset | undefined,
-  e: RenderEvent,
-): void {
+export function recordRender(dataset: AnalyticsEngineDataset | undefined, e: RenderEvent): void {
   if (!dataset) return
   try {
     dataset.writeDataPoint({

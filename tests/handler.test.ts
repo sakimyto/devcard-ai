@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { handleRequest } from '~/handler'
 import type { GitHubQueryResponse } from '~/github/types'
+import { handleRequest } from '~/handler'
 
 const NOW = new Date('2026-07-08T12:00:00Z')
 const recent = (daysAgo: number) =>

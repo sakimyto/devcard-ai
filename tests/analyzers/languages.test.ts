@@ -2,10 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { analyzeLanguages } from '~/analyzers/languages'
 import type { GitHubRepo } from '~/github/types'
 
-const repo = (
-  lang: { name: string; color: string } | null,
-  hasAiConfig: boolean,
-): GitHubRepo => ({
+const repo = (lang: { name: string; color: string } | null, hasAiConfig: boolean): GitHubRepo => ({
   name: 'test',
   pushedAt: '2026-03-14T00:00:00Z',
   defaultBranchRef: null,

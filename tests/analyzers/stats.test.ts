@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { analyzeStats, gradeFromPoints } from '~/analyzers/stats'
-import type { GitHubCommit } from '~/github/types'
 import type { UsageAnalysis } from '~/analyzers/types'
+import type { GitHubCommit } from '~/github/types'
 
 const NOW = new Date('2026-07-08T12:00:00Z')
 

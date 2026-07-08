@@ -1,11 +1,8 @@
-import { isAiCommit } from './coauthor'
 import type { GitHubCommit } from '~/github/types'
+import { isAiCommit } from './coauthor'
 import type { PatternAnalysis, PatternType } from './types'
 
-export function analyzePattern(
-  allCommits: GitHubCommit[],
-  aiCommitCount: number,
-): PatternAnalysis {
+export function analyzePattern(allCommits: GitHubCommit[], aiCommitCount: number): PatternAnalysis {
   const total = allCommits.length
   if (total === 0) {
     return { pattern: 'Selective User', aiRate: 0, alternationScore: 0 }

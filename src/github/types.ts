@@ -1,44 +1,44 @@
 export interface GitHubUser {
-	login: string;
-	repositories: {
-		nodes: GitHubRepo[];
-	};
+  login: string
+  repositories: {
+    nodes: GitHubRepo[]
+  }
 }
 
 export interface GitHubRepo {
-	name: string;
-	pushedAt: string;
-	defaultBranchRef: {
-		target: {
-			history: {
-				nodes: GitHubCommit[];
-				totalCount: number;
-			};
-		};
-	} | null;
-	claudeMd: FileCheck | null;
-	agentsMd: FileCheck | null;
-	cursorrules: FileCheck | null;
-	cursorrulesDir: FileCheck | null;
-	githubCopilot: FileCheck | null;
-	claudeDir: FileCheck | null;
-	primaryLanguage: { name: string; color: string } | null;
+  name: string
+  pushedAt: string
+  defaultBranchRef: {
+    target: {
+      history: {
+        nodes: GitHubCommit[]
+        totalCount: number
+      }
+    }
+  } | null
+  claudeMd: FileCheck | null
+  agentsMd: FileCheck | null
+  cursorrules: FileCheck | null
+  cursorrulesDir: FileCheck | null
+  githubCopilot: FileCheck | null
+  claudeDir: FileCheck | null
+  primaryLanguage: { name: string; color: string } | null
 }
 
 interface FileCheck {
-	id: string;
+  id: string
 }
 
 export interface GitHubCommit {
-	oid: string;
-	message: string;
-	committedDate: string;
-	author: {
-		user: { login: string } | null;
-	};
-	repoFullName?: string;
+  oid: string
+  message: string
+  committedDate: string
+  author: {
+    user: { login: string } | null
+  }
+  repoFullName?: string
 }
 
 export interface GitHubQueryResponse {
-	user: GitHubUser | null;
+  user: GitHubUser | null
 }

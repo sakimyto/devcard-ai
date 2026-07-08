@@ -75,7 +75,7 @@ async function graphql(token: string, query: string, variables: Record<string, u
     throw new Error(`HTTP ${res.status}: ${text}`)
   }
 
-  const json = await res.json() as { data?: unknown; errors?: unknown }
+  const json = (await res.json()) as { data?: unknown; errors?: unknown }
 
   if (json.errors) {
     console.error('GraphQL errors:', JSON.stringify(json.errors, null, 2))
@@ -94,7 +94,7 @@ async function main() {
 
   console.log(`\n=== Fetching repos for: ${LOGIN} ===\n`)
 
-  const data = await graphql(token, USER_REPOS_QUERY, { login: LOGIN }) as {
+  const data = (await graphql(token, USER_REPOS_QUERY, { login: LOGIN })) as {
     user: {
       login: string
       repositories: {
@@ -123,8 +123,10 @@ async function main() {
   if (!data.user) {
     console.error('User not found or GitHub App lacks access to this user.')
     console.error('\nPossible causes:')
-    console.error('  1. GitHub App is not installed on sakimyto\'s account')
-    console.error('  2. GitHub App installation has "Selected repositories" access, not "All repositories"')
+    console.error("  1. GitHub App is not installed on sakimyto's account")
+    console.error(
+      '  2. GitHub App installation has "Selected repositories" access, not "All repositories"',
+    )
     console.error('  3. The PAT token does not have sufficient scope')
     process.exit(1)
   }
@@ -144,7 +146,14 @@ async function main() {
   }
 
   // Config file detection summary
-  const configFields = ['claudeMd', 'agentsMd', 'cursorrules', 'cursorrulesDir', 'githubCopilot', 'claudeDir'] as const
+  const configFields = [
+    'claudeMd',
+    'agentsMd',
+    'cursorrules',
+    'cursorrulesDir',
+    'githubCopilot',
+    'claudeDir',
+  ] as const
 
   console.log('=== Per-repo config file detection ===\n')
 
@@ -172,15 +181,19 @@ async function main() {
     console.log('\nMost likely root cause:')
     console.log('  The GitHub App installation uses "Selected repositories" access.')
     console.log('  Even though GraphQL can list repos (public data), the object() calls')
-    console.log('  for file-existence checks return null for repos outside the App\'s scope.')
-    console.log('\n  Alternatively, sakimyto\'s public repos genuinely do not contain')
+    console.log("  for file-existence checks return null for repos outside the App's scope.")
+    console.log("\n  Alternatively, sakimyto's public repos genuinely do not contain")
     console.log('  CLAUDE.md / .claude / .cursorrules / .cursor/rules /')
     console.log('  .github/copilot-instructions.md / AGENTS.md at HEAD of their default branch.')
     console.log('\n  Check: does ~/sakimemo or ~/devcard-ai have CLAUDE.md at repo root?')
     console.log('  These repos may be PRIVATE - the query only fetches PUBLIC repos.')
   } else {
-    console.log(`RESULT: ${repos.filter((r) => configFields.some((f) => r[f] !== null)).length} repo(s) have AI config files`)
-    console.log('Tools detection should work. Check analyzer logic if card still shows "None detected".')
+    console.log(
+      `RESULT: ${repos.filter((r) => configFields.some((f) => r[f] !== null)).length} repo(s) have AI config files`,
+    )
+    console.log(
+      'Tools detection should work. Check analyzer logic if card still shows "None detected".',
+    )
   }
 
   // Raw response for the first 3 repos

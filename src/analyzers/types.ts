@@ -1,98 +1,94 @@
 export interface CoauthorAnalysis {
-	totalCommits: number;
-	aiCommits: number;
-	rate: number; // 0-1
+  totalCommits: number
+  aiCommits: number
+  rate: number // 0-1
 }
 
 // === Stats (v2) ===
-export type Grade = "S" | "A" | "B" | "C" | "D";
+export type Grade = 'S' | 'A' | 'B' | 'C' | 'D'
 export interface StatsAnalysis {
-	velocity: number; // 0-100
-	diversity: number; // 0-100
-	consistency: number; // 0-100
-	points: number; // 0-100, V40/D30/C30
-	grade: Grade;
-	aiCommitsInWindow: number;
-	activeWeeks: number; // 0-12
+  velocity: number // 0-100
+  diversity: number // 0-100
+  consistency: number // 0-100
+  points: number // 0-100, V40/D30/C30
+  grade: Grade
+  aiCommitsInWindow: number
+  activeWeeks: number // 0-12
 }
 
 // === Tool Attribution ===
 export interface ToolAttribution {
-	toolId: string;
-	toolName: string;
-	commitCount: number;
-	percentage: number;
+  toolId: string
+  toolName: string
+  commitCount: number
+  percentage: number
 }
 export interface ToolAttributionAnalysis {
-	tools: ToolAttribution[];
-	totalAiCommits: number;
-	verified: boolean;
+  tools: ToolAttribution[]
+  totalAiCommits: number
+  verified: boolean
 }
 
 // === Equipped (config-file signals) ===
 export interface EquippedTool {
-	toolId: string;
-	toolName: string;
-	repoCount: number;
+  toolId: string
+  toolName: string
+  repoCount: number
 }
 export interface EquippedAnalysis {
-	equipped: EquippedTool[];
+  equipped: EquippedTool[]
 }
 
 // === Usage ===
-export type UsageCategory = "feature" | "bugfix" | "test" | "refactor";
+export type UsageCategory = 'feature' | 'bugfix' | 'test' | 'refactor'
 export interface UsageCategoryData {
-	category: UsageCategory;
-	count: number;
-	percentage: number;
+  category: UsageCategory
+  count: number
+  percentage: number
 }
 export interface UsageAnalysis {
-	categories: UsageCategoryData[];
-	totalCommits: number;
+  categories: UsageCategoryData[]
+  totalCommits: number
 }
 
 // === Languages ===
 export interface LanguageData {
-	name: string;
-	color: string;
-	repoCount: number;
+  name: string
+  color: string
+  repoCount: number
 }
 export interface LanguageAnalysis {
-	languages: LanguageData[];
+  languages: LanguageData[]
 }
 
 // === Pattern ===
-export type PatternType =
-	| "AI Native"
-	| "Pair Programmer"
-	| "Delegator"
-	| "Selective User";
+export type PatternType = 'AI Native' | 'Pair Programmer' | 'Delegator' | 'Selective User'
 export interface PatternAnalysis {
-	pattern: PatternType;
-	aiRate: number;
-	alternationScore: number;
+  pattern: PatternType
+  aiRate: number
+  alternationScore: number
 }
 
 // === Velocity ===
 export interface VelocityAnalysis {
-	weeksActive: number; // distinct weeks with AI commits in last 12
-	commitsPerWeek: number; // total-in-window / weeksActive (1 decimal)
-	sparkline: number[]; // length 12, oldest → newest
-	firstAiDate: string | null; // 'YYYY-MM-DD'
-	daysSinceFirst: number; // days from first AI commit to now (UTC days)
+  weeksActive: number // distinct weeks with AI commits in last 12
+  commitsPerWeek: number // total-in-window / weeksActive (1 decimal)
+  sparkline: number[] // length 12, oldest → newest
+  firstAiDate: string | null // 'YYYY-MM-DD'
+  daysSinceFirst: number // days from first AI commit to now (UTC days)
 }
 
 // === Card Data (v2) ===
 export interface CardDataV2 {
-	username: string;
-	stats: StatsAnalysis;
-	toolAttribution: ToolAttributionAnalysis;
-	equipped: EquippedAnalysis;
-	usage: UsageAnalysis;
-	languages: LanguageAnalysis;
-	pattern: PatternAnalysis;
-	flavor: string;
-	serial: string;
-	seed: number;
-	issuedYear: number;
+  username: string
+  stats: StatsAnalysis
+  toolAttribution: ToolAttributionAnalysis
+  equipped: EquippedAnalysis
+  usage: UsageAnalysis
+  languages: LanguageAnalysis
+  pattern: PatternAnalysis
+  flavor: string
+  serial: string
+  seed: number
+  issuedYear: number
 }

@@ -29,7 +29,8 @@ const MESSAGE_SIGNALS: Signal[] = [
   // ベンダードメイン単独（@anthropic.com 等）では判定しない（人間の社員 co-author を
   // 誤検出するため、ドメインの scoping 有無に関わらず全て除外し名称一致のみに統一）
   {
-    pattern: /co-authored-by:.*\bclaude\b|assisted-by:.*\bclaude\b|generated with \[?claude( code)?\]?|via claude\b/i,
+    pattern:
+      /co-authored-by:.*\bclaude\b|assisted-by:.*\bclaude\b|generated with \[?claude( code)?\]?|via claude\b/i,
     toolId: 'claude',
   },
   { pattern: /co-authored-by:.*\bcodex\b|via codex\b/i, toolId: 'codex' },

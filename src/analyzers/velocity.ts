@@ -42,17 +42,12 @@ export function analyzeVelocity(
 
   const totalInWindow = sparkline.reduce((a, b) => a + b, 0)
   const weeksActive = sparkline.filter((n) => n > 0).length
-  const commitsPerWeek =
-    weeksActive === 0 ? 0 : Math.round((totalInWindow / weeksActive) * 10) / 10
+  const commitsPerWeek = weeksActive === 0 ? 0 : Math.round((totalInWindow / weeksActive) * 10) / 10
 
   const firstAiDate =
-    firstTs === Number.POSITIVE_INFINITY
-      ? null
-      : new Date(firstTs).toISOString().slice(0, 10)
+    firstTs === Number.POSITIVE_INFINITY ? null : new Date(firstTs).toISOString().slice(0, 10)
   const daysSinceFirst =
-    firstTs === Number.POSITIVE_INFINITY
-      ? 0
-      : Math.floor((nowStart - firstTs) / MS_PER_DAY)
+    firstTs === Number.POSITIVE_INFINITY ? 0 : Math.floor((nowStart - firstTs) / MS_PER_DAY)
 
   return {
     weeksActive,
