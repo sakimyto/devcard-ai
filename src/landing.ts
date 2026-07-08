@@ -4,263 +4,89 @@ export function renderLandingPage(): string {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>devcard-ai — AI Builder Passport</title>
-  <meta name="description" content="A verifiable AI-builder credential for your GitHub profile. Ship velocity, tool attribution, and archetype — proof you can actually ship with AI." />
-  <meta property="og:title" content="devcard-ai — AI Builder Passport" />
-  <meta property="og:description" content="A verifiable AI-builder credential for your GitHub profile. Proof you can ship with AI." />
+  <title>devcard-ai — AI Builder Trading Card</title>
+  <meta name="description" content="Your AI coding style as a trading card. Rarity frames, archetype, stats — generated from your public GitHub activity. One line of markdown." />
+  <meta property="og:title" content="devcard-ai — AI Builder Trading Card" />
+  <meta property="og:description" content="Your AI coding style as a trading card. Proof you ship with AI." />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-      background: #0d1117;
-      color: #c9d1d9;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .hero {
-      text-align: center;
-      padding: 80px 24px 40px;
-      max-width: 600px;
-    }
-    .hero h1 {
-      font-size: 2.4rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #a371f7, #58a6ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 16px;
-    }
-    .hero p {
-      font-size: 1.1rem;
-      color: #8b949e;
-      line-height: 1.6;
-    }
-    .input-section {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      margin-top: 32px;
-      flex-wrap: wrap;
-      padding: 0 24px;
-    }
-    input[type="text"] {
-      padding: 12px 16px;
-      font-size: 16px;
-      border: 1px solid #30363d;
-      border-radius: 8px;
-      background: #161b22;
-      color: #c9d1d9;
-      width: 260px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    input[type="text"]:focus { border-color: #a371f7; }
-    input[type="text"]::placeholder { color: #484f58; }
-    button {
-      padding: 12px 24px;
-      font-size: 16px;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    button:hover { opacity: 0.85; }
-    .btn-primary { background: #a371f7; color: #fff; }
-    .btn-secondary {
-      background: #21262d;
-      color: #c9d1d9;
-      border: 1px solid #30363d;
-    }
-    .preview-area {
-      margin-top: 40px;
-      min-height: 200px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-    }
-    .preview-area img {
-      max-width: 400px;
-      width: 100%;
-      border-radius: 12px;
-    }
-    .snippet-box {
-      display: none;
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 8px;
-      padding: 16px;
-      max-width: 500px;
-      width: calc(100% - 48px);
-      position: relative;
-    }
-    .snippet-box.visible { display: block; }
-    .snippet-box code {
-      font-family: 'SF Mono', Consolas, monospace;
-      font-size: 13px;
-      color: #79c0ff;
-      word-break: break-all;
-    }
-    .snippet-box .copy-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      padding: 4px 12px;
-      font-size: 12px;
-      background: #30363d;
-      color: #c9d1d9;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .theme-toggle {
-      margin-top: 12px;
-      display: flex;
-      gap: 8px;
-    }
-    .theme-toggle button {
-      padding: 6px 14px;
-      font-size: 13px;
-      border-radius: 6px;
-    }
-    .theme-toggle button.active {
-      background: #a371f7;
-      color: #fff;
-      border-color: #a371f7;
-    }
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      max-width: 640px;
-      margin: 48px 24px;
-      width: calc(100% - 48px);
-    }
-    .feature {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 10px;
-      padding: 20px;
-    }
-    .feature h3 { font-size: 14px; color: #f0f6fc; margin-bottom: 6px; }
-    .feature p { font-size: 13px; color: #8b949e; line-height: 1.5; }
-    footer {
-      margin-top: auto;
-      padding: 32px;
-      color: #484f58;
-      font-size: 13px;
-    }
-    footer a { color: #58a6ff; text-decoration: none; }
-    .tools-list {
-      margin-top: 8px;
-      font-size: 12px;
-      color: #6e7681;
-      max-width: 500px;
-      text-align: center;
-      line-height: 1.8;
-    }
-    .tools-list span {
-      display: inline-block;
-      padding: 2px 8px;
-      background: #21262d;
-      border-radius: 12px;
-      margin: 2px;
-    }
+    :root { --bg: #0d1117; --panel: #161b22; --border: #30363d; --text: #c9d1d9; --muted: #8b949e; --accent: #a371f7 }
+    * { margin: 0; padding: 0; box-sizing: border-box }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6 }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 48px 24px }
+    h1 { font-size: 40px; letter-spacing: -0.02em }
+    .sub { color: var(--muted); font-size: 18px; margin: 12px 0 32px }
+    .hero-card { display: block; margin: 0 auto 40px; max-width: 375px; width: 100% }
+    .builder { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 32px }
+    .builder label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px }
+    .row { display: flex; gap: 8px; flex-wrap: wrap }
+    input#username-input { flex: 1; min-width: 200px; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 10px 14px; border-radius: 8px; font-size: 15px }
+    button { background: var(--accent); border: 0; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 15px; cursor: pointer; font-weight: 600 }
+    button.ghost { background: transparent; border: 1px solid var(--border); color: var(--text) }
+    pre#markdown-output { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-top: 16px; overflow-x: auto; font-size: 13px; white-space: pre-wrap; word-break: break-all }
+    .steps { color: var(--muted); font-size: 14px; margin-top: 10px }
+    footer { color: var(--muted); font-size: 13px; margin-top: 48px; text-align: center }
+    a { color: var(--accent) }
   </style>
 </head>
 <body>
-  <div class="hero">
-    <h1>AI Builder Passport</h1>
-    <p>A verifiable credential for your GitHub profile.<br>Ship velocity, tool fluency, archetype — the signals recruiters of AI-native teams actually look for.</p>
-  </div>
-
-  <div class="input-section">
-    <input type="text" id="username" placeholder="GitHub username" />
-    <button class="btn-primary" onclick="generate()">Generate</button>
-  </div>
-
-  <div class="theme-toggle">
-    <button class="btn-secondary active" id="btn-light" onclick="setTheme('light')">Light</button>
-    <button class="btn-secondary" id="btn-dark" onclick="setTheme('dark')">Dark</button>
-  </div>
-
-  <div class="preview-area">
-    <img id="preview" alt="" style="display:none" />
-    <div class="snippet-box" id="snippet">
-      <button class="copy-btn" onclick="copySnippet()">Copy</button>
-      <code id="snippet-text"></code>
+  <div class="wrap">
+    <h1>Your AI coding style,<br/>as a trading card.</h1>
+    <p class="sub">devcard-ai — AI Builder Trading Card. Rarity frame, archetype, stats. Generated from your public GitHub activity. Embedded with one line of markdown.</p>
+    <img class="hero-card" src="/?user=sakimyto&theme=dark" alt="Example AI Builder Trading Card" />
+    <div class="builder">
+      <label for="username-input">GitHub username</label>
+      <div class="row">
+        <input id="username-input" placeholder="octocat" autocomplete="off" spellcheck="false" />
+        <button id="generate-button">Summon my card</button>
+      </div>
+      <pre id="markdown-output" hidden></pre>
+      <div class="row" style="margin-top:12px">
+        <button id="copy-button" hidden>Copy markdown</button>
+        <a id="share-x" hidden target="_blank" rel="noopener"><button class="ghost">Share on X</button></a>
+      </div>
+      <p class="steps">1. Summon → 2. Copy → 3. Paste into your profile README. Done in 60 seconds.</p>
     </div>
+    <footer>
+      <a href="https://github.com/sakimyto/devcard-ai">GitHub</a> · MIT · stats from public repos, last 12 weeks
+    </footer>
   </div>
-
-  <div class="tools-list">
-    <span>Claude</span><span>Codex</span><span>Copilot</span><span>Cursor</span><span>Windsurf</span><span>Aider</span><span>Cody</span><span>Amazon Q</span><span>Gemini</span><span>Devin</span><span>Sweep</span>
-  </div>
-
-  <div class="features">
-    <div class="feature">
-      <h3>Verified, not self-declared</h3>
-      <p>Derived from Co-Authored-By commit trailers — the non-fakeable paper trail of real AI usage.</p>
-    </div>
-    <div class="feature">
-      <h3>Ship Velocity</h3>
-      <p>Active weeks, AI commits per week, and a 12-week cadence sparkline. "Can they still ship?" — at a glance.</p>
-    </div>
-    <div class="feature">
-      <h3>Builder Archetype</h3>
-      <p>AI Native, Pair Programmer, Delegator, or Selective User — so AI-native teams can filter by fit.</p>
-    </div>
-    <div class="feature">
-      <h3>Tier + Badges</h3>
-      <p>Tier S–D anchored on tool breadth, AI commit rate, and recency. Shipper, Parallel, TDD-with-AI, and more.</p>
-    </div>
-  </div>
-
-  <footer>
-    <a href="https://github.com/sakimyto/devcard-ai">GitHub</a> · devcard-ai
-  </footer>
-
   <script>
-    // Same-origin: relative URLs avoid server-side baseUrl interpolation (XSS sink).
-    let theme = 'light'
+    const RE = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/
+    const input = document.getElementById('username-input')
+    const output = document.getElementById('markdown-output')
+    const copyBtn = document.getElementById('copy-button')
+    const shareX = document.getElementById('share-x')
+    const base = location.origin
 
-    function setTheme(t) {
-      theme = t
-      document.getElementById('btn-light').classList.toggle('active', t === 'light')
-      document.getElementById('btn-dark').classList.toggle('active', t === 'dark')
-      const user = document.getElementById('username').value.trim()
-      if (user) generate()
+    function summon() {
+      const u = input.value.trim()
+      if (!RE.test(u)) { input.focus(); return }
+      const cardUrl = base + '/?user=' + encodeURIComponent(u) + '&theme=dark'
+      // リンク先は /#username — LP に着地しつつ持ち主を引き継ぎ、着地側で自動召喚する
+      const md = '[![AI Builder Trading Card](' + cardUrl + ')](' + base + '/#' + encodeURIComponent(u) + ')'
+      output.textContent = md
+      output.hidden = false
+      copyBtn.hidden = false
+      shareX.hidden = false
+      shareX.href = 'https://twitter.com/intent/tweet?text=' +
+        encodeURIComponent('Summoned my AI Builder Trading Card 🃏 ' + base + '/#' + u)
+      const hero = document.querySelector('.hero-card')
+      hero.src = cardUrl
     }
 
-    function generate() {
-      const user = document.getElementById('username').value.trim()
-      if (!user) return
-      const relative = '/?user=' + encodeURIComponent(user) + '&theme=' + theme
-      const absolute = location.origin + relative
-      const img = document.getElementById('preview')
-      img.src = relative
-      img.style.display = 'block'
-      img.alt = user + "'s AI Builder Passport"
-
-      const snippet = '![AI Builder Passport](' + absolute + ')'
-      document.getElementById('snippet-text').textContent = snippet
-      document.getElementById('snippet').classList.add('visible')
-    }
-
-    function copySnippet() {
-      const text = document.getElementById('snippet-text').textContent
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = document.querySelector('.copy-btn')
-        btn.textContent = 'Copied!'
-        setTimeout(() => btn.textContent = 'Copy', 1500)
-      })
-    }
-
-    document.getElementById('username').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') generate()
+    document.getElementById('generate-button').addEventListener('click', summon)
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') summon() })
+    copyBtn.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(output.textContent)
+      copyBtn.textContent = 'Copied!'
+      setTimeout(() => { copyBtn.textContent = 'Copy markdown' }, 1500)
     })
+
+    // 事前入力: バッジ/シェアリンク経由の /#username を最優先、次に ?user=（保険）
+    const fromHash = location.hash.length > 1 ? decodeURIComponent(location.hash.slice(1)) : ''
+    const fromQuery = new URLSearchParams(location.search).get('user')
+    const prefill = RE.test(fromHash) ? fromHash : (fromQuery && RE.test(fromQuery) ? fromQuery : '')
+    if (prefill) { input.value = prefill; summon() }
   </script>
 </body>
 </html>`
