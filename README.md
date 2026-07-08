@@ -1,37 +1,40 @@
 # devcard-ai
 
-AI Dev Card for your GitHub profile. Shows what AI tools you use, how you use them, and in what languages.
+Your AI coding style, as a trading card. Rarity frame, archetype, stats — generated from your public GitHub activity and embedded with one line of markdown.
 
-[![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/?user=sakimyto&theme=dark)](https://devcard-ai.sakimyto.workers.dev/?user=sakimyto)
+[![AI Builder Trading Card](https://devcard-ai.sakimyto.workers.dev/?user=sakimyto&theme=dark)](https://devcard-ai.sakimyto.workers.dev/#sakimyto)
 
 ## Add to your README
 
 Copy this into your GitHub profile README and replace `YOUR_USERNAME`:
 
 ```markdown
-[![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME&theme=dark)](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME)
+[![AI Builder Trading Card](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME&theme=dark)](https://devcard-ai.sakimyto.workers.dev/#YOUR_USERNAME)
 ```
 
 <details>
 <summary>Light theme</summary>
 
 ```markdown
-[![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME&theme=light)](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME)
+[![AI Builder Trading Card](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME&theme=light)](https://devcard-ai.sakimyto.workers.dev/#YOUR_USERNAME)
 ```
 
 </details>
 
-## What it shows
+Or visit the [card builder](https://devcard-ai.sakimyto.workers.dev/) — summon, copy, paste. Done in 60 seconds.
 
-| Section | Description |
+## The card
+
+| Element | Description |
 |---------|-------------|
-| **Tools** | Which AI tools you use (Claude, Copilot, Cursor, etc.) detected from `Co-Authored-By` trailers |
-| **Usage** | What you use AI for — Feature, Bug Fix, Test, Refactor — from conventional commit prefixes |
-| **Languages** | Your top 3 programming languages across repos |
-| **Pattern** | Your collaboration style: AI Native, Pair Programmer, Delegator, or Selective User |
-| **Grade** | S/A/B/C/D score based on tool diversity, AI activity, and recent commits |
+| **Rarity frame** | Your tier decides the frame: S = animated holo, A = gold, B = silver, C = bronze, D = common |
+| **Archetype** | Your collaboration class: AI Native, Pair Programmer, Delegator, or Selective User |
+| **Generative art** | A geometric artwork seeded by your username — unique to you, reproducible forever |
+| **Stats** | VELOCITY (commit cadence), DIVERSITY (tools × usage spread), CONSISTENCY (active weeks) — each 0-100 |
+| **Loadout** | AI tools detected from commit evidence (`Co-Authored-By`, generator markers, bots), plus `equipped` badges from config files like `CLAUDE.md` / `.cursorrules` |
+| **Serial** | Card number derived from your username hash |
 
-> Based on latest activity across your repositories.
+> All stats come from **public repositories, last 12 weeks** (`public · 12wk` on the card). Every metric shares the same window, so the card never contradicts itself.
 
 ## Parameters
 
@@ -45,7 +48,8 @@ Copy this into your GitHub profile README and replace `YOUR_USERNAME`:
 1. Fork this repo
 2. Create a GitHub App with `Repository contents: read` permission
 3. Install the App on your account
-4. Deploy to Cloudflare Workers:
+4. Create the KV namespace and update `wrangler.toml` with its id: `bunx wrangler kv namespace create DEVCARD_KV`
+5. Deploy to Cloudflare Workers:
 
 ```bash
 bun install
