@@ -1,4 +1,5 @@
 import { App } from '@octokit/app'
+import { recordRender } from '../src/analytics'
 import { getCachedOrProduce } from '../src/cache'
 import type { GitHubQueryResponse } from '../src/github/types'
 import { buildCardData, handleRequest } from '../src/handler'
@@ -16,6 +17,7 @@ interface Env {
   GITHUB_APP_PRIVATE_KEY: string
   GITHUB_APP_INSTALLATION_ID: string
   DEVCARD_KV: KVNamespace
+  CARD_ANALYTICS?: AnalyticsEngineDataset
   API_RATELIMIT?: RateLimiter
 }
 
@@ -144,6 +146,7 @@ export default {
 
       try {
         const png = await svgToPng(svg, 1200)
+        recordRender(env.CARD_ANALYTICS, { user, theme, kind: 'og', cacheState: 'none' })
         return new Response(png as unknown as BodyInit, {
           headers: {
             'Content-Type': 'image/png',
@@ -192,6 +195,7 @@ export default {
     // Normal request — return SVG（KV stale-if-error キャッシュ経由）
     if (await rateLimited(req, env)) return rateLimitedResponse()
     const card = await resolveCard(user, theme, env)
+    recordRender(env.CARD_ANALYTICS, { user, theme, kind: card.kind, cacheState: card.cacheState })
 
     // not_found: HTML を明示要求するクライアント（ブラウザ直叩き）には 404、
     // 画像コンテキスト（GitHub camo / <img>）には 200 + エラーカード SVG を返す。

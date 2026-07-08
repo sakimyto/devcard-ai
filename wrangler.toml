@@ -31,3 +31,8 @@ fallthrough = true
 [[kv_namespaces]]
 binding = "DEVCARD_KV"
 id = "ca24610c06d74e7e933bc45534c49451"
+
+# distinct レンダリングユーザー計測（KPI: 30日 distinct index1）
+[[analytics_engine_datasets]]
+binding = "CARD_ANALYTICS"
+dataset = "devcard_renders"
