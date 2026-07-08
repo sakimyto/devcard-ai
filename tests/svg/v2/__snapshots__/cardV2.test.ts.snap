@@ -804,28 +804,95 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 </svg>"
 `;
 
-exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-S-light 1`] = `
+exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-A-dark 1`] = `
 "<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-<defs><linearGradient id="holoGrad" x1="0" y1="0" x2="1" y2="1">
-  <stop offset="0%" stop-color="#ff6ec7" />
-  <stop offset="30%" stop-color="#ffc36e" />
-  <stop offset="60%" stop-color="#6ef3ff" />
-  <stop offset="100%" stop-color="#a06eff" />
-  <animateTransform attributeName="gradientTransform" type="rotate" from="0 0.5 0.5" to="360 0.5 0.5" dur="8s" repeatCount="indefinite" />
-</linearGradient>
-<linearGradient id="shineGrad" x1="0" y1="0" x2="1" y2="0">
-  <stop offset="0%" stop-color="#ffffff" stop-opacity="0" />
-  <stop offset="50%" stop-color="#ffffff" stop-opacity="0.35" />
-  <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
-</linearGradient>
-<clipPath id="frameClip"><rect x="0" y="0" width="750" height="1050" rx="36" /></clipPath></defs>
-<rect x="0" y="0" width="750" height="1050" fill="#ffffff" rx="36" />
-<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="url(#holoGrad)" stroke-width="8" />
-<g clip-path="url(#frameClip)">
-  <rect x="-260" y="0" width="200" height="1050" fill="url(#shineGrad)" transform="skewX(-18)">
-    <animate attributeName="x" from="-260" to="1010" dur="5s" repeatCount="indefinite" />
-  </rect>
+<defs><linearGradient id="metalA" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0%" stop-color="#f5d76e" />
+  <stop offset="50%" stop-color="#b8860b" />
+  <stop offset="100%" stop-color="#f5d76e" />
+</linearGradient></defs>
+<rect x="0" y="0" width="750" height="1050" fill="#0d1117" rx="36" />
+<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="url(#metalA)" stroke-width="8" />
+<rect x="16" y="16" width="718" height="1018" rx="24" fill="none" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1" />
+<text x="44" y="84" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
+<text x="44" y="128" font-size="42" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
+<g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /></g>
+<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
+<text x="288" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<clipPath id="artClip"><rect x="44" y="210" width="662" height="290" rx="18" /></clipPath>
+<g clip-path="url(#artClip)"><g transform="translate(44 210)"><g>
+<rect x="0" y="0" width="662" height="290" fill="#161b22" />
+<path d="M 625.6 98.2 Q 562.7 96.7 526.2 147.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 526.2 147.3 Q 305.5 204 69.3 209.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 69.3 209.5 Q 290.8 155.1 530.6 135.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 530.6 135.3 Q 520.8 207.8 570.8 258.6" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 570.8 258.6 Q 392.4 171.5 176.8 138.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 176.8 138.5 Q 343.4 198.1 498.3 233.4" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 498.3 233.4 Q 526.9 196.2 503 214.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 503 214.5 Q 406.5 152.3 302.2 41.8" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 302.2 41.8 Q 231.4 144.4 150.2 206" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<circle cx="625.6" cy="98.2" r="9.2" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="570.8" cy="258.6" r="9.7" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="302.2" cy="41.8" r="8.6" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="625.6" cy="98.2" r="3.2" fill="#a371f7" fill-opacity="0.9" />
+<circle cx="526.2" cy="147.3" r="2.7" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="69.3" cy="209.5" r="5" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="530.6" cy="135.3" r="4.8" fill="#a371f7" fill-opacity="0.9" />
+<circle cx="570.8" cy="258.6" r="3.7" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="176.8" cy="138.5" r="2.6" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="498.3" cy="233.4" r="3.8" fill="#a371f7" fill-opacity="0.9" />
+<circle cx="503" cy="214.5" r="3.8" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="302.2" cy="41.8" r="2.6" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="150.2" cy="206" r="1.9" fill="#a371f7" fill-opacity="0.9" />
+</g></g></g>
+<rect x="44" y="210" width="662" height="290" rx="18" fill="none" stroke="#30363d" />
+<text x="44" y="530" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">STATS</text>
+<text x="44" y="563" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
+<rect x="234" y="548" width="408" height="18" fill="#21262d" rx="9" />
+<rect x="234" y="548" width="335" height="18" fill="#a371f7" rx="9" />
+<text x="658" y="563" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">82</text>
+<text x="44" y="607" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">DIVERSITY</text>
+<rect x="234" y="592" width="408" height="18" fill="#21262d" rx="9" />
+<rect x="234" y="592" width="245" height="18" fill="#a371f7" rx="9" />
+<text x="658" y="607" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">60</text>
+<text x="44" y="651" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">CONSISTENCY</text>
+<rect x="234" y="636" width="408" height="18" fill="#21262d" rx="9" />
+<rect x="234" y="636" width="302" height="18" fill="#a371f7" rx="9" />
+<text x="658" y="651" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">74</text>
+<text x="44" y="702" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">LOADOUT</text>
+<rect x="44" y="716" width="134" height="36" fill="#1f2937" rx="18" />
+<text x="111" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Claude 70%</text>
+<rect x="190" y="716" width="134" height="36" fill="#1f2937" rx="18" />
+<text x="257" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Cursor 30%</text>
+<rect x="336" y="716" width="184" height="36" rx="18" fill="none" stroke="#a371f7" stroke-opacity="0.5" stroke-dasharray="4 3" />
+<text x="428" y="740" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex · equipped</text>
+<text x="44" y="812" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TYPES</text>
+<circle cx="52" cy="830" r="7" fill="#3178c6" />
+<text x="68" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
+<circle cx="232" cy="830" r="7" fill="#3572A5" />
+<text x="248" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<line x1="104" y1="870" x2="646" y2="870" stroke="#30363d" stroke-width="1" />
+<text x="375" y="900" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<g transform="translate(614 56)">
+<polygon points="46,0 92,46 46,92 0,46" fill="#b8860b" />
+<polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
+<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">A</text>
 </g>
+<text x="44" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
+<text x="706" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
+</svg>"
+`;
+
+exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-A-light 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+<defs><linearGradient id="metalA" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0%" stop-color="#f5d76e" />
+  <stop offset="50%" stop-color="#b8860b" />
+  <stop offset="100%" stop-color="#f5d76e" />
+</linearGradient></defs>
+<rect x="0" y="0" width="750" height="1050" fill="#ffffff" rx="36" />
+<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="url(#metalA)" stroke-width="8" />
+<rect x="16" y="16" width="718" height="1018" rx="24" fill="none" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1" />
 <text x="44" y="84" font-size="16" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
 <text x="44" y="128" font-size="42" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
 <g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /></g>
@@ -886,9 +953,473 @@ exports[`renderCardV2 all five grades render for both themes (golden snapshots):
 <line x1="104" y1="870" x2="646" y2="870" stroke="#e1e4e8" stroke-width="1" />
 <text x="375" y="900" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
-<polygon points="46,0 92,46 46,92 0,46" fill="#a06eff" />
+<polygon points="46,0 92,46 46,92 0,46" fill="#b8860b" />
 <polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
-<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">S</text>
+<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">A</text>
+</g>
+<text x="44" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
+<text x="706" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
+</svg>"
+`;
+
+exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-B-dark 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+<defs><linearGradient id="metalB" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0%" stop-color="#e8edf2" />
+  <stop offset="50%" stop-color="#8a939e" />
+  <stop offset="100%" stop-color="#dfe5eb" />
+</linearGradient></defs>
+<rect x="0" y="0" width="750" height="1050" fill="#0d1117" rx="36" />
+<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="url(#metalB)" stroke-width="8" />
+<rect x="16" y="16" width="718" height="1018" rx="24" fill="none" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1" />
+<text x="44" y="84" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
+<text x="44" y="128" font-size="42" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
+<g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /></g>
+<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
+<text x="288" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<clipPath id="artClip"><rect x="44" y="210" width="662" height="290" rx="18" /></clipPath>
+<g clip-path="url(#artClip)"><g transform="translate(44 210)"><g>
+<rect x="0" y="0" width="662" height="290" fill="#161b22" />
+<path d="M 625.6 98.2 Q 562.7 96.7 526.2 147.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 526.2 147.3 Q 305.5 204 69.3 209.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 69.3 209.5 Q 290.8 155.1 530.6 135.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 530.6 135.3 Q 520.8 207.8 570.8 258.6" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 570.8 258.6 Q 392.4 171.5 176.8 138.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 176.8 138.5 Q 343.4 198.1 498.3 233.4" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 498.3 233.4 Q 526.9 196.2 503 214.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 503 214.5 Q 406.5 152.3 302.2 41.8" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 302.2 41.8 Q 231.4 144.4 150.2 206" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<circle cx="625.6" cy="98.2" r="9.2" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="570.8" cy="258.6" r="9.7" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="302.2" cy="41.8" r="8.6" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="625.6" cy="98.2" r="3.2" fill="#a371f7" fill-opacity="0.9" />
+<circle cx="526.2" cy="147.3" r="2.7" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="69.3" cy="209.5" r="5" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="530.6" cy="135.3" r="4.8" fill="#a371f7" fill-opacity="0.9" />
+<circle cx="570.8" cy="258.6" r="3.7" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="176.8" cy="138.5" r="2.6" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="498.3" cy="233.4" r="3.8" fill="#a371f7" fill-opacity="0.9" />
+<circle cx="503" cy="214.5" r="3.8" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="302.2" cy="41.8" r="2.6" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="150.2" cy="206" r="1.9" fill="#a371f7" fill-opacity="0.9" />
+</g></g></g>
+<rect x="44" y="210" width="662" height="290" rx="18" fill="none" stroke="#30363d" />
+<text x="44" y="530" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">STATS</text>
+<text x="44" y="563" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
+<rect x="234" y="548" width="408" height="18" fill="#21262d" rx="9" />
+<rect x="234" y="548" width="335" height="18" fill="#a371f7" rx="9" />
+<text x="658" y="563" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">82</text>
+<text x="44" y="607" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">DIVERSITY</text>
+<rect x="234" y="592" width="408" height="18" fill="#21262d" rx="9" />
+<rect x="234" y="592" width="245" height="18" fill="#a371f7" rx="9" />
+<text x="658" y="607" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">60</text>
+<text x="44" y="651" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">CONSISTENCY</text>
+<rect x="234" y="636" width="408" height="18" fill="#21262d" rx="9" />
+<rect x="234" y="636" width="302" height="18" fill="#a371f7" rx="9" />
+<text x="658" y="651" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">74</text>
+<text x="44" y="702" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">LOADOUT</text>
+<rect x="44" y="716" width="134" height="36" fill="#1f2937" rx="18" />
+<text x="111" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Claude 70%</text>
+<rect x="190" y="716" width="134" height="36" fill="#1f2937" rx="18" />
+<text x="257" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Cursor 30%</text>
+<rect x="336" y="716" width="184" height="36" rx="18" fill="none" stroke="#a371f7" stroke-opacity="0.5" stroke-dasharray="4 3" />
+<text x="428" y="740" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex · equipped</text>
+<text x="44" y="812" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TYPES</text>
+<circle cx="52" cy="830" r="7" fill="#3178c6" />
+<text x="68" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
+<circle cx="232" cy="830" r="7" fill="#3572A5" />
+<text x="248" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<line x1="104" y1="870" x2="646" y2="870" stroke="#30363d" stroke-width="1" />
+<text x="375" y="900" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<g transform="translate(614 56)">
+<polygon points="46,0 92,46 46,92 0,46" fill="#8a939e" />
+<polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
+<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">B</text>
+</g>
+<text x="44" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
+<text x="706" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
+</svg>"
+`;
+
+exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-B-light 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+<defs><linearGradient id="metalB" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0%" stop-color="#e8edf2" />
+  <stop offset="50%" stop-color="#8a939e" />
+  <stop offset="100%" stop-color="#dfe5eb" />
+</linearGradient></defs>
+<rect x="0" y="0" width="750" height="1050" fill="#ffffff" rx="36" />
+<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="url(#metalB)" stroke-width="8" />
+<rect x="16" y="16" width="718" height="1018" rx="24" fill="none" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1" />
+<text x="44" y="84" font-size="16" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
+<text x="44" y="128" font-size="42" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
+<g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /></g>
+<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
+<text x="288" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<clipPath id="artClip"><rect x="44" y="210" width="662" height="290" rx="18" /></clipPath>
+<g clip-path="url(#artClip)"><g transform="translate(44 210)"><g>
+<rect x="0" y="0" width="662" height="290" fill="#f6f8fa" />
+<path d="M 625.6 98.2 Q 562.7 96.7 526.2 147.3" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 526.2 147.3 Q 305.5 204 69.3 209.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 69.3 209.5 Q 290.8 155.1 530.6 135.3" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 530.6 135.3 Q 520.8 207.8 570.8 258.6" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 570.8 258.6 Q 392.4 171.5 176.8 138.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 176.8 138.5 Q 343.4 198.1 498.3 233.4" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 498.3 233.4 Q 526.9 196.2 503 214.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 503 214.5 Q 406.5 152.3 302.2 41.8" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 302.2 41.8 Q 231.4 144.4 150.2 206" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<circle cx="625.6" cy="98.2" r="9.2" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="570.8" cy="258.6" r="9.7" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="302.2" cy="41.8" r="8.6" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="625.6" cy="98.2" r="3.2" fill="#6f42c1" fill-opacity="0.9" />
+<circle cx="526.2" cy="147.3" r="2.7" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="69.3" cy="209.5" r="5" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="530.6" cy="135.3" r="4.8" fill="#6f42c1" fill-opacity="0.9" />
+<circle cx="570.8" cy="258.6" r="3.7" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="176.8" cy="138.5" r="2.6" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="498.3" cy="233.4" r="3.8" fill="#6f42c1" fill-opacity="0.9" />
+<circle cx="503" cy="214.5" r="3.8" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="302.2" cy="41.8" r="2.6" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="150.2" cy="206" r="1.9" fill="#6f42c1" fill-opacity="0.9" />
+</g></g></g>
+<rect x="44" y="210" width="662" height="290" rx="18" fill="none" stroke="#e1e4e8" />
+<text x="44" y="530" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">STATS</text>
+<text x="44" y="563" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
+<rect x="234" y="548" width="408" height="18" fill="#eaecef" rx="9" />
+<rect x="234" y="548" width="335" height="18" fill="#6f42c1" rx="9" />
+<text x="658" y="563" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">82</text>
+<text x="44" y="607" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">DIVERSITY</text>
+<rect x="234" y="592" width="408" height="18" fill="#eaecef" rx="9" />
+<rect x="234" y="592" width="245" height="18" fill="#6f42c1" rx="9" />
+<text x="658" y="607" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">60</text>
+<text x="44" y="651" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">CONSISTENCY</text>
+<rect x="234" y="636" width="408" height="18" fill="#eaecef" rx="9" />
+<rect x="234" y="636" width="302" height="18" fill="#6f42c1" rx="9" />
+<text x="658" y="651" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">74</text>
+<text x="44" y="702" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">LOADOUT</text>
+<rect x="44" y="716" width="134" height="36" fill="#ddf4ff" rx="18" />
+<text x="111" y="740" font-size="17" fill="#24292e" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Claude 70%</text>
+<rect x="190" y="716" width="134" height="36" fill="#ddf4ff" rx="18" />
+<text x="257" y="740" font-size="17" fill="#24292e" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Cursor 30%</text>
+<rect x="336" y="716" width="184" height="36" rx="18" fill="none" stroke="#6f42c1" stroke-opacity="0.5" stroke-dasharray="4 3" />
+<text x="428" y="740" font-size="15" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex · equipped</text>
+<text x="44" y="812" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TYPES</text>
+<circle cx="52" cy="830" r="7" fill="#3178c6" />
+<text x="68" y="836" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
+<circle cx="232" cy="830" r="7" fill="#3572A5" />
+<text x="248" y="836" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<line x1="104" y1="870" x2="646" y2="870" stroke="#e1e4e8" stroke-width="1" />
+<text x="375" y="900" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<g transform="translate(614 56)">
+<polygon points="46,0 92,46 46,92 0,46" fill="#8a939e" />
+<polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
+<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">B</text>
+</g>
+<text x="44" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
+<text x="706" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
+</svg>"
+`;
+
+exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-C-dark 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+<defs><linearGradient id="metalC" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0%" stop-color="#e0955e" />
+  <stop offset="50%" stop-color="#7a4a1f" />
+  <stop offset="100%" stop-color="#cd7f32" />
+</linearGradient></defs>
+<rect x="0" y="0" width="750" height="1050" fill="#0d1117" rx="36" />
+<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="url(#metalC)" stroke-width="8" />
+<rect x="16" y="16" width="718" height="1018" rx="24" fill="none" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1" />
+<text x="44" y="84" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
+<text x="44" y="128" font-size="42" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
+<g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /></g>
+<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
+<text x="288" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<clipPath id="artClip"><rect x="44" y="210" width="662" height="290" rx="18" /></clipPath>
+<g clip-path="url(#artClip)"><g transform="translate(44 210)"><g>
+<rect x="0" y="0" width="662" height="290" fill="#161b22" />
+<path d="M 625.6 98.2 Q 562.7 96.7 526.2 147.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 526.2 147.3 Q 305.5 204 69.3 209.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 69.3 209.5 Q 290.8 155.1 530.6 135.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 530.6 135.3 Q 520.8 207.8 570.8 258.6" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 570.8 258.6 Q 392.4 171.5 176.8 138.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 176.8 138.5 Q 343.4 198.1 498.3 233.4" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 498.3 233.4 Q 526.9 196.2 503 214.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 503 214.5 Q 406.5 152.3 302.2 41.8" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 302.2 41.8 Q 231.4 144.4 150.2 206" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<circle cx="625.6" cy="98.2" r="9.2" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="570.8" cy="258.6" r="9.7" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="302.2" cy="41.8" r="8.6" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="625.6" cy="98.2" r="3.2" fill="#a371f7" fill-opacity="0.9" />
+<circle cx="526.2" cy="147.3" r="2.7" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="69.3" cy="209.5" r="5" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="530.6" cy="135.3" r="4.8" fill="#a371f7" fill-opacity="0.9" />
+<circle cx="570.8" cy="258.6" r="3.7" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="176.8" cy="138.5" r="2.6" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="498.3" cy="233.4" r="3.8" fill="#a371f7" fill-opacity="0.9" />
+<circle cx="503" cy="214.5" r="3.8" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="302.2" cy="41.8" r="2.6" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="150.2" cy="206" r="1.9" fill="#a371f7" fill-opacity="0.9" />
+</g></g></g>
+<rect x="44" y="210" width="662" height="290" rx="18" fill="none" stroke="#30363d" />
+<text x="44" y="530" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">STATS</text>
+<text x="44" y="563" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
+<rect x="234" y="548" width="408" height="18" fill="#21262d" rx="9" />
+<rect x="234" y="548" width="335" height="18" fill="#a371f7" rx="9" />
+<text x="658" y="563" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">82</text>
+<text x="44" y="607" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">DIVERSITY</text>
+<rect x="234" y="592" width="408" height="18" fill="#21262d" rx="9" />
+<rect x="234" y="592" width="245" height="18" fill="#a371f7" rx="9" />
+<text x="658" y="607" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">60</text>
+<text x="44" y="651" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">CONSISTENCY</text>
+<rect x="234" y="636" width="408" height="18" fill="#21262d" rx="9" />
+<rect x="234" y="636" width="302" height="18" fill="#a371f7" rx="9" />
+<text x="658" y="651" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">74</text>
+<text x="44" y="702" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">LOADOUT</text>
+<rect x="44" y="716" width="134" height="36" fill="#1f2937" rx="18" />
+<text x="111" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Claude 70%</text>
+<rect x="190" y="716" width="134" height="36" fill="#1f2937" rx="18" />
+<text x="257" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Cursor 30%</text>
+<rect x="336" y="716" width="184" height="36" rx="18" fill="none" stroke="#a371f7" stroke-opacity="0.5" stroke-dasharray="4 3" />
+<text x="428" y="740" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex · equipped</text>
+<text x="44" y="812" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TYPES</text>
+<circle cx="52" cy="830" r="7" fill="#3178c6" />
+<text x="68" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
+<circle cx="232" cy="830" r="7" fill="#3572A5" />
+<text x="248" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<line x1="104" y1="870" x2="646" y2="870" stroke="#30363d" stroke-width="1" />
+<text x="375" y="900" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<g transform="translate(614 56)">
+<polygon points="46,0 92,46 46,92 0,46" fill="#cd7f32" />
+<polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
+<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">C</text>
+</g>
+<text x="44" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
+<text x="706" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
+</svg>"
+`;
+
+exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-C-light 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+<defs><linearGradient id="metalC" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0%" stop-color="#e0955e" />
+  <stop offset="50%" stop-color="#7a4a1f" />
+  <stop offset="100%" stop-color="#cd7f32" />
+</linearGradient></defs>
+<rect x="0" y="0" width="750" height="1050" fill="#ffffff" rx="36" />
+<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="url(#metalC)" stroke-width="8" />
+<rect x="16" y="16" width="718" height="1018" rx="24" fill="none" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1" />
+<text x="44" y="84" font-size="16" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
+<text x="44" y="128" font-size="42" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
+<g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /></g>
+<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
+<text x="288" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<clipPath id="artClip"><rect x="44" y="210" width="662" height="290" rx="18" /></clipPath>
+<g clip-path="url(#artClip)"><g transform="translate(44 210)"><g>
+<rect x="0" y="0" width="662" height="290" fill="#f6f8fa" />
+<path d="M 625.6 98.2 Q 562.7 96.7 526.2 147.3" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 526.2 147.3 Q 305.5 204 69.3 209.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 69.3 209.5 Q 290.8 155.1 530.6 135.3" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 530.6 135.3 Q 520.8 207.8 570.8 258.6" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 570.8 258.6 Q 392.4 171.5 176.8 138.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 176.8 138.5 Q 343.4 198.1 498.3 233.4" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 498.3 233.4 Q 526.9 196.2 503 214.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 503 214.5 Q 406.5 152.3 302.2 41.8" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 302.2 41.8 Q 231.4 144.4 150.2 206" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<circle cx="625.6" cy="98.2" r="9.2" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="570.8" cy="258.6" r="9.7" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="302.2" cy="41.8" r="8.6" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="625.6" cy="98.2" r="3.2" fill="#6f42c1" fill-opacity="0.9" />
+<circle cx="526.2" cy="147.3" r="2.7" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="69.3" cy="209.5" r="5" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="530.6" cy="135.3" r="4.8" fill="#6f42c1" fill-opacity="0.9" />
+<circle cx="570.8" cy="258.6" r="3.7" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="176.8" cy="138.5" r="2.6" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="498.3" cy="233.4" r="3.8" fill="#6f42c1" fill-opacity="0.9" />
+<circle cx="503" cy="214.5" r="3.8" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="302.2" cy="41.8" r="2.6" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="150.2" cy="206" r="1.9" fill="#6f42c1" fill-opacity="0.9" />
+</g></g></g>
+<rect x="44" y="210" width="662" height="290" rx="18" fill="none" stroke="#e1e4e8" />
+<text x="44" y="530" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">STATS</text>
+<text x="44" y="563" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
+<rect x="234" y="548" width="408" height="18" fill="#eaecef" rx="9" />
+<rect x="234" y="548" width="335" height="18" fill="#6f42c1" rx="9" />
+<text x="658" y="563" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">82</text>
+<text x="44" y="607" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">DIVERSITY</text>
+<rect x="234" y="592" width="408" height="18" fill="#eaecef" rx="9" />
+<rect x="234" y="592" width="245" height="18" fill="#6f42c1" rx="9" />
+<text x="658" y="607" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">60</text>
+<text x="44" y="651" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">CONSISTENCY</text>
+<rect x="234" y="636" width="408" height="18" fill="#eaecef" rx="9" />
+<rect x="234" y="636" width="302" height="18" fill="#6f42c1" rx="9" />
+<text x="658" y="651" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">74</text>
+<text x="44" y="702" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">LOADOUT</text>
+<rect x="44" y="716" width="134" height="36" fill="#ddf4ff" rx="18" />
+<text x="111" y="740" font-size="17" fill="#24292e" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Claude 70%</text>
+<rect x="190" y="716" width="134" height="36" fill="#ddf4ff" rx="18" />
+<text x="257" y="740" font-size="17" fill="#24292e" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Cursor 30%</text>
+<rect x="336" y="716" width="184" height="36" rx="18" fill="none" stroke="#6f42c1" stroke-opacity="0.5" stroke-dasharray="4 3" />
+<text x="428" y="740" font-size="15" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex · equipped</text>
+<text x="44" y="812" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TYPES</text>
+<circle cx="52" cy="830" r="7" fill="#3178c6" />
+<text x="68" y="836" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
+<circle cx="232" cy="830" r="7" fill="#3572A5" />
+<text x="248" y="836" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<line x1="104" y1="870" x2="646" y2="870" stroke="#e1e4e8" stroke-width="1" />
+<text x="375" y="900" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<g transform="translate(614 56)">
+<polygon points="46,0 92,46 46,92 0,46" fill="#cd7f32" />
+<polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
+<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">C</text>
+</g>
+<text x="44" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
+<text x="706" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
+</svg>"
+`;
+
+exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-D-dark 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+<defs></defs>
+<rect x="0" y="0" width="750" height="1050" fill="#0d1117" rx="36" />
+<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="#6e7681" stroke-width="6" stroke-opacity="0.8" />
+<text x="44" y="84" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
+<text x="44" y="128" font-size="42" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
+<g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /></g>
+<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
+<text x="288" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<clipPath id="artClip"><rect x="44" y="210" width="662" height="290" rx="18" /></clipPath>
+<g clip-path="url(#artClip)"><g transform="translate(44 210)"><g>
+<rect x="0" y="0" width="662" height="290" fill="#161b22" />
+<path d="M 625.6 98.2 Q 562.7 96.7 526.2 147.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 526.2 147.3 Q 305.5 204 69.3 209.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 69.3 209.5 Q 290.8 155.1 530.6 135.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 530.6 135.3 Q 520.8 207.8 570.8 258.6" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 570.8 258.6 Q 392.4 171.5 176.8 138.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 176.8 138.5 Q 343.4 198.1 498.3 233.4" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 498.3 233.4 Q 526.9 196.2 503 214.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 503 214.5 Q 406.5 152.3 302.2 41.8" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 302.2 41.8 Q 231.4 144.4 150.2 206" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
+<circle cx="625.6" cy="98.2" r="9.2" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="570.8" cy="258.6" r="9.7" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="302.2" cy="41.8" r="8.6" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="625.6" cy="98.2" r="3.2" fill="#a371f7" fill-opacity="0.9" />
+<circle cx="526.2" cy="147.3" r="2.7" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="69.3" cy="209.5" r="5" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="530.6" cy="135.3" r="4.8" fill="#a371f7" fill-opacity="0.9" />
+<circle cx="570.8" cy="258.6" r="3.7" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="176.8" cy="138.5" r="2.6" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="498.3" cy="233.4" r="3.8" fill="#a371f7" fill-opacity="0.9" />
+<circle cx="503" cy="214.5" r="3.8" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="302.2" cy="41.8" r="2.6" fill="#a371f7" fill-opacity="0.55" />
+<circle cx="150.2" cy="206" r="1.9" fill="#a371f7" fill-opacity="0.9" />
+</g></g></g>
+<rect x="44" y="210" width="662" height="290" rx="18" fill="none" stroke="#30363d" />
+<text x="44" y="530" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">STATS</text>
+<text x="44" y="563" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
+<rect x="234" y="548" width="408" height="18" fill="#21262d" rx="9" />
+<rect x="234" y="548" width="335" height="18" fill="#a371f7" rx="9" />
+<text x="658" y="563" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">82</text>
+<text x="44" y="607" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">DIVERSITY</text>
+<rect x="234" y="592" width="408" height="18" fill="#21262d" rx="9" />
+<rect x="234" y="592" width="245" height="18" fill="#a371f7" rx="9" />
+<text x="658" y="607" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">60</text>
+<text x="44" y="651" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">CONSISTENCY</text>
+<rect x="234" y="636" width="408" height="18" fill="#21262d" rx="9" />
+<rect x="234" y="636" width="302" height="18" fill="#a371f7" rx="9" />
+<text x="658" y="651" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">74</text>
+<text x="44" y="702" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">LOADOUT</text>
+<rect x="44" y="716" width="134" height="36" fill="#1f2937" rx="18" />
+<text x="111" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Claude 70%</text>
+<rect x="190" y="716" width="134" height="36" fill="#1f2937" rx="18" />
+<text x="257" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Cursor 30%</text>
+<rect x="336" y="716" width="184" height="36" rx="18" fill="none" stroke="#a371f7" stroke-opacity="0.5" stroke-dasharray="4 3" />
+<text x="428" y="740" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex · equipped</text>
+<text x="44" y="812" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TYPES</text>
+<circle cx="52" cy="830" r="7" fill="#3178c6" />
+<text x="68" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
+<circle cx="232" cy="830" r="7" fill="#3572A5" />
+<text x="248" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<line x1="104" y1="870" x2="646" y2="870" stroke="#30363d" stroke-width="1" />
+<text x="375" y="900" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<g transform="translate(614 56)">
+<polygon points="46,0 92,46 46,92 0,46" fill="#6e7681" />
+<polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
+<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">D</text>
+</g>
+<text x="44" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
+<text x="706" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
+</svg>"
+`;
+
+exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-D-light 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+<defs></defs>
+<rect x="0" y="0" width="750" height="1050" fill="#ffffff" rx="36" />
+<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="#6e7681" stroke-width="6" stroke-opacity="0.8" />
+<text x="44" y="84" font-size="16" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
+<text x="44" y="128" font-size="42" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
+<g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /></g>
+<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
+<text x="288" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<clipPath id="artClip"><rect x="44" y="210" width="662" height="290" rx="18" /></clipPath>
+<g clip-path="url(#artClip)"><g transform="translate(44 210)"><g>
+<rect x="0" y="0" width="662" height="290" fill="#f6f8fa" />
+<path d="M 625.6 98.2 Q 562.7 96.7 526.2 147.3" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 526.2 147.3 Q 305.5 204 69.3 209.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 69.3 209.5 Q 290.8 155.1 530.6 135.3" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 530.6 135.3 Q 520.8 207.8 570.8 258.6" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 570.8 258.6 Q 392.4 171.5 176.8 138.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 176.8 138.5 Q 343.4 198.1 498.3 233.4" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 498.3 233.4 Q 526.9 196.2 503 214.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 503 214.5 Q 406.5 152.3 302.2 41.8" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<path d="M 302.2 41.8 Q 231.4 144.4 150.2 206" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
+<circle cx="625.6" cy="98.2" r="9.2" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="570.8" cy="258.6" r="9.7" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="302.2" cy="41.8" r="8.6" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
+<circle cx="625.6" cy="98.2" r="3.2" fill="#6f42c1" fill-opacity="0.9" />
+<circle cx="526.2" cy="147.3" r="2.7" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="69.3" cy="209.5" r="5" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="530.6" cy="135.3" r="4.8" fill="#6f42c1" fill-opacity="0.9" />
+<circle cx="570.8" cy="258.6" r="3.7" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="176.8" cy="138.5" r="2.6" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="498.3" cy="233.4" r="3.8" fill="#6f42c1" fill-opacity="0.9" />
+<circle cx="503" cy="214.5" r="3.8" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="302.2" cy="41.8" r="2.6" fill="#6f42c1" fill-opacity="0.55" />
+<circle cx="150.2" cy="206" r="1.9" fill="#6f42c1" fill-opacity="0.9" />
+</g></g></g>
+<rect x="44" y="210" width="662" height="290" rx="18" fill="none" stroke="#e1e4e8" />
+<text x="44" y="530" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">STATS</text>
+<text x="44" y="563" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
+<rect x="234" y="548" width="408" height="18" fill="#eaecef" rx="9" />
+<rect x="234" y="548" width="335" height="18" fill="#6f42c1" rx="9" />
+<text x="658" y="563" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">82</text>
+<text x="44" y="607" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">DIVERSITY</text>
+<rect x="234" y="592" width="408" height="18" fill="#eaecef" rx="9" />
+<rect x="234" y="592" width="245" height="18" fill="#6f42c1" rx="9" />
+<text x="658" y="607" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">60</text>
+<text x="44" y="651" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">CONSISTENCY</text>
+<rect x="234" y="636" width="408" height="18" fill="#eaecef" rx="9" />
+<rect x="234" y="636" width="302" height="18" fill="#6f42c1" rx="9" />
+<text x="658" y="651" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">74</text>
+<text x="44" y="702" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">LOADOUT</text>
+<rect x="44" y="716" width="134" height="36" fill="#ddf4ff" rx="18" />
+<text x="111" y="740" font-size="17" fill="#24292e" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Claude 70%</text>
+<rect x="190" y="716" width="134" height="36" fill="#ddf4ff" rx="18" />
+<text x="257" y="740" font-size="17" fill="#24292e" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Cursor 30%</text>
+<rect x="336" y="716" width="184" height="36" rx="18" fill="none" stroke="#6f42c1" stroke-opacity="0.5" stroke-dasharray="4 3" />
+<text x="428" y="740" font-size="15" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex · equipped</text>
+<text x="44" y="812" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TYPES</text>
+<circle cx="52" cy="830" r="7" fill="#3178c6" />
+<text x="68" y="836" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
+<circle cx="232" cy="830" r="7" fill="#3572A5" />
+<text x="248" y="836" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<line x1="104" y1="870" x2="646" y2="870" stroke="#e1e4e8" stroke-width="1" />
+<text x="375" y="900" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<g transform="translate(614 56)">
+<polygon points="46,0 92,46 46,92 0,46" fill="#6e7681" />
+<polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
+<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">D</text>
 </g>
 <text x="44" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
 <text x="706" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
@@ -986,16 +1517,28 @@ exports[`renderCardV2 all five grades render for both themes (golden snapshots):
 </svg>"
 `;
 
-exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-A-light 1`] = `
+exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-S-light 1`] = `
 "<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-<defs><linearGradient id="metalA" x1="0" y1="0" x2="1" y2="1">
-  <stop offset="0%" stop-color="#f5d76e" />
-  <stop offset="50%" stop-color="#b8860b" />
-  <stop offset="100%" stop-color="#f5d76e" />
-</linearGradient></defs>
+<defs><linearGradient id="holoGrad" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0%" stop-color="#ff6ec7" />
+  <stop offset="30%" stop-color="#ffc36e" />
+  <stop offset="60%" stop-color="#6ef3ff" />
+  <stop offset="100%" stop-color="#a06eff" />
+  <animateTransform attributeName="gradientTransform" type="rotate" from="0 0.5 0.5" to="360 0.5 0.5" dur="8s" repeatCount="indefinite" />
+</linearGradient>
+<linearGradient id="shineGrad" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0%" stop-color="#ffffff" stop-opacity="0" />
+  <stop offset="50%" stop-color="#ffffff" stop-opacity="0.35" />
+  <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+</linearGradient>
+<clipPath id="frameClip"><rect x="0" y="0" width="750" height="1050" rx="36" /></clipPath></defs>
 <rect x="0" y="0" width="750" height="1050" fill="#ffffff" rx="36" />
-<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="url(#metalA)" stroke-width="8" />
-<rect x="16" y="16" width="718" height="1018" rx="24" fill="none" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1" />
+<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="url(#holoGrad)" stroke-width="8" />
+<g clip-path="url(#frameClip)">
+  <rect x="-260" y="0" width="200" height="1050" fill="url(#shineGrad)" transform="skewX(-18)">
+    <animate attributeName="x" from="-260" to="1010" dur="5s" repeatCount="indefinite" />
+  </rect>
+</g>
 <text x="44" y="84" font-size="16" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
 <text x="44" y="128" font-size="42" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
 <g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /></g>
@@ -1056,554 +1599,11 @@ exports[`renderCardV2 all five grades render for both themes (golden snapshots):
 <line x1="104" y1="870" x2="646" y2="870" stroke="#e1e4e8" stroke-width="1" />
 <text x="375" y="900" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
-<polygon points="46,0 92,46 46,92 0,46" fill="#b8860b" />
+<polygon points="46,0 92,46 46,92 0,46" fill="#a06eff" />
 <polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
-<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">A</text>
+<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">S</text>
 </g>
 <text x="44" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
 <text x="706" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
-</svg>"
-`;
-
-exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-A-dark 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-<defs><linearGradient id="metalA" x1="0" y1="0" x2="1" y2="1">
-  <stop offset="0%" stop-color="#f5d76e" />
-  <stop offset="50%" stop-color="#b8860b" />
-  <stop offset="100%" stop-color="#f5d76e" />
-</linearGradient></defs>
-<rect x="0" y="0" width="750" height="1050" fill="#0d1117" rx="36" />
-<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="url(#metalA)" stroke-width="8" />
-<rect x="16" y="16" width="718" height="1018" rx="24" fill="none" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1" />
-<text x="44" y="84" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
-<text x="44" y="128" font-size="42" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
-<g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
-<clipPath id="artClip"><rect x="44" y="210" width="662" height="290" rx="18" /></clipPath>
-<g clip-path="url(#artClip)"><g transform="translate(44 210)"><g>
-<rect x="0" y="0" width="662" height="290" fill="#161b22" />
-<path d="M 625.6 98.2 Q 562.7 96.7 526.2 147.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 526.2 147.3 Q 305.5 204 69.3 209.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 69.3 209.5 Q 290.8 155.1 530.6 135.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 530.6 135.3 Q 520.8 207.8 570.8 258.6" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 570.8 258.6 Q 392.4 171.5 176.8 138.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 176.8 138.5 Q 343.4 198.1 498.3 233.4" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 498.3 233.4 Q 526.9 196.2 503 214.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 503 214.5 Q 406.5 152.3 302.2 41.8" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 302.2 41.8 Q 231.4 144.4 150.2 206" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<circle cx="625.6" cy="98.2" r="9.2" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="570.8" cy="258.6" r="9.7" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="302.2" cy="41.8" r="8.6" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="625.6" cy="98.2" r="3.2" fill="#a371f7" fill-opacity="0.9" />
-<circle cx="526.2" cy="147.3" r="2.7" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="69.3" cy="209.5" r="5" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="530.6" cy="135.3" r="4.8" fill="#a371f7" fill-opacity="0.9" />
-<circle cx="570.8" cy="258.6" r="3.7" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="176.8" cy="138.5" r="2.6" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="498.3" cy="233.4" r="3.8" fill="#a371f7" fill-opacity="0.9" />
-<circle cx="503" cy="214.5" r="3.8" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="302.2" cy="41.8" r="2.6" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="150.2" cy="206" r="1.9" fill="#a371f7" fill-opacity="0.9" />
-</g></g></g>
-<rect x="44" y="210" width="662" height="290" rx="18" fill="none" stroke="#30363d" />
-<text x="44" y="530" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">STATS</text>
-<text x="44" y="563" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
-<rect x="234" y="548" width="408" height="18" fill="#21262d" rx="9" />
-<rect x="234" y="548" width="335" height="18" fill="#a371f7" rx="9" />
-<text x="658" y="563" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">82</text>
-<text x="44" y="607" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">DIVERSITY</text>
-<rect x="234" y="592" width="408" height="18" fill="#21262d" rx="9" />
-<rect x="234" y="592" width="245" height="18" fill="#a371f7" rx="9" />
-<text x="658" y="607" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">60</text>
-<text x="44" y="651" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">CONSISTENCY</text>
-<rect x="234" y="636" width="408" height="18" fill="#21262d" rx="9" />
-<rect x="234" y="636" width="302" height="18" fill="#a371f7" rx="9" />
-<text x="658" y="651" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">74</text>
-<text x="44" y="702" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">LOADOUT</text>
-<rect x="44" y="716" width="134" height="36" fill="#1f2937" rx="18" />
-<text x="111" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Claude 70%</text>
-<rect x="190" y="716" width="134" height="36" fill="#1f2937" rx="18" />
-<text x="257" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Cursor 30%</text>
-<rect x="336" y="716" width="184" height="36" rx="18" fill="none" stroke="#a371f7" stroke-opacity="0.5" stroke-dasharray="4 3" />
-<text x="428" y="740" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex · equipped</text>
-<text x="44" y="812" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TYPES</text>
-<circle cx="52" cy="830" r="7" fill="#3178c6" />
-<text x="68" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
-<circle cx="232" cy="830" r="7" fill="#3572A5" />
-<text x="248" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
-<line x1="104" y1="870" x2="646" y2="870" stroke="#30363d" stroke-width="1" />
-<text x="375" y="900" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
-<g transform="translate(614 56)">
-<polygon points="46,0 92,46 46,92 0,46" fill="#b8860b" />
-<polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
-<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">A</text>
-</g>
-<text x="44" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
-<text x="706" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
-</svg>"
-`;
-
-exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-B-light 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-<defs><linearGradient id="metalB" x1="0" y1="0" x2="1" y2="1">
-  <stop offset="0%" stop-color="#e8edf2" />
-  <stop offset="50%" stop-color="#8a939e" />
-  <stop offset="100%" stop-color="#dfe5eb" />
-</linearGradient></defs>
-<rect x="0" y="0" width="750" height="1050" fill="#ffffff" rx="36" />
-<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="url(#metalB)" stroke-width="8" />
-<rect x="16" y="16" width="718" height="1018" rx="24" fill="none" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1" />
-<text x="44" y="84" font-size="16" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
-<text x="44" y="128" font-size="42" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
-<g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
-<clipPath id="artClip"><rect x="44" y="210" width="662" height="290" rx="18" /></clipPath>
-<g clip-path="url(#artClip)"><g transform="translate(44 210)"><g>
-<rect x="0" y="0" width="662" height="290" fill="#f6f8fa" />
-<path d="M 625.6 98.2 Q 562.7 96.7 526.2 147.3" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 526.2 147.3 Q 305.5 204 69.3 209.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 69.3 209.5 Q 290.8 155.1 530.6 135.3" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 530.6 135.3 Q 520.8 207.8 570.8 258.6" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 570.8 258.6 Q 392.4 171.5 176.8 138.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 176.8 138.5 Q 343.4 198.1 498.3 233.4" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 498.3 233.4 Q 526.9 196.2 503 214.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 503 214.5 Q 406.5 152.3 302.2 41.8" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 302.2 41.8 Q 231.4 144.4 150.2 206" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<circle cx="625.6" cy="98.2" r="9.2" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="570.8" cy="258.6" r="9.7" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="302.2" cy="41.8" r="8.6" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="625.6" cy="98.2" r="3.2" fill="#6f42c1" fill-opacity="0.9" />
-<circle cx="526.2" cy="147.3" r="2.7" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="69.3" cy="209.5" r="5" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="530.6" cy="135.3" r="4.8" fill="#6f42c1" fill-opacity="0.9" />
-<circle cx="570.8" cy="258.6" r="3.7" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="176.8" cy="138.5" r="2.6" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="498.3" cy="233.4" r="3.8" fill="#6f42c1" fill-opacity="0.9" />
-<circle cx="503" cy="214.5" r="3.8" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="302.2" cy="41.8" r="2.6" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="150.2" cy="206" r="1.9" fill="#6f42c1" fill-opacity="0.9" />
-</g></g></g>
-<rect x="44" y="210" width="662" height="290" rx="18" fill="none" stroke="#e1e4e8" />
-<text x="44" y="530" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">STATS</text>
-<text x="44" y="563" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
-<rect x="234" y="548" width="408" height="18" fill="#eaecef" rx="9" />
-<rect x="234" y="548" width="335" height="18" fill="#6f42c1" rx="9" />
-<text x="658" y="563" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">82</text>
-<text x="44" y="607" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">DIVERSITY</text>
-<rect x="234" y="592" width="408" height="18" fill="#eaecef" rx="9" />
-<rect x="234" y="592" width="245" height="18" fill="#6f42c1" rx="9" />
-<text x="658" y="607" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">60</text>
-<text x="44" y="651" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">CONSISTENCY</text>
-<rect x="234" y="636" width="408" height="18" fill="#eaecef" rx="9" />
-<rect x="234" y="636" width="302" height="18" fill="#6f42c1" rx="9" />
-<text x="658" y="651" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">74</text>
-<text x="44" y="702" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">LOADOUT</text>
-<rect x="44" y="716" width="134" height="36" fill="#ddf4ff" rx="18" />
-<text x="111" y="740" font-size="17" fill="#24292e" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Claude 70%</text>
-<rect x="190" y="716" width="134" height="36" fill="#ddf4ff" rx="18" />
-<text x="257" y="740" font-size="17" fill="#24292e" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Cursor 30%</text>
-<rect x="336" y="716" width="184" height="36" rx="18" fill="none" stroke="#6f42c1" stroke-opacity="0.5" stroke-dasharray="4 3" />
-<text x="428" y="740" font-size="15" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex · equipped</text>
-<text x="44" y="812" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TYPES</text>
-<circle cx="52" cy="830" r="7" fill="#3178c6" />
-<text x="68" y="836" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
-<circle cx="232" cy="830" r="7" fill="#3572A5" />
-<text x="248" y="836" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
-<line x1="104" y1="870" x2="646" y2="870" stroke="#e1e4e8" stroke-width="1" />
-<text x="375" y="900" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
-<g transform="translate(614 56)">
-<polygon points="46,0 92,46 46,92 0,46" fill="#8a939e" />
-<polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
-<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">B</text>
-</g>
-<text x="44" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
-<text x="706" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
-</svg>"
-`;
-
-exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-B-dark 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-<defs><linearGradient id="metalB" x1="0" y1="0" x2="1" y2="1">
-  <stop offset="0%" stop-color="#e8edf2" />
-  <stop offset="50%" stop-color="#8a939e" />
-  <stop offset="100%" stop-color="#dfe5eb" />
-</linearGradient></defs>
-<rect x="0" y="0" width="750" height="1050" fill="#0d1117" rx="36" />
-<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="url(#metalB)" stroke-width="8" />
-<rect x="16" y="16" width="718" height="1018" rx="24" fill="none" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1" />
-<text x="44" y="84" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
-<text x="44" y="128" font-size="42" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
-<g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
-<clipPath id="artClip"><rect x="44" y="210" width="662" height="290" rx="18" /></clipPath>
-<g clip-path="url(#artClip)"><g transform="translate(44 210)"><g>
-<rect x="0" y="0" width="662" height="290" fill="#161b22" />
-<path d="M 625.6 98.2 Q 562.7 96.7 526.2 147.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 526.2 147.3 Q 305.5 204 69.3 209.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 69.3 209.5 Q 290.8 155.1 530.6 135.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 530.6 135.3 Q 520.8 207.8 570.8 258.6" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 570.8 258.6 Q 392.4 171.5 176.8 138.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 176.8 138.5 Q 343.4 198.1 498.3 233.4" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 498.3 233.4 Q 526.9 196.2 503 214.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 503 214.5 Q 406.5 152.3 302.2 41.8" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 302.2 41.8 Q 231.4 144.4 150.2 206" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<circle cx="625.6" cy="98.2" r="9.2" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="570.8" cy="258.6" r="9.7" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="302.2" cy="41.8" r="8.6" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="625.6" cy="98.2" r="3.2" fill="#a371f7" fill-opacity="0.9" />
-<circle cx="526.2" cy="147.3" r="2.7" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="69.3" cy="209.5" r="5" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="530.6" cy="135.3" r="4.8" fill="#a371f7" fill-opacity="0.9" />
-<circle cx="570.8" cy="258.6" r="3.7" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="176.8" cy="138.5" r="2.6" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="498.3" cy="233.4" r="3.8" fill="#a371f7" fill-opacity="0.9" />
-<circle cx="503" cy="214.5" r="3.8" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="302.2" cy="41.8" r="2.6" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="150.2" cy="206" r="1.9" fill="#a371f7" fill-opacity="0.9" />
-</g></g></g>
-<rect x="44" y="210" width="662" height="290" rx="18" fill="none" stroke="#30363d" />
-<text x="44" y="530" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">STATS</text>
-<text x="44" y="563" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
-<rect x="234" y="548" width="408" height="18" fill="#21262d" rx="9" />
-<rect x="234" y="548" width="335" height="18" fill="#a371f7" rx="9" />
-<text x="658" y="563" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">82</text>
-<text x="44" y="607" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">DIVERSITY</text>
-<rect x="234" y="592" width="408" height="18" fill="#21262d" rx="9" />
-<rect x="234" y="592" width="245" height="18" fill="#a371f7" rx="9" />
-<text x="658" y="607" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">60</text>
-<text x="44" y="651" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">CONSISTENCY</text>
-<rect x="234" y="636" width="408" height="18" fill="#21262d" rx="9" />
-<rect x="234" y="636" width="302" height="18" fill="#a371f7" rx="9" />
-<text x="658" y="651" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">74</text>
-<text x="44" y="702" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">LOADOUT</text>
-<rect x="44" y="716" width="134" height="36" fill="#1f2937" rx="18" />
-<text x="111" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Claude 70%</text>
-<rect x="190" y="716" width="134" height="36" fill="#1f2937" rx="18" />
-<text x="257" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Cursor 30%</text>
-<rect x="336" y="716" width="184" height="36" rx="18" fill="none" stroke="#a371f7" stroke-opacity="0.5" stroke-dasharray="4 3" />
-<text x="428" y="740" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex · equipped</text>
-<text x="44" y="812" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TYPES</text>
-<circle cx="52" cy="830" r="7" fill="#3178c6" />
-<text x="68" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
-<circle cx="232" cy="830" r="7" fill="#3572A5" />
-<text x="248" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
-<line x1="104" y1="870" x2="646" y2="870" stroke="#30363d" stroke-width="1" />
-<text x="375" y="900" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
-<g transform="translate(614 56)">
-<polygon points="46,0 92,46 46,92 0,46" fill="#8a939e" />
-<polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
-<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">B</text>
-</g>
-<text x="44" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
-<text x="706" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
-</svg>"
-`;
-
-exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-C-light 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-<defs><linearGradient id="metalC" x1="0" y1="0" x2="1" y2="1">
-  <stop offset="0%" stop-color="#e0955e" />
-  <stop offset="50%" stop-color="#7a4a1f" />
-  <stop offset="100%" stop-color="#cd7f32" />
-</linearGradient></defs>
-<rect x="0" y="0" width="750" height="1050" fill="#ffffff" rx="36" />
-<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="url(#metalC)" stroke-width="8" />
-<rect x="16" y="16" width="718" height="1018" rx="24" fill="none" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1" />
-<text x="44" y="84" font-size="16" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
-<text x="44" y="128" font-size="42" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
-<g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
-<clipPath id="artClip"><rect x="44" y="210" width="662" height="290" rx="18" /></clipPath>
-<g clip-path="url(#artClip)"><g transform="translate(44 210)"><g>
-<rect x="0" y="0" width="662" height="290" fill="#f6f8fa" />
-<path d="M 625.6 98.2 Q 562.7 96.7 526.2 147.3" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 526.2 147.3 Q 305.5 204 69.3 209.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 69.3 209.5 Q 290.8 155.1 530.6 135.3" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 530.6 135.3 Q 520.8 207.8 570.8 258.6" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 570.8 258.6 Q 392.4 171.5 176.8 138.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 176.8 138.5 Q 343.4 198.1 498.3 233.4" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 498.3 233.4 Q 526.9 196.2 503 214.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 503 214.5 Q 406.5 152.3 302.2 41.8" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 302.2 41.8 Q 231.4 144.4 150.2 206" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<circle cx="625.6" cy="98.2" r="9.2" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="570.8" cy="258.6" r="9.7" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="302.2" cy="41.8" r="8.6" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="625.6" cy="98.2" r="3.2" fill="#6f42c1" fill-opacity="0.9" />
-<circle cx="526.2" cy="147.3" r="2.7" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="69.3" cy="209.5" r="5" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="530.6" cy="135.3" r="4.8" fill="#6f42c1" fill-opacity="0.9" />
-<circle cx="570.8" cy="258.6" r="3.7" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="176.8" cy="138.5" r="2.6" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="498.3" cy="233.4" r="3.8" fill="#6f42c1" fill-opacity="0.9" />
-<circle cx="503" cy="214.5" r="3.8" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="302.2" cy="41.8" r="2.6" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="150.2" cy="206" r="1.9" fill="#6f42c1" fill-opacity="0.9" />
-</g></g></g>
-<rect x="44" y="210" width="662" height="290" rx="18" fill="none" stroke="#e1e4e8" />
-<text x="44" y="530" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">STATS</text>
-<text x="44" y="563" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
-<rect x="234" y="548" width="408" height="18" fill="#eaecef" rx="9" />
-<rect x="234" y="548" width="335" height="18" fill="#6f42c1" rx="9" />
-<text x="658" y="563" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">82</text>
-<text x="44" y="607" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">DIVERSITY</text>
-<rect x="234" y="592" width="408" height="18" fill="#eaecef" rx="9" />
-<rect x="234" y="592" width="245" height="18" fill="#6f42c1" rx="9" />
-<text x="658" y="607" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">60</text>
-<text x="44" y="651" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">CONSISTENCY</text>
-<rect x="234" y="636" width="408" height="18" fill="#eaecef" rx="9" />
-<rect x="234" y="636" width="302" height="18" fill="#6f42c1" rx="9" />
-<text x="658" y="651" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">74</text>
-<text x="44" y="702" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">LOADOUT</text>
-<rect x="44" y="716" width="134" height="36" fill="#ddf4ff" rx="18" />
-<text x="111" y="740" font-size="17" fill="#24292e" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Claude 70%</text>
-<rect x="190" y="716" width="134" height="36" fill="#ddf4ff" rx="18" />
-<text x="257" y="740" font-size="17" fill="#24292e" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Cursor 30%</text>
-<rect x="336" y="716" width="184" height="36" rx="18" fill="none" stroke="#6f42c1" stroke-opacity="0.5" stroke-dasharray="4 3" />
-<text x="428" y="740" font-size="15" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex · equipped</text>
-<text x="44" y="812" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TYPES</text>
-<circle cx="52" cy="830" r="7" fill="#3178c6" />
-<text x="68" y="836" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
-<circle cx="232" cy="830" r="7" fill="#3572A5" />
-<text x="248" y="836" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
-<line x1="104" y1="870" x2="646" y2="870" stroke="#e1e4e8" stroke-width="1" />
-<text x="375" y="900" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
-<g transform="translate(614 56)">
-<polygon points="46,0 92,46 46,92 0,46" fill="#cd7f32" />
-<polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
-<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">C</text>
-</g>
-<text x="44" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
-<text x="706" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
-</svg>"
-`;
-
-exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-C-dark 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-<defs><linearGradient id="metalC" x1="0" y1="0" x2="1" y2="1">
-  <stop offset="0%" stop-color="#e0955e" />
-  <stop offset="50%" stop-color="#7a4a1f" />
-  <stop offset="100%" stop-color="#cd7f32" />
-</linearGradient></defs>
-<rect x="0" y="0" width="750" height="1050" fill="#0d1117" rx="36" />
-<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="url(#metalC)" stroke-width="8" />
-<rect x="16" y="16" width="718" height="1018" rx="24" fill="none" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1" />
-<text x="44" y="84" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
-<text x="44" y="128" font-size="42" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
-<g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
-<clipPath id="artClip"><rect x="44" y="210" width="662" height="290" rx="18" /></clipPath>
-<g clip-path="url(#artClip)"><g transform="translate(44 210)"><g>
-<rect x="0" y="0" width="662" height="290" fill="#161b22" />
-<path d="M 625.6 98.2 Q 562.7 96.7 526.2 147.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 526.2 147.3 Q 305.5 204 69.3 209.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 69.3 209.5 Q 290.8 155.1 530.6 135.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 530.6 135.3 Q 520.8 207.8 570.8 258.6" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 570.8 258.6 Q 392.4 171.5 176.8 138.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 176.8 138.5 Q 343.4 198.1 498.3 233.4" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 498.3 233.4 Q 526.9 196.2 503 214.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 503 214.5 Q 406.5 152.3 302.2 41.8" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 302.2 41.8 Q 231.4 144.4 150.2 206" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<circle cx="625.6" cy="98.2" r="9.2" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="570.8" cy="258.6" r="9.7" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="302.2" cy="41.8" r="8.6" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="625.6" cy="98.2" r="3.2" fill="#a371f7" fill-opacity="0.9" />
-<circle cx="526.2" cy="147.3" r="2.7" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="69.3" cy="209.5" r="5" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="530.6" cy="135.3" r="4.8" fill="#a371f7" fill-opacity="0.9" />
-<circle cx="570.8" cy="258.6" r="3.7" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="176.8" cy="138.5" r="2.6" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="498.3" cy="233.4" r="3.8" fill="#a371f7" fill-opacity="0.9" />
-<circle cx="503" cy="214.5" r="3.8" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="302.2" cy="41.8" r="2.6" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="150.2" cy="206" r="1.9" fill="#a371f7" fill-opacity="0.9" />
-</g></g></g>
-<rect x="44" y="210" width="662" height="290" rx="18" fill="none" stroke="#30363d" />
-<text x="44" y="530" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">STATS</text>
-<text x="44" y="563" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
-<rect x="234" y="548" width="408" height="18" fill="#21262d" rx="9" />
-<rect x="234" y="548" width="335" height="18" fill="#a371f7" rx="9" />
-<text x="658" y="563" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">82</text>
-<text x="44" y="607" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">DIVERSITY</text>
-<rect x="234" y="592" width="408" height="18" fill="#21262d" rx="9" />
-<rect x="234" y="592" width="245" height="18" fill="#a371f7" rx="9" />
-<text x="658" y="607" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">60</text>
-<text x="44" y="651" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">CONSISTENCY</text>
-<rect x="234" y="636" width="408" height="18" fill="#21262d" rx="9" />
-<rect x="234" y="636" width="302" height="18" fill="#a371f7" rx="9" />
-<text x="658" y="651" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">74</text>
-<text x="44" y="702" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">LOADOUT</text>
-<rect x="44" y="716" width="134" height="36" fill="#1f2937" rx="18" />
-<text x="111" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Claude 70%</text>
-<rect x="190" y="716" width="134" height="36" fill="#1f2937" rx="18" />
-<text x="257" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Cursor 30%</text>
-<rect x="336" y="716" width="184" height="36" rx="18" fill="none" stroke="#a371f7" stroke-opacity="0.5" stroke-dasharray="4 3" />
-<text x="428" y="740" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex · equipped</text>
-<text x="44" y="812" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TYPES</text>
-<circle cx="52" cy="830" r="7" fill="#3178c6" />
-<text x="68" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
-<circle cx="232" cy="830" r="7" fill="#3572A5" />
-<text x="248" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
-<line x1="104" y1="870" x2="646" y2="870" stroke="#30363d" stroke-width="1" />
-<text x="375" y="900" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
-<g transform="translate(614 56)">
-<polygon points="46,0 92,46 46,92 0,46" fill="#cd7f32" />
-<polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
-<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">C</text>
-</g>
-<text x="44" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
-<text x="706" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
-</svg>"
-`;
-
-exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-D-light 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-<defs></defs>
-<rect x="0" y="0" width="750" height="1050" fill="#ffffff" rx="36" />
-<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="#6e7681" stroke-width="6" stroke-opacity="0.8" />
-<text x="44" y="84" font-size="16" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
-<text x="44" y="128" font-size="42" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
-<g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
-<clipPath id="artClip"><rect x="44" y="210" width="662" height="290" rx="18" /></clipPath>
-<g clip-path="url(#artClip)"><g transform="translate(44 210)"><g>
-<rect x="0" y="0" width="662" height="290" fill="#f6f8fa" />
-<path d="M 625.6 98.2 Q 562.7 96.7 526.2 147.3" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 526.2 147.3 Q 305.5 204 69.3 209.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 69.3 209.5 Q 290.8 155.1 530.6 135.3" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 530.6 135.3 Q 520.8 207.8 570.8 258.6" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 570.8 258.6 Q 392.4 171.5 176.8 138.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 176.8 138.5 Q 343.4 198.1 498.3 233.4" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 498.3 233.4 Q 526.9 196.2 503 214.5" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 503 214.5 Q 406.5 152.3 302.2 41.8" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 302.2 41.8 Q 231.4 144.4 150.2 206" fill="none" stroke="#6f42c1" stroke-opacity="0.35" stroke-width="1" />
-<circle cx="625.6" cy="98.2" r="9.2" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="570.8" cy="258.6" r="9.7" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="302.2" cy="41.8" r="8.6" fill="none" stroke="#6f42c1" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="625.6" cy="98.2" r="3.2" fill="#6f42c1" fill-opacity="0.9" />
-<circle cx="526.2" cy="147.3" r="2.7" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="69.3" cy="209.5" r="5" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="530.6" cy="135.3" r="4.8" fill="#6f42c1" fill-opacity="0.9" />
-<circle cx="570.8" cy="258.6" r="3.7" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="176.8" cy="138.5" r="2.6" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="498.3" cy="233.4" r="3.8" fill="#6f42c1" fill-opacity="0.9" />
-<circle cx="503" cy="214.5" r="3.8" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="302.2" cy="41.8" r="2.6" fill="#6f42c1" fill-opacity="0.55" />
-<circle cx="150.2" cy="206" r="1.9" fill="#6f42c1" fill-opacity="0.9" />
-</g></g></g>
-<rect x="44" y="210" width="662" height="290" rx="18" fill="none" stroke="#e1e4e8" />
-<text x="44" y="530" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">STATS</text>
-<text x="44" y="563" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
-<rect x="234" y="548" width="408" height="18" fill="#eaecef" rx="9" />
-<rect x="234" y="548" width="335" height="18" fill="#6f42c1" rx="9" />
-<text x="658" y="563" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">82</text>
-<text x="44" y="607" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">DIVERSITY</text>
-<rect x="234" y="592" width="408" height="18" fill="#eaecef" rx="9" />
-<rect x="234" y="592" width="245" height="18" fill="#6f42c1" rx="9" />
-<text x="658" y="607" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">60</text>
-<text x="44" y="651" font-size="18" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">CONSISTENCY</text>
-<rect x="234" y="636" width="408" height="18" fill="#eaecef" rx="9" />
-<rect x="234" y="636" width="302" height="18" fill="#6f42c1" rx="9" />
-<text x="658" y="651" font-size="20" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">74</text>
-<text x="44" y="702" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">LOADOUT</text>
-<rect x="44" y="716" width="134" height="36" fill="#ddf4ff" rx="18" />
-<text x="111" y="740" font-size="17" fill="#24292e" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Claude 70%</text>
-<rect x="190" y="716" width="134" height="36" fill="#ddf4ff" rx="18" />
-<text x="257" y="740" font-size="17" fill="#24292e" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Cursor 30%</text>
-<rect x="336" y="716" width="184" height="36" rx="18" fill="none" stroke="#6f42c1" stroke-opacity="0.5" stroke-dasharray="4 3" />
-<text x="428" y="740" font-size="15" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex · equipped</text>
-<text x="44" y="812" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TYPES</text>
-<circle cx="52" cy="830" r="7" fill="#3178c6" />
-<text x="68" y="836" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
-<circle cx="232" cy="830" r="7" fill="#3572A5" />
-<text x="248" y="836" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
-<line x1="104" y1="870" x2="646" y2="870" stroke="#e1e4e8" stroke-width="1" />
-<text x="375" y="900" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
-<g transform="translate(614 56)">
-<polygon points="46,0 92,46 46,92 0,46" fill="#6e7681" />
-<polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
-<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">D</text>
-</g>
-<text x="44" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
-<text x="706" y="1010" font-size="15" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
-</svg>"
-`;
-
-exports[`renderCardV2 all five grades render for both themes (golden snapshots): card-D-dark 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-<defs></defs>
-<rect x="0" y="0" width="750" height="1050" fill="#0d1117" rx="36" />
-<rect x="10" y="10" width="730" height="1030" rx="28" fill="none" stroke="#6e7681" stroke-width="6" stroke-opacity="0.8" />
-<text x="44" y="84" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
-<text x="44" y="128" font-size="42" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
-<g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
-<clipPath id="artClip"><rect x="44" y="210" width="662" height="290" rx="18" /></clipPath>
-<g clip-path="url(#artClip)"><g transform="translate(44 210)"><g>
-<rect x="0" y="0" width="662" height="290" fill="#161b22" />
-<path d="M 625.6 98.2 Q 562.7 96.7 526.2 147.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 526.2 147.3 Q 305.5 204 69.3 209.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 69.3 209.5 Q 290.8 155.1 530.6 135.3" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 530.6 135.3 Q 520.8 207.8 570.8 258.6" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 570.8 258.6 Q 392.4 171.5 176.8 138.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 176.8 138.5 Q 343.4 198.1 498.3 233.4" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 498.3 233.4 Q 526.9 196.2 503 214.5" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 503 214.5 Q 406.5 152.3 302.2 41.8" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<path d="M 302.2 41.8 Q 231.4 144.4 150.2 206" fill="none" stroke="#a371f7" stroke-opacity="0.35" stroke-width="1" />
-<circle cx="625.6" cy="98.2" r="9.2" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="570.8" cy="258.6" r="9.7" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="302.2" cy="41.8" r="8.6" fill="none" stroke="#a371f7" stroke-opacity="0.3" stroke-width="1" />
-<circle cx="625.6" cy="98.2" r="3.2" fill="#a371f7" fill-opacity="0.9" />
-<circle cx="526.2" cy="147.3" r="2.7" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="69.3" cy="209.5" r="5" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="530.6" cy="135.3" r="4.8" fill="#a371f7" fill-opacity="0.9" />
-<circle cx="570.8" cy="258.6" r="3.7" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="176.8" cy="138.5" r="2.6" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="498.3" cy="233.4" r="3.8" fill="#a371f7" fill-opacity="0.9" />
-<circle cx="503" cy="214.5" r="3.8" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="302.2" cy="41.8" r="2.6" fill="#a371f7" fill-opacity="0.55" />
-<circle cx="150.2" cy="206" r="1.9" fill="#a371f7" fill-opacity="0.9" />
-</g></g></g>
-<rect x="44" y="210" width="662" height="290" rx="18" fill="none" stroke="#30363d" />
-<text x="44" y="530" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">STATS</text>
-<text x="44" y="563" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
-<rect x="234" y="548" width="408" height="18" fill="#21262d" rx="9" />
-<rect x="234" y="548" width="335" height="18" fill="#a371f7" rx="9" />
-<text x="658" y="563" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">82</text>
-<text x="44" y="607" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">DIVERSITY</text>
-<rect x="234" y="592" width="408" height="18" fill="#21262d" rx="9" />
-<rect x="234" y="592" width="245" height="18" fill="#a371f7" rx="9" />
-<text x="658" y="607" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">60</text>
-<text x="44" y="651" font-size="18" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">CONSISTENCY</text>
-<rect x="234" y="636" width="408" height="18" fill="#21262d" rx="9" />
-<rect x="234" y="636" width="302" height="18" fill="#a371f7" rx="9" />
-<text x="658" y="651" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">74</text>
-<text x="44" y="702" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">LOADOUT</text>
-<rect x="44" y="716" width="134" height="36" fill="#1f2937" rx="18" />
-<text x="111" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Claude 70%</text>
-<rect x="190" y="716" width="134" height="36" fill="#1f2937" rx="18" />
-<text x="257" y="740" font-size="17" fill="#c9d1d9" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Cursor 30%</text>
-<rect x="336" y="716" width="184" height="36" rx="18" fill="none" stroke="#a371f7" stroke-opacity="0.5" stroke-dasharray="4 3" />
-<text x="428" y="740" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex · equipped</text>
-<text x="44" y="812" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TYPES</text>
-<circle cx="52" cy="830" r="7" fill="#3178c6" />
-<text x="68" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
-<circle cx="232" cy="830" r="7" fill="#3572A5" />
-<text x="248" y="836" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
-<line x1="104" y1="870" x2="646" y2="870" stroke="#30363d" stroke-width="1" />
-<text x="375" y="900" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
-<g transform="translate(614 56)">
-<polygon points="46,0 92,46 46,92 0,46" fill="#6e7681" />
-<polygon points="46,8 84,46 46,84 8,46" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
-<text x="46" y="58" font-size="34" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">D</text>
-</g>
-<text x="44" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
-<text x="706" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
 </svg>"
 `;
