@@ -1,8 +1,10 @@
 import { App } from '@octokit/app'
+import { getCachedOrProduce } from '../src/cache'
 import type { GitHubQueryResponse } from '../src/github/types'
 import { buildCardData, handleRequest } from '../src/handler'
 import { renderLandingPage } from '../src/landing'
 import { isBotRequest, renderOgpHtml, svgToPng } from '../src/ogp'
+import { renderPlaceholderCard } from '../src/svg/v2/cardV2'
 import { renderOgError, renderOgShare } from '../src/svg/v2/ogShare'
 
 interface RateLimiter {
@@ -13,6 +15,7 @@ interface Env {
   GITHUB_APP_ID: string
   GITHUB_APP_PRIVATE_KEY: string
   GITHUB_APP_INSTALLATION_ID: string
+  DEVCARD_KV: KVNamespace
   API_RATELIMIT?: RateLimiter
 }
 
@@ -36,10 +39,19 @@ const GH_LOGIN_RE = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/
 
 function parseParams(url: URL) {
   const rawUser = url.searchParams.get('user') ?? ''
-  const user = GH_LOGIN_RE.test(rawUser) ? rawUser : ''
+  // 空はランディング用に有効扱い。非空で GitHub login 規約に合わないものだけ不正
+  const userValid = rawUser === '' || GH_LOGIN_RE.test(rawUser)
+  const user = userValid ? rawUser : ''
   const rawTheme = url.searchParams.get('theme') ?? 'light'
   const theme = VALID_THEMES.has(rawTheme) ? rawTheme : 'light'
-  return { user, theme }
+  return { user, theme, invalidUser: !userValid }
+}
+
+function badRequestResponse(message: string): Response {
+  return new Response(message, {
+    status: 400,
+    headers: { 'Cache-Control': 'public, max-age=3600' },
+  })
 }
 
 function createGraphql(octokit: Awaited<ReturnType<App['getInstallationOctokit']>>) {
@@ -72,15 +84,9 @@ export default {
 
     // /og endpoint — returns a 1200x630 landscape PNG share image
     if (pathname === '/og') {
-      const { user, theme } = parseParams(url)
-      // parseParams already rejects invalid GitHub logins to ''. Task 9 will split
-      // this into distinct 400 (malformed) vs 404 (unknown) responses.
-      if (!user) {
-        return new Response('Invalid user parameter', {
-          status: 400,
-          headers: { 'Cache-Control': 'public, max-age=3600' },
-        })
-      }
+      const { user, theme, invalidUser } = parseParams(url)
+      if (invalidUser) return badRequestResponse('Invalid user parameter')
+      if (!user) return badRequestResponse('User parameter required')
       if (await rateLimited(req, env)) return rateLimitedResponse()
 
       const githubApp = getApp(env)
@@ -125,7 +131,8 @@ export default {
     }
 
     // No user param → landing page
-    const { user, theme } = parseParams(url)
+    const { user, theme, invalidUser } = parseParams(url)
+    if (invalidUser) return badRequestResponse('Invalid user parameter')
     if (!user && pathname === '/') {
       return new Response(renderLandingPage(), {
         headers: {
@@ -134,24 +141,60 @@ export default {
         },
       })
     }
+    // 空 user がランディング以外に流れたら GitHub API に触れる前に 400 で止める
+    if (!user) return badRequestResponse('User parameter required')
 
-    // Normal request — return SVG
+    // Normal request — return SVG（KV stale-if-error キャッシュ経由）
     if (await rateLimited(req, env)) return rateLimitedResponse()
     const githubApp = getApp(env)
     const octokit = await githubApp.getInstallationOctokit(
       Number(env.GITHUB_APP_INSTALLATION_ID),
     )
 
-    const result = await handleRequest(
-      { user, theme },
-      createGraphql(octokit),
-    )
+    let svg: string
+    let kind = 'error'
+    let cacheState = 'none'
+    try {
+      const cached = await getCachedOrProduce({
+        kv: env.DEVCARD_KV,
+        key: `card:v2:${user}:${theme}`,
+        freshTtlSec: 3600,
+        staleTtlSec: 86400,
+        produce: async () => {
+          const result = await handleRequest({ user, theme }, createGraphql(octokit))
+          // エラーカードはキャッシュせず throw して stale 供給に切り替える
+          if (result.kind === 'error') throw new Error('upstream error')
+          return { svg: result.svg, kind: result.kind }
+        },
+        shouldCache: (v) =>
+          v.kind === 'ok' || v.kind === 'not_found' || v.kind === 'no_ai' || v.kind === 'no_repos',
+      })
+      svg = cached.value.svg
+      kind = cached.value.kind
+      cacheState = cached.cacheState
+    } catch {
+      // fresh も stale も無い完全失敗 → プレースホルダカード（エラー画像は出さない）
+      svg = renderPlaceholderCard(user, theme)
+      kind = 'placeholder'
+    }
 
-    return new Response(result.svg, {
-      status: result.status,
+    // not_found: HTML を明示要求するクライアント（ブラウザ直叩き）には 404、
+    // 画像コンテキスト（GitHub camo / <img>）には 200 + エラーカード SVG を返す。
+    // 4xx を画像に返すと README で broken image になるための設計判断（spec 受け入れ条件4）
+    const accept = req.headers.get('accept') ?? ''
+    if (kind === 'not_found' && accept.includes('text/html')) {
+      return new Response('User not found', {
+        status: 404,
+        headers: { 'Cache-Control': 'public, max-age=3600' },
+      })
+    }
+
+    return new Response(svg, {
+      status: 200,
       headers: {
         'Content-Type': 'image/svg+xml',
         'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+        'X-Cache-State': cacheState,
       },
     })
   },

@@ -25,3 +25,9 @@ simple = { limit = 60, period = 60 }
 type = "Data"
 globs = ["**/*.ttf"]
 fallthrough = true
+
+# SWR card cache: fresh 1h / stale 24h (stale-if-error). GitHub API 枯渇時は
+# stale を供給し、それも無ければ placeholder カードにフォールバックする。
+[[kv_namespaces]]
+binding = "DEVCARD_KV"
+id = "ca24610c06d74e7e933bc45534c49451"
