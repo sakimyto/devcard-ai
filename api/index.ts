@@ -3,7 +3,6 @@ import type { GitHubQueryResponse } from '../src/github/types'
 import { handleRequest } from '../src/handler'
 import { renderLandingPage } from '../src/landing'
 import { isBotRequest, renderOgpHtml, svgToPng } from '../src/ogp'
-import { MODULE_HEIGHTS } from '../src/svg/card'
 
 interface RateLimiter {
   limit(opts: { key: string }): Promise<{ success: boolean }>
@@ -30,7 +29,6 @@ function getApp(env: Env): App {
   return app
 }
 
-const VALID_MODULES = new Set(Object.keys(MODULE_HEIGHTS))
 const VALID_THEMES = new Set(['light', 'dark'])
 // GitHub login spec: 1-39 chars, alphanumeric and single hyphens, not starting with hyphen.
 const GH_LOGIN_RE = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/
@@ -38,12 +36,9 @@ const GH_LOGIN_RE = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/
 function parseParams(url: URL) {
   const rawUser = url.searchParams.get('user') ?? ''
   const user = GH_LOGIN_RE.test(rawUser) ? rawUser : ''
-  const modules = (url.searchParams.get('modules') ?? '')
-    .split(',')
-    .filter((m) => VALID_MODULES.has(m))
   const rawTheme = url.searchParams.get('theme') ?? 'light'
   const theme = VALID_THEMES.has(rawTheme) ? rawTheme : 'light'
-  return { user, modules, theme }
+  return { user, theme }
 }
 
 function createGraphql(octokit: Awaited<ReturnType<App['getInstallationOctokit']>>) {
@@ -77,7 +72,7 @@ export default {
     // /og endpoint — returns PNG image
     if (pathname === '/og') {
       if (await rateLimited(req, env)) return rateLimitedResponse()
-      const { user, modules, theme } = parseParams(url)
+      const { user, theme } = parseParams(url)
 
       const githubApp = getApp(env)
       const octokit = await githubApp.getInstallationOctokit(
@@ -85,7 +80,7 @@ export default {
       )
 
       const result = await handleRequest(
-        { user, modules, theme },
+        { user, theme },
         createGraphql(octokit),
       )
 
@@ -120,7 +115,7 @@ export default {
     }
 
     // No user param → landing page
-    const { user, modules, theme } = parseParams(url)
+    const { user, theme } = parseParams(url)
     if (!user && pathname === '/') {
       return new Response(renderLandingPage(), {
         headers: {
@@ -138,7 +133,7 @@ export default {
     )
 
     const result = await handleRequest(
-      { user, modules, theme },
+      { user, theme },
       createGraphql(octokit),
     )
 

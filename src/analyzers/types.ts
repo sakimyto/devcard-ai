@@ -4,18 +4,6 @@ export interface CoauthorAnalysis {
 	rate: number; // 0-1
 }
 
-// === Score ===
-export interface ScoreAnalysis {
-	grade: "S" | "A" | "B" | "C" | "D";
-	points: number;
-	breakdown: {
-		hasTools: boolean;
-		multipleTools: boolean;
-		activeAiCommits: boolean;
-		recentActivity: boolean;
-	};
-}
-
 // === Stats (v2) ===
 export type Grade = "S" | "A" | "B" | "C" | "D";
 export interface StatsAnalysis {
@@ -92,21 +80,6 @@ export interface VelocityAnalysis {
 	sparkline: number[]; // length 12, oldest → newest
 	firstAiDate: string | null; // 'YYYY-MM-DD'
 	daysSinceFirst: number; // days from first AI commit to now (UTC days)
-}
-
-// === Badges ===
-export type { Badge, BadgeAnalysis } from "./badges";
-
-// === Card Data ===
-export interface CardData {
-	username: string;
-	score: ScoreAnalysis;
-	toolAttribution: ToolAttributionAnalysis;
-	usage: UsageAnalysis;
-	languages: LanguageAnalysis;
-	pattern: PatternAnalysis;
-	badges: import("./badges").BadgeAnalysis;
-	velocity: VelocityAnalysis;
 }
 
 // === Card Data (v2) ===

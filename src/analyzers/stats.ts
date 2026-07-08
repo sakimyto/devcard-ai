@@ -16,7 +16,7 @@ export interface StatsInput {
   now?: Date
 }
 
-function gradeFromPoints(points: number): Grade {
+export function gradeFromPoints(points: number): Grade {
   if (points >= 80) return 'S'
   if (points >= 60) return 'A'
   if (points >= 40) return 'B'

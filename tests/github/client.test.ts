@@ -40,17 +40,29 @@ describe("fetchUserData", () => {
 			},
 		});
 
-		const result = await fetchUserData("testuser", mockGraphql);
+		const result = await fetchUserData(
+			"testuser",
+			mockGraphql,
+			"2026-04-15T12:00:00.000Z",
+		);
 
 		expect(result).not.toBeNull();
 		expect(result?.login).toBe("testuser");
 		expect(result?.repositories.nodes).toHaveLength(1);
 		expect(mockGraphql).toHaveBeenCalledOnce();
+		expect(mockGraphql).toHaveBeenCalledWith(expect.any(String), {
+			login: "testuser",
+			since: "2026-04-15T12:00:00.000Z",
+		});
 	});
 
 	it("returns null for non-existent user", async () => {
 		const mockGraphql = vi.fn().mockResolvedValue({ user: null });
-		const result = await fetchUserData("nonexistent", mockGraphql);
+		const result = await fetchUserData(
+			"nonexistent",
+			mockGraphql,
+			"2026-04-15T12:00:00.000Z",
+		);
 		expect(result).toBeNull();
 	});
 });

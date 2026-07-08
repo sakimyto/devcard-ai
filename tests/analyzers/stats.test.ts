@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { analyzeStats } from '~/analyzers/stats'
+import { analyzeStats, gradeFromPoints } from '~/analyzers/stats'
 import type { GitHubCommit } from '~/github/types'
 import type { UsageAnalysis } from '~/analyzers/types'
 
@@ -148,5 +148,20 @@ describe('analyzeStats', () => {
     })
     expect(d.points).toBeLessThan(20)
     expect(d.grade).toBe('D')
+  })
+
+  it('gradeFromPoints pins A/B/C/D/S boundary edges (20/40/60/80)', () => {
+    // C/D edge at 20
+    expect(gradeFromPoints(19)).toBe('D')
+    expect(gradeFromPoints(20)).toBe('C')
+    // B/C edge at 40
+    expect(gradeFromPoints(39)).toBe('C')
+    expect(gradeFromPoints(40)).toBe('B')
+    // A/B edge at 60
+    expect(gradeFromPoints(59)).toBe('B')
+    expect(gradeFromPoints(60)).toBe('A')
+    // S/A edge at 80
+    expect(gradeFromPoints(79)).toBe('A')
+    expect(gradeFromPoints(80)).toBe('S')
   })
 })

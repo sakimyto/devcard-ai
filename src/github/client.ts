@@ -9,7 +9,8 @@ type GraphqlFn = (
 export async function fetchUserData(
 	login: string,
 	graphql: GraphqlFn,
+	since: string,
 ): Promise<GitHubUser | null> {
-	const response = await graphql(USER_REPOS_QUERY, { login });
+	const response = await graphql(USER_REPOS_QUERY, { login, since });
 	return response.user;
 }

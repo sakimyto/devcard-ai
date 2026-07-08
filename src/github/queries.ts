@@ -1,5 +1,5 @@
 export const USER_REPOS_QUERY = `
-  query($login: String!) {
+  query($login: String!, $since: GitTimestamp!) {
     user(login: $login) {
       login
       repositories(
@@ -13,7 +13,7 @@ export const USER_REPOS_QUERY = `
           defaultBranchRef {
             target {
               ... on Commit {
-                history(first: 100) {
+                history(first: 100, since: $since) {
                   nodes {
                     oid
                     message
