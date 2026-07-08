@@ -32,24 +32,33 @@ type GraphqlFn = (
   variables: Record<string, unknown>,
 ) => Promise<GitHubQueryResponse>
 
-export async function handleRequest(
+export interface BuildResult {
+  kind: HandlerKind
+  data?: CardDataV2
+  errorMessage?: string
+}
+
+// Analysis core shared by the SVG card (/) and the PNG share image (/og). Returns
+// the analyzed data or a typed failure; rendering is left to each caller so the two
+// surfaces can draw the same result differently (vertical card vs landscape share).
+export async function buildCardData(
   params: RequestParams,
   graphql: GraphqlFn,
   now: Date = new Date(),
-): Promise<HandlerResult> {
-  const { user, theme } = params
+): Promise<BuildResult> {
+  const { user } = params
 
   try {
     // 12週窓の下限を GraphQL 側にも伝え、窓外コミットの取得自体を止める（per-repo 100件上限を窓内に使う）
     const since = new Date(now.getTime() - WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString()
     const userData = await fetchUserData(user, graphql, since)
     if (!userData) {
-      return { svg: renderErrorCard('User not found', theme), status: 200, kind: 'not_found' }
+      return { kind: 'not_found', errorMessage: 'User not found' }
     }
 
     const repos = userData.repositories.nodes
     if (repos.length === 0) {
-      return { svg: renderErrorCard('No public repos', theme), status: 200, kind: 'no_repos' }
+      return { kind: 'no_repos', errorMessage: 'No public repos' }
     }
 
     const allCommits: GitHubCommit[] = repos.flatMap((r) =>
@@ -68,11 +77,7 @@ export async function handleRequest(
     const equipped = analyzeEquipped(repos)
 
     if (windowAiCommits.length === 0) {
-      return {
-        svg: renderErrorCard('No public AI activity in the last 12 weeks', theme),
-        status: 200,
-        kind: 'no_ai',
-      }
+      return { kind: 'no_ai', errorMessage: 'No public AI activity in the last 12 weeks' }
     }
 
     const toolAttribution = analyzeToolAttribution(windowAiCommits)
@@ -109,11 +114,28 @@ export async function handleRequest(
       issuedYear: now.getUTCFullYear(),
     }
 
-    return { svg: renderCardV2(data, { theme }), status: 200, kind: 'ok' }
+    return { kind: 'ok', data }
   } catch (error) {
     const isRateLimit = error instanceof Error && error.message.includes('rate limit')
-    console.error(`handleRequest error [${isRateLimit ? 'rate_limit' : 'unknown'}]:`, error)
+    console.error(`buildCardData error [${isRateLimit ? 'rate_limit' : 'unknown'}]:`, error)
     const message = isRateLimit ? 'GitHub API rate limit exceeded' : 'Temporarily unavailable'
-    return { svg: renderErrorCard(message, theme), status: 200, kind: 'error' }
+    return { kind: 'error', errorMessage: message }
+  }
+}
+
+export async function handleRequest(
+  params: RequestParams,
+  graphql: GraphqlFn,
+  now: Date = new Date(),
+): Promise<HandlerResult> {
+  const { theme } = params
+  const r = await buildCardData(params, graphql, now)
+  if (r.kind === 'ok' && r.data) {
+    return { svg: renderCardV2(r.data, { theme }), status: 200, kind: 'ok' }
+  }
+  return {
+    svg: renderErrorCard(r.errorMessage ?? 'Temporarily unavailable', theme),
+    status: 200,
+    kind: r.kind,
   }
 }

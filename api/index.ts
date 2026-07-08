@@ -1,8 +1,9 @@
 import { App } from '@octokit/app'
 import type { GitHubQueryResponse } from '../src/github/types'
-import { handleRequest } from '../src/handler'
+import { buildCardData, handleRequest } from '../src/handler'
 import { renderLandingPage } from '../src/landing'
 import { isBotRequest, renderOgpHtml, svgToPng } from '../src/ogp'
+import { renderOgError, renderOgShare } from '../src/svg/v2/ogShare'
 
 interface RateLimiter {
   limit(opts: { key: string }): Promise<{ success: boolean }>
@@ -69,23 +70,32 @@ export default {
     const url = new URL(req.url)
     const pathname = url.pathname
 
-    // /og endpoint — returns PNG image
+    // /og endpoint — returns a 1200x630 landscape PNG share image
     if (pathname === '/og') {
-      if (await rateLimited(req, env)) return rateLimitedResponse()
       const { user, theme } = parseParams(url)
+      // parseParams already rejects invalid GitHub logins to ''. Task 9 will split
+      // this into distinct 400 (malformed) vs 404 (unknown) responses.
+      if (!user) {
+        return new Response('Invalid user parameter', {
+          status: 400,
+          headers: { 'Cache-Control': 'public, max-age=3600' },
+        })
+      }
+      if (await rateLimited(req, env)) return rateLimitedResponse()
 
       const githubApp = getApp(env)
       const octokit = await githubApp.getInstallationOctokit(
         Number(env.GITHUB_APP_INSTALLATION_ID),
       )
 
-      const result = await handleRequest(
-        { user, theme },
-        createGraphql(octokit),
-      )
+      const r = await buildCardData({ user, theme }, createGraphql(octokit))
+      const svg =
+        r.kind === 'ok' && r.data
+          ? renderOgShare(r.data, theme)
+          : renderOgError(r.errorMessage ?? 'Temporarily unavailable', theme)
 
       try {
-        const png = await svgToPng(result.svg)
+        const png = await svgToPng(svg, 1200)
         return new Response(png as unknown as BodyInit, {
           headers: {
             'Content-Type': 'image/png',

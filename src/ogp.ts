@@ -1,7 +1,13 @@
 import { Resvg, initWasm } from '@resvg/resvg-wasm'
 import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm'
+import interBold from '../fonts/inter-bold-subset.ttf'
+import interRegular from '../fonts/inter-regular-subset.ttf'
 
 let initialized = false
+
+// Built once at module scope, not per request — the Worker's cpu_ms=100 budget
+// can't afford re-decoding the font buffers on every /og call.
+const FONT_BUFFERS = [new Uint8Array(interRegular), new Uint8Array(interBold)]
 
 async function ensureWasmInitialized(): Promise<void> {
   if (initialized) return
@@ -9,10 +15,17 @@ async function ensureWasmInitialized(): Promise<void> {
   initialized = true
 }
 
-export async function svgToPng(svg: string): Promise<Uint8Array> {
+export async function svgToPng(svg: string, widthPx = 1200): Promise<Uint8Array> {
   await ensureWasmInitialized()
   const resvg = new Resvg(svg, {
-    fitTo: { mode: 'width', value: 800 },
+    fitTo: { mode: 'width', value: widthPx },
+    // resvg-wasm has no filesystem, so system fonts are never available. Ship the
+    // subset TTFs explicitly — without this every text glyph rendered as nothing.
+    font: {
+      fontBuffers: FONT_BUFFERS,
+      defaultFontFamily: 'Inter',
+      loadSystemFonts: false,
+    },
   })
   const rendered = resvg.render()
   return rendered.asPng()
@@ -64,8 +77,8 @@ export function renderOgpHtml(user: string, baseUrl: string, theme: string): str
   <meta property="og:title" content="${title}" />
   <meta property="og:description" content="${description}" />
   <meta property="og:image" content="${safeImage}" />
-  <meta property="og:image:width" content="800" />
-  <meta property="og:image:height" content="600" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${title}" />
   <meta name="twitter:description" content="${description}" />

@@ -3,7 +3,7 @@
 AI coding style trading card generator for GitHub profiles.
 
 ## Commands
-- `bun test` — run tests
+- `bun run test` — run tests (Vitest; loads vitest.config.ts binary loader for wasm/fonts — `bun test` native can't run the resvg pixel test)
 - `bun run dev` — local Vercel dev server
 - `bun run typecheck` — type check
 - `bun run lint` — lint with Biome
