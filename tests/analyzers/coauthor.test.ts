@@ -88,3 +88,21 @@ describe("analyzeCoauthor", () => {
 		expect(result.rate).toBe(0);
 	});
 });
+
+import corpus from "./__fixtures__/commit-corpus.json";
+
+interface CorpusEntry {
+	message: string;
+	authorLogin: string | null;
+	expected: boolean;
+	expectedTool?: string;
+	note: string;
+}
+
+describe("isAiCommit corpus (oracle + new detections)", () => {
+	for (const c of corpus as CorpusEntry[]) {
+		it(`${c.note}: expected=${c.expected}`, () => {
+			expect(isAiCommit(c.message, c.authorLogin)).toBe(c.expected);
+		});
+	}
+});

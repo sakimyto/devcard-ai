@@ -1,5 +1,6 @@
 import type { GitHubCommit } from '~/github/types'
 import type { ToolAttribution, ToolAttributionAnalysis } from './types'
+import { detectAiSignal } from './aiPatterns'
 
 const TOOL_NAMES: Record<string, string> = {
   claude: 'Claude',
@@ -8,6 +9,7 @@ const TOOL_NAMES: Record<string, string> = {
   cursor: 'Cursor',
   windsurf: 'Windsurf',
   aider: 'Aider',
+  tabnine: 'Tabnine',
   cody: 'Cody',
   amazonq: 'Amazon Q',
   gemini: 'Gemini',
@@ -16,31 +18,8 @@ const TOOL_NAMES: Record<string, string> = {
   unknown: 'Other',
 }
 
-const BOT_TOOL_MAP: Record<string, string> = {
-  'copilot-for-prs[bot]': 'copilot',
-  'devin-ai-integration[bot]': 'devin',
-  'devin-ai[bot]': 'devin',
-  'sweep-ai[bot]': 'sweep',
-}
-
 function attributeTool(commit: GitHubCommit): string {
-  const msg = commit.message.toLowerCase()
-  const login = commit.author?.user?.login ?? ''
-
-  if (login && BOT_TOOL_MAP[login]) return BOT_TOOL_MAP[login]
-  if (login.endsWith('[bot]')) return 'unknown'
-
-  if (msg.includes('@anthropic.com') || /co-authored-by:.*\bclaude\b/i.test(msg)) return 'claude'
-  if (msg.includes('@openai.com') || /co-authored-by:.*\bcodex\b/i.test(msg)) return 'codex'
-  if (/co-authored-by:.*\bcopilot\b/i.test(msg)) return 'copilot'
-  if (/co-authored-by:.*\bcursor\b/i.test(msg)) return 'cursor'
-  if (/co-authored-by:.*\b(windsurf|codeium)\b/i.test(msg)) return 'windsurf'
-  if (msg.includes('@aider.chat') || /co-authored-by:.*\baider\b/i.test(msg)) return 'aider'
-  if (/co-authored-by:.*\b(cody|sourcegraph)\b/i.test(msg)) return 'cody'
-  if (/co-authored-by:.*\b(amazon-?q|amazonq)\b/i.test(msg)) return 'amazonq'
-  if (msg.includes('@google.com') || /co-authored-by:.*\bgemini\b/i.test(msg)) return 'gemini'
-
-  return 'unknown'
+  return detectAiSignal(commit.message, commit.author?.user?.login ?? null).toolId
 }
 
 export function analyzeToolAttribution(aiCommits: GitHubCommit[]): ToolAttributionAnalysis {

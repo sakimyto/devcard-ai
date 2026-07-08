@@ -60,3 +60,29 @@ describe('analyzeToolAttribution', () => {
     expect(result.tools[0].toolId).toBe('unknown')
   })
 })
+
+import corpus from './__fixtures__/commit-corpus.json'
+
+interface CorpusEntry {
+  message: string
+  authorLogin: string | null
+  expected: boolean
+  expectedTool?: string
+  note: string
+}
+
+describe('detection ↔ attribution contract', () => {
+  const entries = (corpus as CorpusEntry[]).filter((c) => c.expected)
+  for (const c of entries) {
+    it(`${c.note} → toolId=${c.expectedTool}`, () => {
+      const commit: GitHubCommit = {
+        oid: 'x',
+        message: c.message,
+        committedDate: '2026-07-01T00:00:00Z',
+        author: { user: c.authorLogin ? { login: c.authorLogin } : null },
+      }
+      const result = analyzeToolAttribution([commit])
+      expect(result.tools[0]?.toolId).toBe(c.expectedTool)
+    })
+  }
+})
