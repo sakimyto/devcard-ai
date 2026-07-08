@@ -1,6 +1,8 @@
 import { PNG } from 'pngjs'
 import { describe, expect, it } from 'vitest'
+import type { CardDataV2 } from '~/analyzers/types'
 import { isBotRequest, renderOgpHtml, svgToPng } from '~/ogp'
+import { renderOgShare } from '~/svg/v2/ogShare'
 import { themes } from '~/svg/themes'
 
 describe('isBotRequest', () => {
@@ -74,19 +76,27 @@ describe('renderOgpHtml', () => {
   })
 })
 
-// Layout constants for the probe SVG — the inspection rect is derived from these,
-// never hardcoded, so the assertion tracks the drawn glyph box exactly.
-const CANVAS = { w: 200, h: 60 }
-const TEXT = { x: 10, baselineY: 40, fontSize: 32, content: 'HELLO' }
-// Glyph ink lives from ~ascent (≈fontSize above the baseline) to a little below it.
-const TEXT_RECT = {
-  x: TEXT.x,
-  y: TEXT.baselineY - TEXT.fontSize,
-  w: Math.round(TEXT.fontSize * 0.6 * TEXT.content.length),
-  h: TEXT.fontSize + 8,
-}
 const MIN_INK_RATIO = 0.02 // >2% of the rect non-background ⇒ glyphs actually drew
 const CHANNEL_DIFF_THRESHOLD = 30
+
+// Mirrors renderOgShare's username layout in src/svg/v2/ogShare.ts (PAD=72, baseline
+// y=180, fontSize=56). Kept in sync there; the inspection rect is derived from these,
+// never hardcoded, so it tracks the drawn glyph box.
+const OG_USERNAME = { pad: 72, baselineY: 180, fontSize: 56 }
+
+const PROBE_DATA: CardDataV2 = {
+  username: 'testuser',
+  stats: { velocity: 82, diversity: 60, consistency: 74, points: 73, grade: 'S', aiCommitsInWindow: 120, activeWeeks: 9 },
+  toolAttribution: { tools: [], totalAiCommits: 120, verified: true },
+  equipped: { equipped: [] },
+  usage: { categories: [], totalCommits: 120 },
+  languages: { languages: [] },
+  pattern: { pattern: 'AI Native', aiRate: 0.7, alternationScore: 0.3 },
+  flavor: 'x',
+  serial: '#7F3A',
+  seed: 42,
+  issuedYear: 2026,
+}
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } {
   return {
@@ -96,21 +106,34 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } {
   }
 }
 
+// The real /og path draws every glyph through svgText, whose font-family is the
+// `-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif` stack — NONE of which
+// resvg has. Correct text therefore depends entirely on svgToPng's fallback to
+// `defaultFontFamily: 'Inter'`. This test rasterizes the actual renderOgShare output
+// (not a bespoke font-family="Inter" SVG), so it goes red the moment that fallback
+// breaks — e.g. defaultFontFamily removed or svgText's family stack changed — which
+// is exactly the "all OGP text missing" regression Task 8 fixed. A direct
+// font-family="Inter" probe would stay green through such a regression (false green).
 describe('svgToPng font rendering regression (pixel inspection)', () => {
-  it('renders text ink inside the glyph box — font-missing detector', async () => {
-    const bg = themes.light.bg // same theme constant the cards paint their background with
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${CANVAS.w}" height="${CANVAS.h}">
-      <rect width="${CANVAS.w}" height="${CANVAS.h}" fill="${bg}"/>
-      <text x="${TEXT.x}" y="${TEXT.baselineY}" font-size="${TEXT.fontSize}" fill="#000000" font-family="Inter">${TEXT.content}</text>
-    </svg>`
-    const bytes = await svgToPng(svg, CANVAS.w)
+  it('renders username ink via the production svgText → Inter fallback path', async () => {
+    const bg = themes.dark.bg // renderOgShare paints the canvas with this theme constant
+    const svg = renderOgShare(PROBE_DATA, 'dark')
+    const bytes = await svgToPng(svg, 1200)
     const png = PNG.sync.read(Buffer.from(bytes))
     const bgRgb = hexToRgb(bg)
 
+    // Glyph ink spans from ~ascent (≈fontSize above the baseline) to a little below it.
+    const rect = {
+      x: OG_USERNAME.pad,
+      y: OG_USERNAME.baselineY - OG_USERNAME.fontSize,
+      w: Math.round(OG_USERNAME.fontSize * 0.6 * PROBE_DATA.username.length),
+      h: OG_USERNAME.fontSize + 8,
+    }
+
     let ink = 0
     let total = 0
-    for (let y = TEXT_RECT.y; y < TEXT_RECT.y + TEXT_RECT.h && y < png.height; y++) {
-      for (let x = TEXT_RECT.x; x < TEXT_RECT.x + TEXT_RECT.w && x < png.width; x++) {
+    for (let y = rect.y; y < rect.y + rect.h && y < png.height; y++) {
+      for (let x = rect.x; x < rect.x + rect.w && x < png.width; x++) {
         const i = (png.width * y + x) << 2
         total++
         const diff =
