@@ -88,6 +88,30 @@ describe('getCachedOrProduce', () => {
     expect(await kv.get('k')).toBeNull()
   })
 
+  it('kv.put throws after successful produce → value still returned as miss', async () => {
+    const kv = fakeKv()
+    kv.put = async () => {
+      throw new Error('kv write down')
+    }
+    const r = await getCachedOrProduce({
+      kv, key: 'k', freshTtlSec: 3600, staleTtlSec: 86400, now: () => NOW,
+      produce: async () => 'good-value',
+    })
+    expect(r).toEqual({ value: 'good-value', cacheState: 'miss' })
+  })
+
+  it('kv.get throws → treated as miss, produce still called', async () => {
+    const kv = fakeKv()
+    kv.get = async () => {
+      throw new Error('kv read down')
+    }
+    const r = await getCachedOrProduce({
+      kv, key: 'k', freshTtlSec: 3600, staleTtlSec: 86400, now: () => NOW,
+      produce: async () => 'produced',
+    })
+    expect(r).toEqual({ value: 'produced', cacheState: 'miss' })
+  })
+
   it('corrupt KV entry → treated as miss, repopulated', async () => {
     const kv = fakeKv()
     await kv.put('k', '{not json')

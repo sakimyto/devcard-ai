@@ -54,6 +54,48 @@ function badRequestResponse(message: string): Response {
   })
 }
 
+function notFoundResponse(): Response {
+  return new Response('User not found', {
+    status: 404,
+    headers: { 'Cache-Control': 'public, max-age=3600' },
+  })
+}
+
+interface ResolvedCard {
+  svg: string
+  kind: string
+  cacheState: string
+}
+
+// KV SWR 経由でカードを解決する。GitHub App 認証は produce 内（miss/expired 時のみ）に
+// 遅延させ、fresh hit を GitHub 側の認証・API 障害から完全に切り離す。
+// fresh も stale も無い完全失敗だけが placeholder に落ちる。
+async function resolveCard(user: string, theme: string, env: Env): Promise<ResolvedCard> {
+  try {
+    const cached = await getCachedOrProduce({
+      kv: env.DEVCARD_KV,
+      key: `card:v2:${user}:${theme}`,
+      freshTtlSec: 3600,
+      staleTtlSec: 86400,
+      produce: async () => {
+        const githubApp = getApp(env)
+        const octokit = await githubApp.getInstallationOctokit(
+          Number(env.GITHUB_APP_INSTALLATION_ID),
+        )
+        const result = await handleRequest({ user, theme }, createGraphql(octokit))
+        // エラーカードはキャッシュせず throw して stale 供給に切り替える
+        if (result.kind === 'error') throw new Error('upstream error')
+        return { svg: result.svg, kind: result.kind }
+      },
+      shouldCache: (v) =>
+        v.kind === 'ok' || v.kind === 'not_found' || v.kind === 'no_ai' || v.kind === 'no_repos',
+    })
+    return { svg: cached.value.svg, kind: cached.value.kind, cacheState: cached.cacheState }
+  } catch {
+    return { svg: renderPlaceholderCard(user, theme), kind: 'placeholder', cacheState: 'none' }
+  }
+}
+
 function createGraphql(octokit: Awaited<ReturnType<App['getInstallationOctokit']>>) {
   return async (query: string, variables: Record<string, unknown>) => {
     return octokit.graphql<GitHubQueryResponse>(query, variables)
@@ -114,11 +156,14 @@ export default {
       }
     }
 
-    // Bot User-Agent → return OGP HTML
+    // Bot User-Agent → return OGP HTML（存在しないユーザーは 200 を返さず 404）
     const userAgent = req.headers.get('user-agent') ?? ''
     if (isBotRequest(userAgent)) {
-      const { user, theme } = parseParams(url)
-      if (user) {
+      const { user, theme, invalidUser } = parseParams(url)
+      if (!invalidUser && user) {
+        if (await rateLimited(req, env)) return rateLimitedResponse()
+        const card = await resolveCard(user, theme, env)
+        if (card.kind === 'not_found') return notFoundResponse()
         const baseUrl = `${url.protocol}//${url.host}`
         const html = renderOgpHtml(user, baseUrl, theme)
         return new Response(html, {
@@ -146,55 +191,34 @@ export default {
 
     // Normal request — return SVG（KV stale-if-error キャッシュ経由）
     if (await rateLimited(req, env)) return rateLimitedResponse()
-    const githubApp = getApp(env)
-    const octokit = await githubApp.getInstallationOctokit(
-      Number(env.GITHUB_APP_INSTALLATION_ID),
-    )
-
-    let svg: string
-    let kind = 'error'
-    let cacheState = 'none'
-    try {
-      const cached = await getCachedOrProduce({
-        kv: env.DEVCARD_KV,
-        key: `card:v2:${user}:${theme}`,
-        freshTtlSec: 3600,
-        staleTtlSec: 86400,
-        produce: async () => {
-          const result = await handleRequest({ user, theme }, createGraphql(octokit))
-          // エラーカードはキャッシュせず throw して stale 供給に切り替える
-          if (result.kind === 'error') throw new Error('upstream error')
-          return { svg: result.svg, kind: result.kind }
-        },
-        shouldCache: (v) =>
-          v.kind === 'ok' || v.kind === 'not_found' || v.kind === 'no_ai' || v.kind === 'no_repos',
-      })
-      svg = cached.value.svg
-      kind = cached.value.kind
-      cacheState = cached.cacheState
-    } catch {
-      // fresh も stale も無い完全失敗 → プレースホルダカード（エラー画像は出さない）
-      svg = renderPlaceholderCard(user, theme)
-      kind = 'placeholder'
-    }
+    const card = await resolveCard(user, theme, env)
 
     // not_found: HTML を明示要求するクライアント（ブラウザ直叩き）には 404、
     // 画像コンテキスト（GitHub camo / <img>）には 200 + エラーカード SVG を返す。
     // 4xx を画像に返すと README で broken image になるための設計判断（spec 受け入れ条件4）
     const accept = req.headers.get('accept') ?? ''
-    if (kind === 'not_found' && accept.includes('text/html')) {
-      return new Response('User not found', {
-        status: 404,
-        headers: { 'Cache-Control': 'public, max-age=3600' },
+    if (card.kind === 'not_found' && accept.includes('text/html')) {
+      return notFoundResponse()
+    }
+
+    // placeholder は一時障害の産物なのでキャッシュさせない（復旧後すぐ実カードに戻す）
+    if (card.kind === 'placeholder') {
+      return new Response(card.svg, {
+        status: 200,
+        headers: {
+          'Content-Type': 'image/svg+xml',
+          'Cache-Control': 'no-store',
+          'X-Cache-State': card.cacheState,
+        },
       })
     }
 
-    return new Response(svg, {
+    return new Response(card.svg, {
       status: 200,
       headers: {
         'Content-Type': 'image/svg+xml',
         'Cache-Control': 'public, max-age=3600, s-maxage=3600',
-        'X-Cache-State': cacheState,
+        'X-Cache-State': card.cacheState,
       },
     })
   },
