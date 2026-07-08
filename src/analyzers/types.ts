@@ -29,6 +29,16 @@ export interface ToolAttributionAnalysis {
 	verified: boolean
 }
 
+// === Equipped (config-file signals) ===
+export interface EquippedTool {
+	toolId: string
+	toolName: string
+	repoCount: number
+}
+export interface EquippedAnalysis {
+	equipped: EquippedTool[]
+}
+
 // === Usage ===
 export type UsageCategory = 'feature' | 'bugfix' | 'test' | 'refactor'
 export interface UsageCategoryData {
