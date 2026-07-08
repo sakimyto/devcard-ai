@@ -12,7 +12,7 @@ function graphqlWith(response: GitHubQueryResponse) {
 
 const aiCommit = (daysAgo: number, oid: string) => ({
   oid,
-  message: `feat: x\n\nCo-Authored-By: Claude <noreply@anthropic.com>`,
+  message: 'feat: x\n\nCo-Authored-By: Claude <noreply@anthropic.com>',
   committedDate: recent(daysAgo),
   author: { user: { login: 'someone' } },
 })
@@ -82,9 +82,9 @@ describe('handleRequest v2', () => {
     expect(noRepos.kind).toBe('no_repos')
 
     const stale: GitHubQueryResponse = JSON.parse(JSON.stringify(fullUser))
-    stale.user!.repositories.nodes[0].defaultBranchRef!.target.history.nodes = [
-      aiCommit(300, 'ancient'),
-    ]
+    const staleRef = stale.user?.repositories.nodes[0]?.defaultBranchRef
+    if (!staleRef) throw new Error('fixture shape changed')
+    staleRef.target.history.nodes = [aiCommit(300, 'ancient')]
     const noAi = await handleRequest({ user: 'u', theme: 'light' }, graphqlWith(stale), NOW)
     expect(noAi.kind).toBe('no_ai')
     expect(noAi.svg).toContain('No public AI activity in the last 12 weeks')
