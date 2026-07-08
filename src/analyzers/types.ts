@@ -16,6 +16,18 @@ export interface ScoreAnalysis {
 	}
 }
 
+// === Stats (v2) ===
+export type Grade = 'S' | 'A' | 'B' | 'C' | 'D'
+export interface StatsAnalysis {
+	velocity: number // 0-100
+	diversity: number // 0-100
+	consistency: number // 0-100
+	points: number // 0-100, V40/D30/C30
+	grade: Grade
+	aiCommitsInWindow: number
+	activeWeeks: number // 0-12
+}
+
 // === Tool Attribution ===
 export interface ToolAttribution {
 	toolId: string
