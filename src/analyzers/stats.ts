@@ -17,6 +17,12 @@ export interface StatsInput {
   assistedToolCount: number
   equippedOnlyCount: number
   usage: UsageAnalysis
+  // v2.2 レーダー3軸の入力（全て同一12週窓・決定論）。呼び出し側が常に渡すが、
+  // 既存アンカーテストを無改変で緑に保つため optional（未指定は 0 相当 = 各軸 0）。
+  totalCommitsInWindow?: number // 窓内の全コミット数（AI + 人間）。SYNERGY の分母
+  alternationScore?: number // 窓内コミットの人間↔AI交互性 0-1（pattern.alternationScore）
+  langCount?: number // languages.languages.length
+  activeRepoCount?: number // 窓内コミットが1件以上あるリポジトリ数
   now?: Date
 }
 
@@ -74,14 +80,33 @@ export function analyzeStats(input: StatsInput): StatsAnalysis {
 
   const consistency = Math.round((100 * activeWeeks) / WINDOW_WEEKS)
 
+  // Grade は従来3軸のまま（V40/D30/C30・閾値80/60/40/20）。新3軸は points に一切寄与しない
+  // ので、既存ユーザーのティアは動かない。
   const points = Math.round(0.4 * velocity + 0.3 * diversity + 0.3 * consistency)
+
+  // --- v2.2 レーダー3軸 ---
+  const totalInWindow = input.totalCommitsInWindow ?? 0
+  const synergy = Math.round(100 * Math.min(1, aiCommitsInWindow / Math.max(1, totalInWindow)))
+  const flow = Math.round(100 * Math.max(0, Math.min(1, input.alternationScore ?? 0)))
+  const langCount = input.langCount ?? 0
+  const activeRepoCount = input.activeRepoCount ?? 0
+  const range = Math.round(
+    100 * (0.5 * Math.min(1, langCount / 3) + 0.5 * Math.min(1, activeRepoCount / 6)),
+  )
+
+  // POWER: 6軸合計 × 17（最大10,200）。トップ層だけが over-9000 に届くキャリブレーション
+  const power = Math.round((velocity + diversity + consistency + synergy + range + flow) * 17)
 
   return {
     velocity,
     diversity,
     consistency,
+    synergy,
+    range,
+    flow,
     points,
     grade: gradeFromPoints(points),
+    power,
     aiCommitsInWindow,
     activeWeeks,
   }

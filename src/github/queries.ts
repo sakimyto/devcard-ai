@@ -2,6 +2,7 @@ export const USER_REPOS_QUERY = `
   query($login: String!, $since: GitTimestamp!) {
     user(login: $login) {
       login
+      avatarUrl(size: 128)
       repositories(
         first: 50
         orderBy: { field: PUSHED_AT, direction: DESC }

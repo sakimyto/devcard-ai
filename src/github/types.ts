@@ -1,5 +1,8 @@
 export interface GitHubUser {
   login: string
+  // GitHub always returns this; optional here only so existing GraphQL fixtures that
+  // predate the avatar feature still type-check. Handler treats absent as "no avatar".
+  avatarUrl?: string
   repositories: {
     nodes: GitHubRepo[]
   }

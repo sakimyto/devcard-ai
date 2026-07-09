@@ -10,8 +10,12 @@ export interface StatsAnalysis {
   velocity: number // 0-100
   diversity: number // 0-100
   consistency: number // 0-100
-  points: number // 0-100, V40/D30/C30
+  synergy: number // 0-100, AI-involved commit rate
+  range: number // 0-100, language + active-repo breadth
+  flow: number // 0-100, human↔AI alternation over the window
+  points: number // 0-100, V40/D30/C30 (unchanged — drives Grade)
   grade: Grade
+  power: number // 0-10200, (v+d+c+syn+range+flow)*17 — the over-9000 headline number
   aiCommitsInWindow: number
   activeWeeks: number // 0-12
 }
@@ -99,4 +103,8 @@ export interface CardDataV2 {
   serial: string
   seed: number
   issuedYear: number
+  // Circular avatar medallion source. Always a self-built `data:` URI (never a remote
+  // http(s) URL — those are blocked in GitHub's <img>/camo context) or null when the
+  // fetch failed; the card degrades gracefully with no medallion.
+  avatarDataUri: string | null
 }

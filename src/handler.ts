@@ -30,6 +30,38 @@ export interface HandlerResult {
 
 type GraphqlFn = (query: string, variables: Record<string, unknown>) => Promise<GitHubQueryResponse>
 
+// Fetches an avatar and returns its raw base64 + mime, or null on any failure. Injected
+// so tests can exercise medallion assembly without network I/O.
+export type AvatarFetcher = (url: string) => Promise<{ base64: string; mime: string } | null>
+
+const AVATAR_TIMEOUT_MS = 3000
+const AVATAR_CHUNK = 0x2000 // 8KB — bound String.fromCharCode arg count (stack-safe)
+
+// Restrict to a bare `image/<subtype>` token: strips `;charset=…` params and, crucially,
+// guarantees the mime carries no `"` so the assembled data URI needs no escaping.
+function sanitizeImageMime(raw: string): string {
+  const base = raw.split(';')[0].trim().toLowerCase()
+  return /^image\/[a-z0-9.+-]+$/.test(base) ? base : 'image/png'
+}
+
+const defaultAvatarFetcher: AvatarFetcher = async (url) => {
+  if (!url) return null
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(AVATAR_TIMEOUT_MS) })
+    if (!res.ok) return null
+    const mime = sanitizeImageMime(res.headers.get('content-type') ?? 'image/png')
+    const bytes = new Uint8Array(await res.arrayBuffer())
+    // Chunked to avoid a stack overflow from spreading a large array into fromCharCode.
+    let binary = ''
+    for (let i = 0; i < bytes.length; i += AVATAR_CHUNK) {
+      binary += String.fromCharCode(...bytes.subarray(i, i + AVATAR_CHUNK))
+    }
+    return { base64: btoa(binary), mime }
+  } catch {
+    return null
+  }
+}
+
 export interface BuildResult {
   kind: HandlerKind
   data?: CardDataV2
@@ -43,6 +75,7 @@ export async function buildCardData(
   params: RequestParams,
   graphql: GraphqlFn,
   now: Date = new Date(),
+  avatarFetcher: AvatarFetcher = defaultAvatarFetcher,
 ): Promise<BuildResult> {
   const { user } = params
 
@@ -97,14 +130,28 @@ export async function buildCardData(
       (e) => !committedIds.has(e.toolId) && !assistedIds.has(e.toolId),
     ).length
 
+    // 窓内コミットが1件以上あるリポジトリ数（RANGE の活動リポ幅）
+    const activeRepoCount = new Set(
+      windowCommits.map((c) => c.repoFullName).filter((n): n is string => n !== undefined),
+    ).size
+
     const stats = analyzeStats({
       windowAiCommits: involvedCommits,
       commitToolCount: toolAttribution.tools.filter((t) => t.toolId !== 'unknown').length,
       assistedToolCount: toolAttribution.assisted.filter((a) => a.toolId !== 'unknown').length,
       equippedOnlyCount,
       usage,
+      totalCommitsInWindow: windowCommits.length,
+      alternationScore: pattern.alternationScore,
+      langCount: languages.languages.length,
+      activeRepoCount,
       now,
     })
+
+    // Avatar is fetched server-side and inlined as a data URI: GitHub blocks remote
+    // <image href> in the camo/img context, so a raw avatarUrl would never render.
+    const avatar = await avatarFetcher(userData.avatarUrl ?? '')
+    const avatarDataUri = avatar ? `data:${avatar.mime};base64,${avatar.base64}` : null
 
     const data: CardDataV2 = {
       username: userData.login,
@@ -122,6 +169,7 @@ export async function buildCardData(
       serial: cardSerial(userData.login),
       seed: artSeed(userData.login),
       issuedYear: now.getUTCFullYear(),
+      avatarDataUri,
     }
 
     return { kind: 'ok', data }

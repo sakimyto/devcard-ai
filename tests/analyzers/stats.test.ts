@@ -54,8 +54,12 @@ describe('analyzeStats', () => {
       velocity: 0,
       diversity: 0,
       consistency: 0,
+      synergy: 0,
+      range: 0,
+      flow: 0,
       points: 0,
       grade: 'D',
+      power: 0,
       aiCommitsInWindow: 0,
       activeWeeks: 0,
     })
@@ -203,6 +207,117 @@ describe('analyzeStats', () => {
     })
     expect(d.points).toBeLessThan(20)
     expect(d.grade).toBe('D')
+  })
+
+  it('SYNERGY = AI-involved / total commits in window (0 → 0, all-AI → 100)', () => {
+    const base = {
+      commitToolCount: 0,
+      assistedToolCount: 0,
+      equippedOnlyCount: 0,
+      usage: singleUsage,
+      alternationScore: 0,
+      langCount: 0,
+      activeRepoCount: 0,
+      now: NOW,
+    }
+    // no AI commits in the window → synergy 0
+    expect(analyzeStats({ ...base, windowAiCommits: [], totalCommitsInWindow: 0 }).synergy).toBe(0)
+    // 5 AI commits over 5 total → 100%
+    expect(
+      analyzeStats({ ...base, windowAiCommits: commitsPerWeek(5, 1), totalCommitsInWindow: 5 })
+        .synergy,
+    ).toBe(100)
+    // 3 AI of 6 total → 50
+    expect(
+      analyzeStats({ ...base, windowAiCommits: commitsPerWeek(3, 1), totalCommitsInWindow: 6 })
+        .synergy,
+    ).toBe(50)
+  })
+
+  it('FLOW = round(100 * alternationScore), clamped to 0-100', () => {
+    const base = {
+      windowAiCommits: commitsPerWeek(2, 6),
+      commitToolCount: 0,
+      assistedToolCount: 0,
+      equippedOnlyCount: 0,
+      usage: singleUsage,
+      totalCommitsInWindow: 12,
+      langCount: 0,
+      activeRepoCount: 0,
+      now: NOW,
+    }
+    expect(analyzeStats({ ...base, alternationScore: 0 }).flow).toBe(0)
+    expect(analyzeStats({ ...base, alternationScore: 0.5 }).flow).toBe(50)
+    expect(analyzeStats({ ...base, alternationScore: 1 }).flow).toBe(100)
+  })
+
+  it('RANGE = langCount/3 and activeRepoCount/6 each at half weight (caps at 100)', () => {
+    const base = {
+      windowAiCommits: commitsPerWeek(2, 6),
+      commitToolCount: 0,
+      assistedToolCount: 0,
+      equippedOnlyCount: 0,
+      usage: singleUsage,
+      totalCommitsInWindow: 12,
+      alternationScore: 0,
+      now: NOW,
+    }
+    // 3 langs + 6 active repos → both halves maxed → 100
+    expect(analyzeStats({ ...base, langCount: 3, activeRepoCount: 6 }).range).toBe(100)
+    // beyond the caps still 100 (min clamp)
+    expect(analyzeStats({ ...base, langCount: 9, activeRepoCount: 20 }).range).toBe(100)
+    // 0/0 → 0
+    expect(analyzeStats({ ...base, langCount: 0, activeRepoCount: 0 }).range).toBe(0)
+    // 3 langs (0.5) + 3 repos (0.25) → round(100*(0.5+0.25)) = 75
+    expect(analyzeStats({ ...base, langCount: 3, activeRepoCount: 3 }).range).toBe(75)
+  })
+
+  it('POWER = round(sum of the 6 axes * 17)', () => {
+    const s = analyzeStats({
+      windowAiCommits: commitsPerWeek(25, 12),
+      commitToolCount: 3,
+      assistedToolCount: 0,
+      equippedOnlyCount: 2,
+      usage: evenUsage,
+      totalCommitsInWindow: 300,
+      alternationScore: 1,
+      langCount: 3,
+      activeRepoCount: 6,
+      now: NOW,
+    })
+    const sum = s.velocity + s.diversity + s.consistency + s.synergy + s.range + s.flow
+    expect(s.power).toBe(Math.round(sum * 17))
+    // all-100 axes → the over-9000 ceiling (100*6*17 = 10200)
+    expect(s.power).toBe(10200)
+  })
+
+  it('radar axes and POWER do not shift grade/points (tier invariance)', () => {
+    const withRadar = analyzeStats({
+      windowAiCommits: commitsPerWeek(3, 8),
+      commitToolCount: 2,
+      assistedToolCount: 0,
+      equippedOnlyCount: 0,
+      usage: evenUsage,
+      totalCommitsInWindow: 40,
+      alternationScore: 0.7,
+      langCount: 3,
+      activeRepoCount: 5,
+      now: NOW,
+    })
+    // Same core inputs but no radar inputs supplied → identical points/grade.
+    const withoutRadar = analyzeStats({
+      windowAiCommits: commitsPerWeek(3, 8),
+      commitToolCount: 2,
+      assistedToolCount: 0,
+      equippedOnlyCount: 0,
+      usage: evenUsage,
+      now: NOW,
+    })
+    expect(withRadar.points).toBe(withoutRadar.points)
+    expect(withRadar.grade).toBe(withoutRadar.grade)
+    expect(withRadar.velocity).toBe(withoutRadar.velocity)
+    expect(withRadar.diversity).toBe(withoutRadar.diversity)
+    expect(withRadar.consistency).toBe(withoutRadar.consistency)
   })
 
   it('gradeFromPoints pins A/B/C/D/S boundary edges (20/40/60/80)', () => {

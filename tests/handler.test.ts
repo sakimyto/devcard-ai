@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { GitHubQueryResponse } from '~/github/types'
-import { handleRequest } from '~/handler'
+import { buildCardData, handleRequest } from '~/handler'
 
 const NOW = new Date('2026-07-08T12:00:00Z')
 const recent = (daysAgo: number) =>
@@ -99,6 +99,34 @@ describe('handleRequest v2', () => {
       NOW,
     )
     expect(r.kind).toBe('error')
+  })
+
+  it('assembles avatarDataUri from the injected fetcher (base64 → data URI)', async () => {
+    const avatarUser: GitHubQueryResponse = JSON.parse(JSON.stringify(fullUser))
+    if (avatarUser.user) avatarUser.user.avatarUrl = 'https://avatars.example/u/1?v=4'
+    const fetcher = async (url: string) => {
+      expect(url).toBe('https://avatars.example/u/1?v=4')
+      return { base64: 'QUJD', mime: 'image/png' }
+    }
+    const r = await buildCardData(
+      { user: 'testuser', theme: 'dark' },
+      graphqlWith(avatarUser),
+      NOW,
+      fetcher,
+    )
+    expect(r.kind).toBe('ok')
+    expect(r.data?.avatarDataUri).toBe('data:image/png;base64,QUJD')
+  })
+
+  it('degrades to null avatar when the fetcher returns null (no crash, no http href)', async () => {
+    const r = await buildCardData(
+      { user: 'testuser', theme: 'dark' },
+      graphqlWith(fullUser),
+      NOW,
+      async () => null,
+    )
+    expect(r.kind).toBe('ok')
+    expect(r.data?.avatarDataUri).toBeNull()
   })
 
   it('passes $since (= now - 84d) to GraphQL — 窓外データを取得しない', async () => {
