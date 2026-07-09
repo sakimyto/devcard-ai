@@ -59,6 +59,7 @@ light / dark 両テーマ維持。
 - 追加①: コミット本文の AI マーカー（`Generated with [Claude Code]`、`🤖 Generated with` 等のパターン集)
 - 追加②: 設定ファイルシグナル（CLAUDE.md / AGENTS.md / .cursorrules / .cursor/rules / copilot-instructions.md / .claude — **GraphQL で取得済みだが未活用**)。ツールロードアウトに「equipped」バッジ（設定ファイル由来）として表示し、コミット由来のシェア%とは混ぜない（%はコミット実績のみ)。DIVERSITY のツール種類数には equipped も 0.5 重みで算入
 - 追加③: bot author（`*[bot]` login）
+- 追加④: assisted シグナル（コミット本文の「ツール名 + 使用動詞」文脈 — 例 `codex exec review` / `codexレビュー反映` / `gpt-5 review で指摘`）。トレーラーを残さないレビュアー用途の AI 使用（codex 等）を可視化する。committed（トレーラー/マーカー/bot）とは別軸で評価し、AI 関与 = committed または assisted と定義。ツールロードアウトに「· assisted」チップ（実線・アイコン付き、equipped の破線チップと区別）。同一ツールが committed に居れば上位証跡として assisted からは除外。ツール名単独の言及（「Codex対応」「add Codex tool」）は使用動詞がないため非マッチ
 
 ### 時間窓の統一
 
@@ -67,7 +68,7 @@ light / dark 両テーマ維持。
 ### ステータス定義（各 0-100)
 
 - **VELOCITY**: 12 週窓のコミット頻度（対数スケールで正規化。碌に公開活動がない場合に 0 に張り付くのは正しい挙動とする）
-- **DIVERSITY**: ツール種類 × 用途（Feature/Fix/Test/Refactor）の分散
+- **DIVERSITY**: ツール種類 × 用途（Feature/Fix/Test/Refactor）の分散。ツール種類数は証跡の強さで重み付け（committed 1.0 / assisted 0.75 / equipped 0.5）。同一ツールは最上位の証跡でのみ算入し二重加算しない。正規化上限は4種
 - **CONSISTENCY**: アクティブ週割合（active weeks / 12）
 - **Grade**: 3 ステータスの加重合成。初期重み VELOCITY 40% / DIVERSITY 30% / CONSISTENCY 30%、閾値は現行踏襲（80/60/40/20)。実装時にサンプルユーザー群（自分 + 著名 OSS 開発者数名）で再キャリブレーションし、変更は golden file の意図した差分として記録。数字とレアリティが同じ物語を語る
 
