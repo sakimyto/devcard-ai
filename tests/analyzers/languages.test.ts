@@ -81,6 +81,23 @@ describe('analyzeLanguagesV2', () => {
     )
   })
 
+  it('shaves the overshoot when independent rounding pushes the top-4 past 100 (33.5/33.5/33.0)', () => {
+    const result = analyzeLanguagesV2([
+      repo(
+        langs([
+          { name: 'A', color: '#111111', size: 335 },
+          { name: 'B', color: '#222222', size: 335 },
+          { name: 'C', color: '#333333', size: 330 },
+        ]),
+      ),
+    ])
+    // Naive round → 34+34+33 = 101; the analyzer must trim to keep the bar ≤ 100.
+    const sum = result.languages.reduce((a, l) => a + l.percentage, 0)
+    expect(sum).toBeLessThanOrEqual(100)
+    expect(sum + result.othersPercentage).toBe(100)
+    expect(result.othersPercentage).toBeGreaterThanOrEqual(0)
+  })
+
   it('does not filter noise languages (Markdown/HTML/CSS counted honestly)', () => {
     const result = analyzeLanguagesV2([
       repo(

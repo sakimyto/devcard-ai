@@ -42,16 +42,36 @@ export function analyzeLanguagesV2(repos: GitHubRepo[]): LanguageAnalysisV2 {
     (a, b) => b[1].bytes - a[1].bytes || a[0].localeCompare(b[0]),
   )
 
-  const languages: LanguageShare[] = ranked.slice(0, 4).map(([name, { color, bytes }]) => ({
+  const top = ranked.slice(0, 4).map(([name, { color, bytes }]) => {
+    const raw = (100 * bytes) / total
+    return { name, color, raw, percentage: Math.round(raw) }
+  })
+
+  let topSum = top.reduce((acc, l) => acc + l.percentage, 0)
+  // Independent rounding can push the top-4 past 100 (e.g. 33.5/33.5/33.0 → 34+34+33=101),
+  // which would overflow the display bar and make the legend read 101%. Shave the overshoot
+  // from the entries that gained most from rounding-up (largest fractional part first; ties
+  // broken toward the lower-priority index) so the drawn shares never exceed 100.
+  if (topSum > 100) {
+    const trimOrder = top
+      .map((l, i) => ({ i, frac: l.raw - Math.floor(l.raw) }))
+      .sort((a, b) => b.frac - a.frac || b.i - a.i)
+    let k = 0
+    while (topSum > 100) {
+      top[trimOrder[k % trimOrder.length].i].percentage -= 1
+      topSum -= 1
+      k++
+    }
+  }
+
+  const languages: LanguageShare[] = top.map(({ name, color, percentage }) => ({
     name,
     color,
-    percentage: Math.round((100 * bytes) / total),
+    percentage,
   }))
-
-  const topSum = languages.reduce((acc, l) => acc + l.percentage, 0)
-  // Others absorbs both the tail languages and the rounding residual so the bar sums to 100.
-  // Clamped at 0 for the rare case where top-4 rounding overshoots (never negative width).
-  const othersPercentage = Math.max(0, 100 - topSum)
+  // Others absorbs the tail languages plus the (non-negative) rounding residual so the top-4
+  // shares plus others always describe a full, non-overflowing 100%-wide bar.
+  const othersPercentage = 100 - topSum
 
   return { languages, othersPercentage }
 }

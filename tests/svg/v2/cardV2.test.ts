@@ -58,8 +58,9 @@ function makeData(over: Partial<CardDataV2> = {}): CardDataV2 {
       languages: [
         { name: 'TypeScript', color: '#3178c6', percentage: 62 },
         { name: 'Python', color: '#3572A5', percentage: 21 },
+        { name: 'Shell', color: '#89e051', percentage: 9 },
       ],
-      othersPercentage: 17,
+      othersPercentage: 8,
     },
     pattern: { pattern: 'Pair Programmer', aiRate: 0.5, alternationScore: 0.6 },
     record: {
@@ -257,6 +258,90 @@ describe('renderCardV2', () => {
     for (const m of svg.matchAll(/<rect x="(\d+)" y="696" width="(\d+)"/g)) {
       expect(Number(m[1]) + Number(m[2])).toBeLessThanOrEqual(706)
     }
+  })
+})
+
+describe('renderCardV2 TYPES language bar (v3.0)', () => {
+  // Stacked-bar segments render at height="10.00" (toFixed) with a bare color fill; the
+  // faint full-width track keeps integer height="10" + a fill-opacity, so this matches
+  // only the colored segments (one per language + one "others" tail when > 0).
+  const SEG_RE = /<rect x="[0-9.]+" y="786\.00" width="[0-9.]+" height="10\.00" fill="[^"]*" \/>/g
+  const segCount = (svg: string): number => [...svg.matchAll(SEG_RE)].length
+
+  it('renders one segment per language plus an others tail', () => {
+    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    // 3 languages + others(8%) → 4 segments.
+    expect(segCount(svg)).toBe(4)
+  })
+
+  it('omits the others segment when othersPercentage is 0', () => {
+    const svg = renderCardV2(
+      makeData({
+        languages: {
+          languages: [
+            { name: 'TypeScript', color: '#3178c6', percentage: 70 },
+            { name: 'Go', color: '#00add8', percentage: 30 },
+          ],
+          othersPercentage: 0,
+        },
+      }),
+      { theme: 'dark' },
+    )
+    expect(segCount(svg)).toBe(2)
+  })
+
+  it('renders the legend with language names and integer percentages', () => {
+    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    expect(svg).toContain('> TypeScript </tspan>')
+    expect(svg).toContain('>62%</tspan>')
+    expect(svg).toContain('> Shell </tspan>')
+  })
+
+  it('segment widths are proportional to percentage (TS ≈ 3× Python)', () => {
+    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    const widths = [...svg.matchAll(SEG_RE)].map((m) => {
+      const w = m[0].match(/width="([0-9.]+)"/)
+      return Number(w?.[1])
+    })
+    // First segment (TS 62%) is wider than the second (Python 21%) by ~3×.
+    expect(widths[0]).toBeGreaterThan(widths[1] * 2.5)
+  })
+
+  it('a single dominant language still renders exactly one full-width-ish segment + others', () => {
+    const svg = renderCardV2(
+      makeData({
+        languages: {
+          languages: [{ name: 'TypeScript', color: '#3178c6', percentage: 96 }],
+          othersPercentage: 4,
+        },
+      }),
+      { theme: 'dark' },
+    )
+    expect(segCount(svg)).toBe(2)
+    expect(svg).toContain('> TypeScript </tspan>')
+  })
+
+  it('renders a — placeholder and no bar when there are no languages', () => {
+    const svg = renderCardV2(makeData({ languages: { languages: [], othersPercentage: 0 } }), {
+      theme: 'dark',
+    })
+    expect(segCount(svg)).toBe(0)
+    expect(svg).not.toContain('langBarClip')
+    expect(svg).not.toContain('NaN')
+  })
+
+  it('escapes XML defensively in a language legend name', () => {
+    const svg = renderCardV2(
+      makeData({
+        languages: {
+          languages: [{ name: 'C<script>', color: '#555555', percentage: 100 }],
+          othersPercentage: 0,
+        },
+      }),
+      { theme: 'dark' },
+    )
+    expect(svg).not.toContain('C<script>')
+    expect(svg).toContain('C&lt;script&gt;')
   })
 })
 

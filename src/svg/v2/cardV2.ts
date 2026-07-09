@@ -322,17 +322,52 @@ ${svgText(startX + cw / 2, toolsY + 24, label, { fontSize: 15, fill: theme.textS
   const loadout = `${svgText(PAD, toolsY - 14, 'LOADOUT', { fontSize: 15, fill: theme.textSecondary, fontWeight: '600' })}
 ${toolChips.length > 0 ? toolChips.join('\n') : svgText(PAD, toolsY + 24, 'no tools detected yet', { fontSize: 16, fill: theme.textSecondary })}`
 
-  // --- languages ---
+  // --- languages (TYPES) — byte-share stacked bar + legend (summary-cards style) ---
+  // One content-width bar split by language colour (segment width = that language's byte %),
+  // with a muted "others" tail, then a legend of the top 3-4. Everything stays inside the
+  // original TYPES band (label y780 → legend y812) so it never crowds the EXP strip at y852.
   const langY = 780
-  const langItems = data.languages.languages
-    .map((l, i) => {
-      const x = PAD + i * 180
-      return `<circle cx="${x + 8}" cy="${langY + 18}" r="7" fill="${l.color}" />
-${svgText(x + 28, langY + 24, l.name, { fontSize: 18, fill: theme.text })}`
-    })
+  const shares = data.languages.languages
+  const hasLangs = shares.length > 0
+  const BAR_X = PAD
+  const BAR_Y = 786
+  const BAR_W = CARD_W - PAD * 2
+  const BAR_H = 10
+  const OTHERS_COLOR = theme.textSecondary
+  // Stack segments left→right; each width = barW * pct/100. Segment coords use toFixed(2)
+  // (the track keeps integer constants, which also distinguishes it from segments).
+  let cursor = BAR_X
+  const seg = (pct: number, fill: string): string => {
+    const w = (BAR_W * pct) / 100
+    if (w <= 0) return ''
+    const rect = `<rect x="${cursor.toFixed(2)}" y="${BAR_Y.toFixed(2)}" width="${w.toFixed(2)}" height="${BAR_H.toFixed(2)}" fill="${fill}" />`
+    cursor += w
+    return rect
+  }
+  const segments = [
+    ...shares.map((l) => seg(l.percentage, l.color)),
+    seg(data.languages.othersPercentage, OTHERS_COLOR),
+  ]
+    .filter((s) => s !== '')
     .join('\n')
+  // Rounded ends via a clip (same pattern as the art/avatar clips). A faint full-width track
+  // sits under the segments so the rounded silhouette reads even when segments don't fill it.
+  const bar = `<clipPath id="langBarClip"><rect x="${BAR_X}" y="${BAR_Y}" width="${BAR_W}" height="${BAR_H}" rx="5" /></clipPath>
+<g clip-path="url(#langBarClip)"><rect x="${BAR_X}" y="${BAR_Y}" width="${BAR_W}" height="${BAR_H}" fill="${OTHERS_COLOR}" fill-opacity="0.25" />
+${segments}</g>`
+  // Legend: `● Name NN%` for the top 3-4 — dot in the language colour, % in the muted tone.
+  const LEGEND_Y = 812
+  const legendFont = shares.length >= 4 ? 12 : 13
+  const legendItems = shares
+    .slice(0, 4)
+    .map(
+      (l) =>
+        `<tspan fill="${l.color}" font-size="${legendFont}">●</tspan><tspan fill="${theme.text}" font-size="${legendFont}"> ${escapeXml(l.name)} </tspan><tspan fill="${theme.textSecondary}" font-size="${legendFont}">${l.percentage}%</tspan>`,
+    )
+    .join(`<tspan fill="${theme.textSecondary}" font-size="${legendFont}"> · </tspan>`)
+  const legend = `<text x="${PAD}" y="${LEGEND_Y}" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">${legendItems}</text>`
   const langs = `${svgText(PAD, langY, 'TYPES', { fontSize: 15, fill: theme.textSecondary, fontWeight: '600' })}
-${data.languages.languages.length > 0 ? langItems : svgText(PAD, langY + 24, '—', { fontSize: 16, fill: theme.textSecondary })}`
+${hasLangs ? `${bar}\n${legend}` : svgText(PAD, BAR_Y + 18, '—', { fontSize: 16, fill: theme.textSecondary })}`
 
   // --- record strip (EXP / commit·pr·review counts / streak) ---
   // Occupies the band y 820-858 between TYPES and the CONTRIBUTIONS graph. Display-only:
