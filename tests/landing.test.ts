@@ -1,19 +1,62 @@
 import { describe, expect, it } from 'vitest'
 import { renderLandingPage } from '~/landing'
 
-describe('renderLandingPage v2', () => {
+describe('renderLandingPage v3', () => {
   const html = renderLandingPage()
 
   it('has trading-card concept copy and title', () => {
     expect(html).toContain('AI Builder Trading Card')
     expect(html).toContain('devcard-ai')
+    expect(html).toContain('Your GitHub,')
   })
 
-  it('has username input, markdown snippet output and copy button', () => {
+  it('keeps username input, markdown output, copy and share ids', () => {
     expect(html).toContain('id="username-input"')
     expect(html).toContain('id="markdown-output"')
     expect(html).toContain('id="copy-button"')
     expect(html).toContain('id="share-x"')
+  })
+
+  it('places the input and Summon button inside the hero first-view (before result/gallery)', () => {
+    const heroIdx = html.indexOf('id="hero"')
+    const inputIdx = html.indexOf('id="username-input"')
+    const buttonIdx = html.indexOf('id="generate-button"')
+    const resultIdx = html.indexOf('id="result"')
+    const galleryIdx = html.indexOf('id="gallery"')
+    expect(heroIdx).toBeGreaterThan(-1)
+    expect(inputIdx).toBeGreaterThan(heroIdx)
+    expect(buttonIdx).toBeGreaterThan(heroIdx)
+    // input/button come before the result and gallery sections
+    expect(inputIdx).toBeLessThan(resultIdx)
+    expect(buttonIdx).toBeLessThan(resultIdx)
+    expect(resultIdx).toBeLessThan(galleryIdx)
+  })
+
+  it('keeps the result panel hidden on load (ID display rule cannot beat [hidden])', () => {
+    // #result{display:grid} は UA の [hidden]{display:none} に勝つため明示ガードが要る
+    expect(html).toContain('id="result" hidden')
+    expect(html).toContain('#result[hidden] { display: none }')
+  })
+
+  it('fetches /api/gallery and builds avatar URLs from github.com/{user}.png', () => {
+    expect(html).toContain("fetch('/api/gallery')")
+    expect(html).toContain(
+      "'https://github.com/' + encodeURIComponent(entry.user) + '.png?size=64'",
+    )
+  })
+
+  it('renders usernames without innerHTML (XSS-safe: textContent/createElement only)', () => {
+    // 防御的アサート: user 由来の値を innerHTML に連結していないこと
+    expect(html).not.toMatch(/innerHTML[^\n]*\buser/)
+    expect(html).not.toMatch(/innerHTML[^\n]*\bentry/)
+    expect(html).toContain('createElement')
+    expect(html).toContain('.textContent')
+  })
+
+  it('has the step 2 profile-README guidance with a create-repo hint', () => {
+    expect(html).toContain('profile README')
+    expect(html).toContain('username/username')
+    expect(html).toContain('github.com/new')
   })
 
   it('reads prefill client-side with the GitHub login regex (no server interpolation)', () => {

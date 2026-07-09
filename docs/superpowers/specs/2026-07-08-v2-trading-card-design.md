@@ -15,8 +15,10 @@
 
 ## スコープ
 
-- **IN**: カード全面リデザイン（トレカ文法)、指標再設計、検出拡張（公開範囲内)、OGP フォント修正、入力防御、キャッシュ/耐障害、Analytics Engine 計測、LP の追随更新
-- **OUT**: GitHub OAuth 連携（プライベート集計 = v2.x の「Verified+」)、収集・ギャラリー・シーズン機構、マネタイズ、マルチプラットフォーム対応
+- **IN**: カード全面リデザイン（トレカ文法)、指標再設計、検出拡張（公開範囲内)、OGP フォント修正、入力防御、キャッシュ/耐障害、Analytics Engine 計測、LP の追随更新、召喚ギャラリー（KV メタデータによる直近召喚者一覧、ユーザー指示 2026-07-09)
+- **OUT**: GitHub OAuth 連携（プライベート集計 = v2.x の「Verified+」)、収集・所有・シーズン機構、マネタイズ、マルチプラットフォーム対応
+
+> 召喚ギャラリー = KV メタデータによる直近召喚者一覧のみ。収集・所有・シーズン機構は引き続き OUT。
 
 ## Section 1: トレカ文法
 
@@ -113,9 +115,16 @@ light / dark 両テーマ維持。OGP 横長シェア画像にも名前左のア
 
 - Analytics Engine `writeDataPoint`: username / theme / cache hit を記録。KPI「distinct レンダリングユーザー数」を取得可能にする（グローバル戦略文書の行動5と接続: sakimemo `40_output/devcard-ai/20260708_global-strategy.md`)
 
+### 召喚ギャラリー（KV メタデータ)
+
+- **書き込み**: SVG ルートで `kind==='ok'` かつ **miss レンダリング時のみ**、`ctx.waitUntil()` で `gallery:u:{user}`（値 `'1'`)を KV に fire-and-forget 記録。metadata = `{ at, grade, power, element, epithet }`（1024B 制限内)、`expirationTtl` 90日。fresh hit では書かず KV 無料枠に収める。記録失敗はレンダリングを止めない（ベストエフォート)
+- **読み出し**: `GET /api/gallery` — `DEVCARD_KV.list({ prefix: 'gallery:u:', limit: 1000 })` を cursor で全ページ走査し、`{ user, at, grade, power, element, epithet }[]` を `at` 降順 top24 で JSON 返却。`Cache-Control: public, max-age=60`。KV list はキー名昇順ページングのため、単一ページを at ソートせず全走査してから並べ替える。list の結果整合性は許容
+- スコープ: 直近召喚者一覧のみ。収集・所有・シーズン機構は OUT
+
 ### LP 追随
 
-- トレカコンセプトにコピー・ビジュアルを合わせる。`?user=` 引き継ぎ + markdown ワンクリックコピー + Share on X intent（グローバル戦略の行動2)
+- トレカコンセプトにコピー・ビジュアルを合わせる。`?user=` / `/#username` 引き継ぎ + markdown ワンクリックコピー + Share on X intent（グローバル戦略の行動2)
+- v2.9 刷新: ①1stビューで input+Summon を即生成（説明1文)、②生成後にカード wow → プロフィール README 埋め込み導線（同名リポジトリ `username/username` の README がプロフィールに出る旨 + `github.com/new` リンク)、③直近召喚ギャラリー（アバター + ティア + POWER + element グリフ、同 element 枠色共鳴、クリックで `location.hash` 経由自動召喚)。ユーザー名は textContent/createElement のみで描画（innerHTML 連結禁止 = XSS 防御)
 
 ## Section 4: テスト戦略
 
