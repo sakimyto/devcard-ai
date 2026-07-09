@@ -6,8 +6,20 @@ const NOW = new Date('2026-07-08T12:00:00Z')
 const recent = (daysAgo: number) =>
   new Date(NOW.getTime() - daysAgo * 24 * 60 * 60 * 1000).toISOString()
 
-function graphqlWith(response: GitHubQueryResponse) {
-  return async () => response
+// The client now runs 3 parallel queries (public repos / private repos / contributions).
+// By default the PRIVATE query resolves to an empty repo set so these fixtures stay
+// public-only (includesPrivate=false); pass `privateResponse` to exercise private inclusion.
+function graphqlWith(response: GitHubQueryResponse, privateResponse?: GitHubQueryResponse) {
+  return async (_q: string, vars: Record<string, unknown>): Promise<GitHubQueryResponse> => {
+    if (vars?.privacy === 'PRIVATE') {
+      return (
+        privateResponse ?? {
+          user: response.user ? { ...response.user, repositories: { nodes: [] } } : null,
+        }
+      )
+    }
+    return response
+  }
 }
 
 const aiCommit = (daysAgo: number, oid: string) => ({
@@ -54,6 +66,41 @@ describe('handleRequest v2', () => {
     expect(r.svg).toContain('width="750"')
     expect(r.svg).toContain('public 12wk')
     expect(r.svg).toContain('testuser')
+  })
+
+  it('private リポが流入すると all repos · 12wk + verified+ を表示', async () => {
+    const privateUser: GitHubQueryResponse = {
+      user: {
+        login: 'testuser',
+        repositories: {
+          nodes: [
+            {
+              name: 'secret',
+              pushedAt: recent(1),
+              defaultBranchRef: {
+                target: { history: { nodes: [aiCommit(1, 'p1')], totalCount: 1 } },
+              },
+              claudeMd: null,
+              agentsMd: null,
+              cursorrules: null,
+              cursorrulesDir: null,
+              githubCopilot: null,
+              claudeDir: null,
+              primaryLanguage: { name: 'TypeScript', color: '#3178c6' },
+            },
+          ],
+        },
+      },
+    }
+    const r = await handleRequest(
+      { user: 'testuser', theme: 'dark' },
+      graphqlWith(fullUser, privateUser),
+      NOW,
+    )
+    expect(r.kind).toBe('ok')
+    expect(r.svg).toContain('all repos · 12wk')
+    expect(r.svg).not.toContain('public 12wk')
+    expect(r.svg).toContain('✓ verified+')
   })
 
   it('12wk 窓外のコミットは指標に入らない（old commit は無視される）', async () => {

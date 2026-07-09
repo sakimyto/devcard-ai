@@ -4,13 +4,20 @@
 // history.since は GitTimestamp 型。
 // 2026-07-10 Task 21: languages(first:8) を各リポに追加。gh api graphql 実測で repos 7.5s /
 // contributions 2.4s（いずれも単独で上限内・502 なし）を確認済み。分割は維持する。
+// 2026-07-10 Task 21 追補: App を All repositories でインストールすると installation token に
+// private リポが流入し、単一 repos クエリが 9〜11s（本番 502 が 5回中1回再発）まで肥大化する
+// ことを gh api graphql 実測で確認（public 2.3s / private 9〜11s）。そこで `$privacy` 変数で
+// PUBLIC / PRIVATE を別クエリ化し client.ts で 3並列（public+private+contributions）実行する。
+// public は常に軽量・確実に成功し、重い private が 502 しても public のみで劣化描画を継続する
+// （フォールトアイソレーション）。private の 502 はカード全体を殺さない。
 export const USER_REPOS_QUERY = `
-  query($login: String!, $since: GitTimestamp!) {
+  query($login: String!, $since: GitTimestamp!, $privacy: RepositoryPrivacy!) {
     user(login: $login) {
       login
       avatarUrl(size: 128)
       repositories(
         first: 50
+        privacy: $privacy
         orderBy: { field: PUSHED_AT, direction: DESC }
         isFork: false
       ) {

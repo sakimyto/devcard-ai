@@ -99,6 +99,19 @@ const NO_REPOS_RESPONSE = {
   user: { login: 'someuser', repositories: { nodes: [] } },
 }
 
+// The client fires 3 parallel queries (public/private repos + contributions). Route the
+// okResponse to the PUBLIC call and return an empty repo set for PRIVATE so the fixture
+// stays public-only (no duplicated repos, includesPrivate=false).
+function mockOkPublicOnly(login = 'octocat') {
+  const ok = okResponse(login)
+  graphqlMock.mockImplementation((_q: string, vars: Record<string, unknown>) => {
+    if (vars?.privacy === 'PRIVATE') {
+      return Promise.resolve({ user: { login, repositories: { nodes: [] } } })
+    }
+    return Promise.resolve(ok)
+  })
+}
+
 function req(path: string, headers: Record<string, string> = {}) {
   return new Request(`https://devcard.example${path}`, { headers })
 }
@@ -236,7 +249,7 @@ describe('召喚ギャラリー', () => {
   })
 
   it('ok の miss レンダリングでギャラリーへ記録される', async () => {
-    graphqlMock.mockResolvedValue(okResponse('octocat'))
+    mockOkPublicOnly('octocat')
     const kv = fakeKv()
     const { ctx, flush } = fakeCtx()
     const res = await worker.fetch(req('/?user=octocat'), makeEnv(kv), ctx)
@@ -267,7 +280,7 @@ describe('召喚ギャラリー', () => {
   })
 
   it('ギャラリー記録失敗はレスポンスに影響しない', async () => {
-    graphqlMock.mockResolvedValue(okResponse('octocat'))
+    mockOkPublicOnly('octocat')
     const kv = fakeKv()
     const origPut = kv.put.bind(kv)
     // gallery キーの put だけ失敗させる（card キャッシュ書き込みは通す）

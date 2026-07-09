@@ -1,112 +1,215 @@
 import { describe, expect, it, vi } from 'vitest'
 import { fetchUserData } from '~/github/client'
+import type { GitHubQueryResponse } from '~/github/types'
 
-describe('fetchUserData', () => {
-  it('returns parsed user data for valid username', async () => {
-    const mockGraphql = vi.fn().mockResolvedValue({
-      user: {
-        login: 'testuser',
-        repositories: {
-          nodes: [
-            {
-              name: 'my-repo',
-              pushedAt: '2026-03-14T00:00:00Z',
-              defaultBranchRef: {
-                target: {
-                  history: {
-                    nodes: [
-                      {
-                        oid: 'abc123',
-                        message:
-                          'feat: add feature\n\nCo-Authored-By: Claude <noreply@anthropic.com>',
-                        committedDate: '2026-03-14T00:00:00Z',
-                        author: { user: { login: 'testuser' } },
-                      },
-                    ],
-                    totalCount: 1,
-                  },
+// Builds a repos-query response with a single named repo pushed at `pushedAt`.
+function reposResponse(login: string, repoName: string, pushedAt: string): GitHubQueryResponse {
+  return {
+    user: {
+      login,
+      repositories: {
+        nodes: [
+          {
+            name: repoName,
+            pushedAt,
+            defaultBranchRef: {
+              target: {
+                history: {
+                  nodes: [
+                    {
+                      oid: `${repoName}-1`,
+                      message: 'feat: x\n\nCo-Authored-By: Claude <noreply@anthropic.com>',
+                      committedDate: pushedAt,
+                      author: { user: { login } },
+                    },
+                  ],
+                  totalCount: 1,
                 },
               },
-              claudeMd: { id: 'abc' },
-              agentsMd: null,
-              cursorrules: null,
-              cursorrulesDir: null,
-              githubCopilot: null,
-              claudeDir: { id: 'def' },
-              primaryLanguage: { name: 'TypeScript', color: '#3178c6' },
+            },
+            claudeMd: null,
+            agentsMd: null,
+            cursorrules: null,
+            cursorrulesDir: null,
+            githubCopilot: null,
+            claudeDir: null,
+            primaryLanguage: { name: 'TypeScript', color: '#3178c6' },
+          },
+        ],
+      },
+    },
+  } as unknown as GitHubQueryResponse
+}
+
+// Dispatches the mock by which of the 3 parallel queries is being made: PUBLIC repos,
+// PRIVATE repos, or contributions (identified by the contribSince variable).
+function dispatch(opts: {
+  pub?: GitHubQueryResponse
+  priv?: GitHubQueryResponse | (() => Promise<never>)
+  contrib?: GitHubQueryResponse
+}) {
+  return (_q: string, vars: Record<string, unknown>): Promise<GitHubQueryResponse> => {
+    if ('contribSince' in vars)
+      return Promise.resolve(opts.contrib ?? ({ user: null } as GitHubQueryResponse))
+    if (vars.privacy === 'PRIVATE') {
+      if (typeof opts.priv === 'function') return opts.priv()
+      return Promise.resolve(
+        opts.priv ??
+          ({
+            user: { login: String(vars.login), repositories: { nodes: [] } },
+          } as GitHubQueryResponse),
+      )
+    }
+    return Promise.resolve(opts.pub ?? ({ user: null } as GitHubQueryResponse))
+  }
+}
+
+const SINCE = '2026-04-15T12:00:00.000Z'
+const YEAR_AGO = '2025-04-16T12:00:00.000Z'
+
+describe('fetchUserData', () => {
+  it('runs 3 parallel queries (public repos, private repos, contributions)', async () => {
+    const mockGraphql = vi.fn(
+      dispatch({ pub: reposResponse('testuser', 'pub-repo', '2026-03-14T00:00:00Z') }),
+    )
+    const result = await fetchUserData('testuser', mockGraphql, SINCE, YEAR_AGO)
+    expect(result?.login).toBe('testuser')
+    expect(mockGraphql).toHaveBeenCalledTimes(3)
+    expect(mockGraphql).toHaveBeenCalledWith(expect.any(String), {
+      login: 'testuser',
+      since: SINCE,
+      privacy: 'PUBLIC',
+    })
+    expect(mockGraphql).toHaveBeenCalledWith(expect.any(String), {
+      login: 'testuser',
+      since: SINCE,
+      privacy: 'PRIVATE',
+    })
+    expect(mockGraphql).toHaveBeenCalledWith(expect.any(String), {
+      login: 'testuser',
+      contribSince: SINCE,
+      yearAgo: YEAR_AGO,
+    })
+  })
+
+  it('merges public + private repos and re-sorts by pushedAt desc; sets includesPrivate', async () => {
+    const mockGraphql = vi.fn(
+      dispatch({
+        pub: reposResponse('testuser', 'pub-old', '2026-01-01T00:00:00Z'),
+        priv: reposResponse('testuser', 'priv-new', '2026-06-01T00:00:00Z'),
+      }),
+    )
+    const result = await fetchUserData('testuser', mockGraphql, SINCE, YEAR_AGO)
+    expect(result?.repositories.nodes.map((n) => n.name)).toEqual(['priv-new', 'pub-old'])
+    expect(result?.includesPrivate).toBe(true)
+  })
+
+  it('includesPrivate is false when the private query returns no nodes', async () => {
+    const mockGraphql = vi.fn(
+      dispatch({ pub: reposResponse('testuser', 'pub-repo', '2026-03-14T00:00:00Z') }),
+    )
+    const result = await fetchUserData('testuser', mockGraphql, SINCE, YEAR_AGO)
+    expect(result?.includesPrivate).toBe(false)
+    expect(result?.repositories.nodes.map((n) => n.name)).toEqual(['pub-repo'])
+  })
+
+  it('degrades to public-only (no throw) when the private query fails', async () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const mockGraphql = vi.fn(
+      dispatch({
+        pub: reposResponse('testuser', 'pub-repo', '2026-03-14T00:00:00Z'),
+        priv: () => Promise.reject(new Error('HTTP 502')),
+      }),
+    )
+    const result = await fetchUserData('testuser', mockGraphql, SINCE, YEAR_AGO)
+    expect(result?.repositories.nodes.map((n) => n.name)).toEqual(['pub-repo'])
+    expect(result?.includesPrivate).toBe(false)
+    spy.mockRestore()
+  })
+
+  it('sets includesPrivate when only the contributions query surfaces private repos (repo query degraded)', async () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const contribWithPrivate = {
+      user: {
+        contributionsCollection: {
+          commitContributionsByRepository: [
+            {
+              repository: { name: 'x', primaryLanguage: null, isPrivate: true },
+              contributions: { totalCount: 5 },
             },
           ],
         },
       },
-    })
-
-    const result = await fetchUserData(
-      'testuser',
-      mockGraphql,
-      '2026-04-15T12:00:00.000Z',
-      '2025-04-16T12:00:00.000Z',
+    } as unknown as GitHubQueryResponse
+    const mockGraphql = vi.fn(
+      dispatch({
+        pub: reposResponse('testuser', 'pub-repo', '2026-03-14T00:00:00Z'),
+        priv: () => Promise.reject(new Error('HTTP 502')),
+        contrib: contribWithPrivate,
+      }),
     )
-
-    expect(result).not.toBeNull()
-    expect(result?.login).toBe('testuser')
-    expect(result?.repositories.nodes).toHaveLength(1)
-    // repos と contributions は2クエリ並列（合算クエリは GitHub の応答時間上限で 502 —
-    // 2026-07-09 本番で実証）。contribSince は since と同値だが DateTime! 宣言が必要
-    //（contributionsCollection.from は GitTimestamp! 変数を拒否する）。
-    expect(mockGraphql).toHaveBeenCalledTimes(2)
-    expect(mockGraphql).toHaveBeenCalledWith(expect.any(String), {
-      login: 'testuser',
-      since: '2026-04-15T12:00:00.000Z',
-    })
-    expect(mockGraphql).toHaveBeenCalledWith(expect.any(String), {
-      login: 'testuser',
-      contribSince: '2026-04-15T12:00:00.000Z',
-      yearAgo: '2025-04-16T12:00:00.000Z',
-    })
+    const result = await fetchUserData('testuser', mockGraphql, SINCE, YEAR_AGO)
+    // Private repos query 502'd (no private nodes), but private contribution rows influenced
+    // the card → the scope flag must still be true so the label stays honest.
+    expect(result?.repositories.nodes.map((n) => n.name)).toEqual(['pub-repo'])
+    expect(result?.includesPrivate).toBe(true)
+    spy.mockRestore()
   })
 
-  it('returns null for non-existent user', async () => {
-    const mockGraphql = vi.fn().mockResolvedValue({ user: null })
-    const result = await fetchUserData(
-      'nonexistent',
-      mockGraphql,
-      '2026-04-15T12:00:00.000Z',
-      '2025-04-16T12:00:00.000Z',
+  it('stays public-only when contribution rows are all public (isPrivate false)', async () => {
+    const contribPublic = {
+      user: {
+        contributionsCollection: {
+          commitContributionsByRepository: [
+            {
+              repository: { name: 'x', primaryLanguage: null, isPrivate: false },
+              contributions: { totalCount: 5 },
+            },
+          ],
+        },
+      },
+    } as unknown as GitHubQueryResponse
+    const mockGraphql = vi.fn(
+      dispatch({
+        pub: reposResponse('testuser', 'pub-repo', '2026-03-14T00:00:00Z'),
+        contrib: contribPublic,
+      }),
     )
+    const result = await fetchUserData('testuser', mockGraphql, SINCE, YEAR_AGO)
+    expect(result?.includesPrivate).toBe(false)
+  })
+
+  it('returns null when the public (primary) query has no user', async () => {
+    const mockGraphql = vi.fn(dispatch({ pub: { user: null } as GitHubQueryResponse }))
+    const result = await fetchUserData('nonexistent', mockGraphql, SINCE, YEAR_AGO)
     expect(result).toBeNull()
   })
 
-  // 実運用では octokit.graphql は user:null を返さず GraphqlResponseError を投げる
-  // （errors[].type === 'NOT_FOUND'）。これを null に正規化しないと 404 契約が破れ、
-  // 存在しないユーザーの連打が毎回 GitHub クォータを消費する（本番スモークで実証済み）
-  it('returns null when graphql throws NOT_FOUND error (real octokit behavior)', async () => {
+  it('returns null when the public query throws NOT_FOUND (real octokit behavior)', async () => {
     const notFoundError = Object.assign(
       new Error("Could not resolve to a User with the login of 'zzz'."),
       {
         name: 'GraphqlResponseError',
-        errors: [
-          { type: 'NOT_FOUND', message: "Could not resolve to a User with the login of 'zzz'." },
-        ],
+        errors: [{ type: 'NOT_FOUND', message: 'nope' }],
       },
     )
-    const mockGraphql = vi.fn().mockRejectedValue(notFoundError)
-    const result = await fetchUserData(
-      'zzz',
-      mockGraphql,
-      '2026-04-15T12:00:00.000Z',
-      '2025-04-16T12:00:00.000Z',
-    )
+    const mockGraphql = vi.fn((_q: string, vars: Record<string, unknown>) => {
+      if (vars.privacy === 'PUBLIC') return Promise.reject(notFoundError)
+      return Promise.resolve({ user: null } as GitHubQueryResponse)
+    })
+    const result = await fetchUserData('zzz', mockGraphql, SINCE, YEAR_AGO)
     expect(result).toBeNull()
   })
 
-  it('rethrows non-NOT_FOUND graphql errors (rate limit etc.)', async () => {
+  it('rethrows non-NOT_FOUND errors from the public query (rate limit etc.)', async () => {
     const rateLimitError = Object.assign(new Error('API rate limit exceeded'), {
       name: 'GraphqlResponseError',
       errors: [{ type: 'RATE_LIMITED', message: 'API rate limit exceeded' }],
     })
-    const mockGraphql = vi.fn().mockRejectedValue(rateLimitError)
-    await expect(
-      fetchUserData('any', mockGraphql, '2026-04-15T12:00:00.000Z', '2025-04-16T12:00:00.000Z'),
-    ).rejects.toThrow('rate limit')
+    const mockGraphql = vi.fn((_q: string, vars: Record<string, unknown>) => {
+      if (vars.privacy === 'PUBLIC') return Promise.reject(rateLimitError)
+      return Promise.resolve({ user: null } as GitHubQueryResponse)
+    })
+    await expect(fetchUserData('any', mockGraphql, SINCE, YEAR_AGO)).rejects.toThrow('rate limit')
   })
 })

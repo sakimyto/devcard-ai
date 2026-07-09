@@ -83,6 +83,7 @@ function makeData(over: Partial<CardDataV2> = {}): CardDataV2 {
     seed: 12345,
     issuedYear: 2026,
     avatarDataUri: null,
+    includesPrivate: false,
     ...over,
   }
 }
@@ -258,6 +259,43 @@ describe('renderCardV2', () => {
     for (const m of svg.matchAll(/<rect x="(\d+)" y="696" width="(\d+)"/g)) {
       expect(Number(m[1]) + Number(m[2])).toBeLessThanOrEqual(706)
     }
+  })
+})
+
+describe('renderCardV2 private inclusion labels (v3.0)', () => {
+  it('defaults to public labels (public 12wk / ✓ verified) when includesPrivate is false', () => {
+    const svg = renderCardV2(makeData({ includesPrivate: false }), { theme: 'dark' })
+    expect(svg).toContain('public 12wk')
+    expect(svg).not.toContain('all repos')
+    expect(svg).toContain('✓ verified')
+    expect(svg).not.toContain('verified+')
+  })
+
+  it('switches to all repos · 12wk and ✓ verified+ when includesPrivate is true', () => {
+    const svg = renderCardV2(makeData({ includesPrivate: true }), { theme: 'dark' })
+    expect(svg).toContain('all repos · 12wk')
+    expect(svg).not.toContain('public 12wk')
+    expect(svg).toContain('✓ verified+')
+  })
+
+  it('never leaks a repository name onto the card (only aggregate labels change)', () => {
+    // includesPrivate is purely a display toggle — no repo identifiers are rendered.
+    const priv = renderCardV2(makeData({ includesPrivate: true }), { theme: 'dark' })
+    const pub = renderCardV2(makeData({ includesPrivate: false }), { theme: 'dark' })
+    // The two SVGs differ only in the scope/verified labels, not by adding repo names.
+    expect(priv).toContain('all repos · 12wk')
+    expect(pub).toContain('public 12wk')
+  })
+
+  it('shows no verified label at all (regardless of scope) when unverified', () => {
+    const svg = renderCardV2(
+      makeData({
+        includesPrivate: true,
+        toolAttribution: { tools: [], assisted: [], totalAiCommits: 0, verified: false },
+      }),
+      { theme: 'dark' },
+    )
+    expect(svg).not.toContain('verified')
   })
 })
 

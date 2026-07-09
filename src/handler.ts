@@ -209,6 +209,7 @@ export async function buildCardData(
       seed: artSeed(userData.login),
       issuedYear: now.getUTCFullYear(),
       avatarDataUri,
+      includesPrivate: userData.includesPrivate ?? false,
     }
 
     return { kind: 'ok', data }

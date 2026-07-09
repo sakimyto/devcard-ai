@@ -124,6 +124,7 @@ const PROBE_DATA: CardDataV2 = {
   seed: 42,
   issuedYear: 2026,
   avatarDataUri: null,
+  includesPrivate: false,
 }
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } {

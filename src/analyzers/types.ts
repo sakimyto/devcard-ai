@@ -124,4 +124,8 @@ export interface CardDataV2 {
   // http(s) URL — those are blocked in GitHub's <img>/camo context) or null when the
   // fetch failed; the card degrades gracefully with no medallion.
   avatarDataUri: string | null
+  // True when private repos flowed into the analysis (App installed on "All repositories").
+  // Display-only: switches the footer window label to `all repos · 12wk` and the archetype
+  // `✓ verified` to `✓ verified+`. Repo names are never shown. Never feeds Grade or POWER.
+  includesPrivate: boolean
 }

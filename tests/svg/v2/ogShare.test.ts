@@ -50,6 +50,7 @@ const data: CardDataV2 = {
   seed: 42,
   issuedYear: 2026,
   avatarDataUri: null,
+  includesPrivate: false,
 }
 
 describe('renderOgShare', () => {

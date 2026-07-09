@@ -75,6 +75,7 @@ const base: CardDataV2 = {
   seed: 987654321,
   issuedYear: 2026,
   avatarDataUri: null,
+  includesPrivate: false,
   record: {
     exp: 1284,
     commits: 214,
@@ -142,5 +143,12 @@ emit(
 )
 emit('zero-lang-dark', { languages: [], othersPercentage: 0 }, 'dark', 'D')
 emit('zero-lang-light', { languages: [], othersPercentage: 0 }, 'light', 'D')
+
+// Private-inclusion labels: `all repos · 12wk` footer + `✓ verified+` archetype row.
+{
+  const svg = renderCardV2({ ...base, includesPrivate: true }, { theme: 'dark' })
+  writeFileSync(`${outDir}all-repos-verified-plus-dark.svg`, svg)
+  writeFileSync(`${outDir}all-repos-verified-plus-dark.png`, svgToPng(svg))
+}
 
 console.log(`wrote proofs to ${outDir}`)

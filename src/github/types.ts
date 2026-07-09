@@ -13,6 +13,11 @@ export interface GitHubUser {
   repositories: {
     nodes: GitHubRepo[]
   }
+  // True when private activity influenced the card via EITHER channel: a private repo node
+  // (languages / commit messages) or a private row in commitContributionsByRepository (which
+  // feeds RANGE even if the private repos query 502'd). Set by fetchUserData; drives the
+  // `all repos` / `verified+` labels. Optional so pre-split fixtures default to public-only.
+  includesPrivate?: boolean
 }
 
 export interface ContributionDay {

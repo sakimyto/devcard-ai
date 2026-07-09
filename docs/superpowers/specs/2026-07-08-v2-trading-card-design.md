@@ -43,7 +43,7 @@ AI Native / Pair Programmer / Delegator / Selective User を「クラス」と�
 縦型トレカ比率 750×1050（現行 800×856 を廃止)。上から:
 
 1. 名前プレート: `AI BUILDER` 肩書 + username + ティアジェム
-2. アーキタイプ行: 紋章 + **二つ名（EPITHET)** + `✓ verified` + **属性チップ（ELEMENT)**（クラス名ラベルは撤去。紋章は内部 PatternType 判定を流用)
+2. アーキタイプ行: 紋章 + **二つ名（EPITHET)** + `✓ verified`（private 込みなら `✓ verified+`)+ **属性チップ（ELEMENT)**（クラス名ラベルは撤去。紋章は内部 PatternType 判定を流用)
 3. **ジェネラティブアート領域**（高さ 220・v2.7 で 240→220 に縮小し CONTRIBUTIONS グラフの縦予算を捻出): username の hash をシードにした決定論的な幾何学アート。ユーザーごとに固有・再現可能。LLM 不使用。中央に**アバターメダリオン**（円形・半径56・accent 3px 縁取り + 外側 1px 暗リング）を重ねる。アバターは handler 層でサーバ取得し base64 の `data:` URI としてインライン化する（GitHub の `<img>`/camo は remote `href` を描画しないため）。取得失敗時は null → メダリオン非表示で劣化なく描画
 4. **ステータス（6角レーダー + 数値列 + POWER)**: 左に6軸レーダー（VELOCITY / DIVERSITY / SYNERGY / CONSISTENCY / RANGE / FLOW、上から時計回り、25/50/75/100 の同心6角グリッド）、右に同6軸の数値列、STATS ヘッダ右端に **POWER**（総合戦闘力・千位カンマ・9000超はゴールド）。従来の縦バー3本は廃止
 5. ツールロードアウト: ツール名 + シェア%（チップ表示）
@@ -51,7 +51,15 @@ AI Native / Pair Programmer / Delegator / Selective User を「クラス」と�
 7. **RECORD ストリップ**（v2.5 追加・TYPES と CONTRIBUTIONS グラフの間、帯 y 820-858・v2.7 で繰り上げ）: 左に `EXP {総コントリビューション:カンマ区切り}`（大きめの数字・accent・ミニ POWER 風。restricted 込みなら右肩に小さく `incl. private`)、中央に `{commits}c · {prs}pr · {reviews}rev`（issues は非表示)、右に `{現在ストリーク}d streak`（現在 0 なら `best {最長}d`、両方 0 なら streak 部分ごと非表示)。マーカーは絵文字（⚔/🔥）が GitHub の SVG ラスタライザで潰れるためテキストグリフ（`›`/`▲`)を採用。**Grade/POWER には一切算入しない（表示専用・ティア不変)**
 8. **CONTRIBUTIONS グラフ（52週・1y・v2.7 追加)**（RECORD の直下・TRAITS の上、ラベル y886・バー下端 y928）: セクションラベル `CONTRIBUTIONS · 1y`（15px muted）+ 右端に `{yearTotal:カンマ} total`（13px muted)。52本の縦バー（幅 = (CARD_W − PAD×2)/52 − gap1px、下端 y940 から上向き)。高さは 4〜32px を週値の **sqrt スケール**で正規化（外れ値週に潰されないため。max 0 のときは全バー最小高でフラット表示)。バー色は accent・値比例 opacity（0.35→0.9)、**今週（右端）だけ full opacity + 1px アクセントリング**で「現在」を示す。座標は `toFixed(2)`（golden 安定)。**12週窓の指標群とは独立した表示専用の1年アクティビティログ**（Grade/POWER に一切算入しない・カード上で `· 1y` 明記)。v2.6 まであったフレーバー上の区切り線はグラフが情報を区切るため撤去
 9. **発動型特性（TRAITS・v2.6)**（CONTRIBUTIONS グラフの下、y952/980・フッター y1010 と 30px クリア): 条件成立した特性を優先度上位2個まで `◆ {名} — {proof}`（名は accent 太字 17px・proof は muted 15px・各1行）で表示。**0個発動時は従来のフレーバーテキスト**（データ決定論生成の一行）に劣化（後方互換)。マーカー `◆` はテキストグリフ（絵文字回避)
-10. フッター: カードシリアル（username hash 由来 4 桁 hex + `2026`)+ データ窓表記 `public · 12wk` + devcard-ai クレジット
+10. フッター: カードシリアル（username hash 由来 4 桁 hex + `2026`)+ データ窓表記（public-only は `public 12wk`、private 込みは `all repos · 12wk`)+ devcard-ai クレジット
+
+### private リポの取り込みとラベル（v3.0）
+
+- private リポは**ユーザーが GitHub App を「All repositories」でインストールした場合のみ**自動的にカードに含まれる（installation token の権限に従う。ユーザー操作不要・opt は App インストール範囲で決まる)
+- private が含まれると **`all repos · 12wk`（フッター）** と **`✓ verified+`（アーキタイプ行）** で明示。含まれなければ従来の `public 12wk` / `✓ verified`
+- `includesPrivate` は2経路のいずれかで true: ①PRIVATE リポクエリが1件以上ノードを返す（languages・コミットメッセージが流入)、②contributions の `commitContributionsByRepository` に `isPrivate` かつ件数>0 の行がある（RANGE に流入。PRIVATE リポクエリが 502 で劣化しても正確にラベルするため)
+- **リポジトリ名・URL・説明は一切カードに描画しない**（集計値とラベルのみ)。private の内容が漏れる表面は持たない
+- クエリは `$privacy` 変数で PUBLIC / PRIVATE を別クエリ化し client.ts で **3並列**（public + private + contributions)。All-repos インストールで単一 repos クエリが 9〜11s まで肥大化し本番 502 が再発するため（gh api graphql 実測: public 2.3s / private 9〜11s)、private を分離し **public は常に軽量・確実に成功する主系**、重い private が 502 しても **public のみで劣化描画**（フォールトアイソレーション。private 502 はカード全体を殺さない)
 
 light / dark 両テーマ維持。OGP 横長シェア画像にも名前左のアバター（半径40）と、ティアジェム下の大きな POWER を反映し、パターン行は**二つ名（EPITHET)** に差し替える（レーダーは入れず縦バー3本のまま）。
 

@@ -182,8 +182,11 @@ ${svgText(PAD, 128, data.username, { fontSize: nameFontSize(data.username.length
   })
   // Advance estimate for the 22px bold epithet (~12px/char), matching the prior layout math.
   const afterEpithetX = epithetX + data.epithet.length * 12 + 24
+  // `verified+` (with the private-inclusion mark) when the card also reflects private repos;
+  // otherwise the plain `verified`. The trailing `+` stays within the 96px chip allowance.
+  const verifiedLabel = data.includesPrivate ? '✓ verified+' : '✓ verified'
   const verified = data.toolAttribution.verified
-    ? svgText(afterEpithetX, rowTextY, '✓ verified', { fontSize: 16, fill: theme.textSecondary })
+    ? svgText(afterEpithetX, rowTextY, verifiedLabel, { fontSize: 16, fill: theme.textSecondary })
     : ''
   // Energy symbol: a round element-colored token (radial gradient + top-left specular
   // + white glyph), like a Pokémon energy pip, with a short label to its right. Sits
@@ -465,11 +468,13 @@ ${num}`
 
   // --- footer ---
   // Card-number line (left): `No.7F3A · S1 ’26 · public 12wk` — serial without the #,
-  // a fixed Season 1 tag, and the two-digit issue year. Rarity mark (right, left of the
-  // devcard-ai credit): D=● C=◆ B=★ A=★★ S=★★★, the S mark filled with the holo rainbow.
+  // a fixed Season 1 tag, and the two-digit issue year. When private repos are included the
+  // window token becomes `all repos · 12wk` (honest label — the card is no longer public-only).
+  // Rarity mark (right, left of the devcard-ai credit): D=● C=◆ B=★ A=★★ S=★★★, S = holo.
   const footerY = CARD_H - 40
   const serialNo = data.serial.replace(/^#/, '')
   const yy = String(data.issuedYear).slice(-2)
+  const scopeLabel = data.includesPrivate ? 'all repos · 12wk' : 'public 12wk'
   const RARITY_MARK: Record<CardDataV2['stats']['grade'], string> = {
     S: '★★★',
     A: '★★',
@@ -482,7 +487,7 @@ ${num}`
     data.stats.grade === 'S' ? 'url(#rarityHolo)' : TIER_GEM_COLORS[data.stats.grade]
   const rarityRight = CARD_W - PAD - 88 // clears the right-aligned "devcard-ai" credit
   const rarity = `<text x="${rarityRight}" y="${footerY}" font-size="16" fill="${rarityFill}" text-anchor="end" letter-spacing="1.5">${mark}</text>`
-  const footer = `${svgText(PAD, footerY, `No.${serialNo} · S1 ’${yy} · public 12wk`, { fontSize: 15, fill: theme.textSecondary })}
+  const footer = `${svgText(PAD, footerY, `No.${serialNo} · S1 ’${yy} · ${scopeLabel}`, { fontSize: 15, fill: theme.textSecondary })}
 ${rarity}
 ${svgText(CARD_W - PAD, footerY, 'devcard-ai', { fontSize: 15, fill: theme.textSecondary, anchor: 'end' })}`
 
