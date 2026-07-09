@@ -40,21 +40,33 @@ describe('fetchUserData', () => {
       },
     })
 
-    const result = await fetchUserData('testuser', mockGraphql, '2026-04-15T12:00:00.000Z')
+    const result = await fetchUserData(
+      'testuser',
+      mockGraphql,
+      '2026-04-15T12:00:00.000Z',
+      '2025-04-16T12:00:00.000Z',
+    )
 
     expect(result).not.toBeNull()
     expect(result?.login).toBe('testuser')
     expect(result?.repositories.nodes).toHaveLength(1)
     expect(mockGraphql).toHaveBeenCalledOnce()
+    // Both window bounds ride on the single request: $since (12wk) and $yearAgo (graph).
     expect(mockGraphql).toHaveBeenCalledWith(expect.any(String), {
       login: 'testuser',
       since: '2026-04-15T12:00:00.000Z',
+      yearAgo: '2025-04-16T12:00:00.000Z',
     })
   })
 
   it('returns null for non-existent user', async () => {
     const mockGraphql = vi.fn().mockResolvedValue({ user: null })
-    const result = await fetchUserData('nonexistent', mockGraphql, '2026-04-15T12:00:00.000Z')
+    const result = await fetchUserData(
+      'nonexistent',
+      mockGraphql,
+      '2026-04-15T12:00:00.000Z',
+      '2025-04-16T12:00:00.000Z',
+    )
     expect(result).toBeNull()
   })
 
@@ -72,7 +84,12 @@ describe('fetchUserData', () => {
       },
     )
     const mockGraphql = vi.fn().mockRejectedValue(notFoundError)
-    const result = await fetchUserData('zzz', mockGraphql, '2026-04-15T12:00:00.000Z')
+    const result = await fetchUserData(
+      'zzz',
+      mockGraphql,
+      '2026-04-15T12:00:00.000Z',
+      '2025-04-16T12:00:00.000Z',
+    )
     expect(result).toBeNull()
   })
 
@@ -82,8 +99,8 @@ describe('fetchUserData', () => {
       errors: [{ type: 'RATE_LIMITED', message: 'API rate limit exceeded' }],
     })
     const mockGraphql = vi.fn().mockRejectedValue(rateLimitError)
-    await expect(fetchUserData('any', mockGraphql, '2026-04-15T12:00:00.000Z')).rejects.toThrow(
-      'rate limit',
-    )
+    await expect(
+      fetchUserData('any', mockGraphql, '2026-04-15T12:00:00.000Z', '2025-04-16T12:00:00.000Z'),
+    ).rejects.toThrow('rate limit')
   })
 })

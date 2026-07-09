@@ -1,4 +1,7 @@
-import type { ContributionsCollection } from '~/github/types'
+import type { ContributionsCollection, YearContributions } from '~/github/types'
+
+// Fixed width of the 1-year activity graph: 52 weekly buckets, oldest → newest.
+export const YEAR_WEEKS = 52
 
 export interface RecordAnalysis {
   exp: number // calendar.totalContributions (restricted only if the user made it public)
@@ -9,6 +12,9 @@ export interface RecordAnalysis {
   inclPrivate: boolean // restrictedContributionsCount > 0
   currentStreak: number // consecutive active days ending today (or yesterday if today is 0)
   longestStreak: number // longest consecutive active-day run within the window
+  // Display-only 1-year activity graph (independent of the 12-week metrics above).
+  yearTotal: number // yearContributions.contributionCalendar.totalContributions
+  weeklyContributions: number[] // exactly YEAR_WEEKS buckets, oldest → newest (front-padded/tail-trimmed)
 }
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000
@@ -22,6 +28,29 @@ const ZERO: RecordAnalysis = {
   inclPrivate: false,
   currentStreak: 0,
   longestStreak: 0,
+  yearTotal: 0,
+  weeklyContributions: new Array(YEAR_WEEKS).fill(0),
+}
+
+// Collapse the 1-year calendar into exactly YEAR_WEEKS weekly sums, oldest → newest.
+// GitHub returns ~52–53 weeks; we take the trailing YEAR_WEEKS (most recent) and front-pad
+// with zeros if fewer are present. Missing calendar/weeks → all-zero graph (no crash).
+function analyzeYearLog(yc: YearContributions | null | undefined): {
+  yearTotal: number
+  weeklyContributions: number[]
+} {
+  const calendar = yc?.contributionCalendar
+  const weeks = calendar?.weeks ?? []
+  const perWeek = weeks.map((w) =>
+    (w.contributionDays ?? []).reduce((sum, d) => sum + (d.contributionCount ?? 0), 0),
+  )
+  let weekly: number[]
+  if (perWeek.length >= YEAR_WEEKS) {
+    weekly = perWeek.slice(perWeek.length - YEAR_WEEKS)
+  } else {
+    weekly = [...new Array(YEAR_WEEKS - perWeek.length).fill(0), ...perWeek]
+  }
+  return { yearTotal: calendar?.totalContributions ?? 0, weeklyContributions: weekly }
 }
 
 function startOfUtcDay(d: Date): number {
@@ -33,8 +62,10 @@ function startOfUtcDay(d: Date): number {
 export function analyzeRecord(
   cc: ContributionsCollection | null | undefined,
   now: Date,
+  yc?: YearContributions | null,
 ): RecordAnalysis {
-  if (!cc) return { ...ZERO }
+  const year = analyzeYearLog(yc)
+  if (!cc) return { ...ZERO, ...year }
 
   const calendar = cc.contributionCalendar
   const weeks = calendar?.weeks ?? []
@@ -81,5 +112,6 @@ export function analyzeRecord(
     inclPrivate: (cc.restrictedContributionsCount ?? 0) > 0,
     currentStreak,
     longestStreak,
+    ...year,
   }
 }

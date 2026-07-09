@@ -7,6 +7,9 @@ export interface GitHubUser {
   // Optional/null so pre-Task-17 fixtures and permission-restricted responses degrade
   // to an all-zero RECORD strip instead of crashing.
   contributionsCollection?: ContributionsCollection | null
+  // 1-year calendar (from: $yearAgo, GitHub's contributionsCollection max span) used only
+  // for the display-only 52-week activity graph. Optional/null → degrades to all-zero bars.
+  yearContributions?: YearContributions | null
   repositories: {
     nodes: GitHubRepo[]
   }
@@ -27,6 +30,16 @@ export interface ContributionsCollection {
   contributionCalendar: {
     totalContributions: number
     weeks: { contributionDays: ContributionDay[] }[]
+  }
+}
+
+// Slim 1-year calendar: only weekly contribution counts are needed for the activity graph,
+// so this aliased collection omits the daily `date` and the totals `contributionsCollection`
+// carries. A missing calendar/weeks array degrades to zeros in analyzeRecord.
+export interface YearContributions {
+  contributionCalendar: {
+    totalContributions: number
+    weeks: { contributionDays: { contributionCount: number }[] }[]
   }
 }
 

@@ -2,6 +2,11 @@ import { describe, expect, it } from 'vitest'
 import type { CardDataV2 } from '~/analyzers/types'
 import { renderCardV2, renderPlaceholderCard } from '~/svg/v2/cardV2'
 
+// A deterministic 52-week "bumpy" activity sample (oldest → newest) with one dominant
+// spike at the tail — exercises the sqrt scale and the current-week highlight.
+const BUMPY_52 = Array.from({ length: 52 }, (_, i) => (i % 5 === 0 ? 0 : 2 + (i % 7)))
+BUMPY_52[51] = 40 // current week spike
+
 function makeData(over: Partial<CardDataV2> = {}): CardDataV2 {
   return {
     username: 'testuser',
@@ -65,6 +70,8 @@ function makeData(over: Partial<CardDataV2> = {}): CardDataV2 {
       inclPrivate: false,
       currentStreak: 7,
       longestStreak: 15,
+      yearTotal: 3480,
+      weeklyContributions: BUMPY_52,
     },
     element: { id: 'lumen', label: 'Lumen', color: '#a371f7' },
     epithet: 'The Symbiont',
@@ -304,6 +311,8 @@ describe('renderCardV2 RECORD strip', () => {
           inclPrivate: false,
           currentStreak: 0,
           longestStreak: 0,
+          yearTotal: 0,
+          weeklyContributions: new Array(52).fill(0),
         },
       }),
       { theme: 'light' },

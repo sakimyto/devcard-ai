@@ -113,6 +113,8 @@ const PROBE_DATA: CardDataV2 = {
     inclPrivate: false,
     currentStreak: 7,
     longestStreak: 15,
+    yearTotal: 1240,
+    weeklyContributions: new Array(52).fill(0),
   },
   element: { id: 'bolt', label: 'Bolt', color: '#f0b429' },
   epithet: 'The Ascendant',

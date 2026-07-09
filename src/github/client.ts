@@ -20,9 +20,10 @@ export async function fetchUserData(
   login: string,
   graphql: GraphqlFn,
   since: string,
+  yearAgo: string,
 ): Promise<GitHubUser | null> {
   try {
-    const response = await graphql(USER_REPOS_QUERY, { login, since })
+    const response = await graphql(USER_REPOS_QUERY, { login, since, yearAgo })
     return response.user
   } catch (error) {
     if (isNotFoundError(error)) return null

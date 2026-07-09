@@ -1,5 +1,5 @@
 export const USER_REPOS_QUERY = `
-  query($login: String!, $since: GitTimestamp!) {
+  query($login: String!, $since: GitTimestamp!, $yearAgo: DateTime!) {
     user(login: $login) {
       login
       avatarUrl(size: 128)
@@ -14,6 +14,16 @@ export const USER_REPOS_QUERY = `
           weeks {
             contributionDays {
               date
+              contributionCount
+            }
+          }
+        }
+      }
+      yearContributions: contributionsCollection(from: $yearAgo) {
+        contributionCalendar {
+          totalContributions
+          weeks {
+            contributionDays {
               contributionCount
             }
           }

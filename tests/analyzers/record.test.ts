@@ -1,6 +1,17 @@
 import { describe, expect, it } from 'vitest'
-import { analyzeRecord } from '~/analyzers/record'
-import type { ContributionsCollection } from '~/github/types'
+import { YEAR_WEEKS, analyzeRecord } from '~/analyzers/record'
+import type { ContributionsCollection, YearContributions } from '~/github/types'
+
+// A 1-year aliased collection from an explicit list of weekly totals (oldest → newest).
+// Each weekly total is emitted as a single day so the per-week sum equals the input.
+function yc(weeklyTotals: number[]): YearContributions {
+  return {
+    contributionCalendar: {
+      totalContributions: weeklyTotals.reduce((a, b) => a + b, 0),
+      weeks: weeklyTotals.map((n) => ({ contributionDays: [{ contributionCount: n }] })),
+    },
+  }
+}
 
 // Time-of-day must not matter: analysis normalizes to the UTC day.
 const NOW = new Date('2026-04-22T09:30:00Z')
@@ -54,6 +65,8 @@ describe('analyzeRecord', () => {
         inclPrivate: false,
         currentStreak: 0,
         longestStreak: 0,
+        yearTotal: 0,
+        weeklyContributions: new Array(YEAR_WEEKS).fill(0),
       })
     }
   })
@@ -145,5 +158,73 @@ describe('analyzeRecord', () => {
     expect(r.commits).toBe(5)
     expect(r.currentStreak).toBe(0)
     expect(r.longestStreak).toBe(0)
+  })
+})
+
+describe('analyzeRecord — 1-year activity graph (weeklyContributions)', () => {
+  it('defaults to yearTotal 0 + 52 zero buckets when yc is omitted', () => {
+    const r = analyzeRecord(cc([]), NOW)
+    expect(r.yearTotal).toBe(0)
+    expect(r.weeklyContributions).toHaveLength(YEAR_WEEKS)
+    expect(r.weeklyContributions.every((v) => v === 0)).toBe(true)
+  })
+
+  it('sums each week and preserves oldest → newest order for exactly 52 weeks', () => {
+    const totals = Array.from({ length: YEAR_WEEKS }, (_, i) => i + 1) // 1..52
+    const r = analyzeRecord(cc([]), NOW, yc(totals))
+    expect(r.weeklyContributions).toEqual(totals)
+    expect(r.yearTotal).toBe(totals.reduce((a, b) => a + b, 0))
+  })
+
+  it('sums multiple days within a week', () => {
+    const week: YearContributions = {
+      contributionCalendar: {
+        totalContributions: 10,
+        weeks: [{ contributionDays: [{ contributionCount: 3 }, { contributionCount: 7 }] }],
+      },
+    }
+    const r = analyzeRecord(cc([]), NOW, week)
+    // 1 input week → front-padded to 52; the only non-zero bucket is the last (newest).
+    expect(r.weeklyContributions).toHaveLength(YEAR_WEEKS)
+    expect(r.weeklyContributions[YEAR_WEEKS - 1]).toBe(10)
+    expect(r.weeklyContributions.slice(0, YEAR_WEEKS - 1).every((v) => v === 0)).toBe(true)
+  })
+
+  it('trims to the trailing 52 weeks when 53 are returned (drops the oldest)', () => {
+    const totals = Array.from({ length: 53 }, (_, i) => i + 1) // 1..53
+    const r = analyzeRecord(cc([]), NOW, yc(totals))
+    expect(r.weeklyContributions).toHaveLength(YEAR_WEEKS)
+    expect(r.weeklyContributions[0]).toBe(2) // week "1" dropped, "2" now oldest
+    expect(r.weeklyContributions[YEAR_WEEKS - 1]).toBe(53) // newest preserved
+  })
+
+  it('front-pads with zeros when fewer than 52 weeks are returned', () => {
+    const r = analyzeRecord(cc([]), NOW, yc([5, 9, 2])) // 40-week-style short history
+    expect(r.weeklyContributions).toHaveLength(YEAR_WEEKS)
+    expect(r.weeklyContributions.slice(0, YEAR_WEEKS - 3).every((v) => v === 0)).toBe(true)
+    expect(r.weeklyContributions.slice(-3)).toEqual([5, 9, 2])
+  })
+
+  it('all-zero year → flat 52 buckets, yearTotal 0', () => {
+    const r = analyzeRecord(cc([]), NOW, yc(new Array(YEAR_WEEKS).fill(0)))
+    expect(r.yearTotal).toBe(0)
+    expect(r.weeklyContributions.every((v) => v === 0)).toBe(true)
+  })
+
+  it('a single dominant week does not zero out the others (raw values preserved for sqrt scaling)', () => {
+    const totals = new Array(YEAR_WEEKS).fill(1)
+    totals[YEAR_WEEKS - 1] = 400 // one huge week
+    const r = analyzeRecord(cc([]), NOW, yc(totals))
+    // Raw counts are kept; the sqrt visual scaling lives in the renderer. Small weeks survive.
+    expect(r.weeklyContributions[0]).toBe(1)
+    expect(r.weeklyContributions[YEAR_WEEKS - 1]).toBe(400)
+  })
+
+  it('degrades to zeros when the year calendar is missing', () => {
+    const broken = {} as unknown as YearContributions
+    const r = analyzeRecord(cc([]), NOW, broken)
+    expect(r.yearTotal).toBe(0)
+    expect(r.weeklyContributions).toHaveLength(YEAR_WEEKS)
+    expect(r.weeklyContributions.every((v) => v === 0)).toBe(true)
   })
 })

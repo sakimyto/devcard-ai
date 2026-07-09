@@ -86,7 +86,10 @@ export async function buildCardData(
   try {
     // 12週窓の下限を GraphQL 側にも伝え、窓外コミットの取得自体を止める（per-repo 100件上限を窓内に使う）
     const since = new Date(now.getTime() - WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString()
-    const userData = await fetchUserData(user, graphql, since)
+    // 表示専用の 1 年アクティビティグラフ用。contributionsCollection の from/to は最大1年なので
+    // 364d で安全側に寄せる（12週窓の指標とは独立、Grade/POWER には算入しない）
+    const yearAgo = new Date(now.getTime() - 364 * 24 * 60 * 60 * 1000).toISOString()
+    const userData = await fetchUserData(user, graphql, since, yearAgo)
     if (!userData) {
       return { kind: 'not_found', errorMessage: 'User not found' }
     }
@@ -159,7 +162,7 @@ export async function buildCardData(
 
     // Contribution record over the same 12-week window; degrades to zeros when the field
     // is absent/restricted. Display-only — not fed into stats/grade/power. Feeds traits.
-    const record = analyzeRecord(userData.contributionsCollection, now)
+    const record = analyzeRecord(userData.contributionsCollection, now, userData.yearContributions)
 
     // v2.6 TCG-density signals (all display-only, no Grade/POWER impact).
     const element = analyzeElement(stats)

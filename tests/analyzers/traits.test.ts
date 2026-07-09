@@ -56,6 +56,8 @@ function input(over: InputOverride = {}): TraitsInput {
       inclPrivate: false,
       currentStreak: 0,
       longestStreak: 0,
+      yearTotal: 0,
+      weeklyContributions: [],
       ...over.record,
     },
     toolAttribution: over.toolAttribution ?? {
