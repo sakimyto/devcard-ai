@@ -36,20 +36,18 @@ export function renderLandingPage(): string {
     .step-body { color: var(--muted); font-size: 14px; margin-top: 8px }
     code { background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px; font-size: 13px }
     pre#markdown-output { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin: 10px 0; overflow-x: auto; font-size: 13px; white-space: pre-wrap; word-break: break-all }
-    /* Gallery: recently summoned, newest first */
-    #gallery { margin-top: 56px }
-    .gallery-title { font-size: 20px; letter-spacing: -0.01em; margin-bottom: 16px }
-    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px }
-    .g-card { display: flex; gap: 10px; align-items: center; text-align: left; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; cursor: pointer; color: var(--text); font: inherit }
-    .g-card:hover { border-color: var(--accent) }
-    .g-avatar { width: 40px; height: 40px; border-radius: 50%; flex: 0 0 auto; background: var(--bg) }
-    .g-body { min-width: 0; flex: 1 }
-    .g-name { font-weight: 600; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
-    .g-meta { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); margin-top: 2px }
-    .g-elem { font-size: 14px; line-height: 1 }
-    .g-tier { border: 1px solid var(--border); border-radius: 5px; padding: 0 5px; font-weight: 600; color: var(--text) }
-    .g-pow { font-variant-numeric: tabular-nums }
-    .g-epithet { font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 1px }
+    /* Gallery: recently summoned, newest first — 実カードをそのまま並べる */
+    #gallery { margin-top: 72px }
+    .gallery-title { font-size: 20px; letter-spacing: -0.01em; margin-bottom: 18px }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 22px }
+    .g-card { display: block; background: none; border: none; padding: 0; cursor: pointer; color: var(--text); font: inherit; text-align: left; transition: transform .15s ease }
+    .g-card:hover { transform: translateY(-4px) }
+    .g-thumb { display: block; width: 100%; border-radius: 14px; border: 1px solid var(--border); background: var(--panel); min-height: 280px }
+    .g-card:hover .g-thumb { border-color: var(--accent) }
+    .g-cap { display: flex; align-items: center; gap: 8px; margin-top: 9px; font-size: 13px; color: var(--muted); min-width: 0 }
+    .g-elem { font-size: 15px; line-height: 1; flex: 0 0 auto }
+    .g-name { font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+    .g-pow { font-variant-numeric: tabular-nums; margin-left: auto; flex: 0 0 auto }
     footer { color: var(--muted); font-size: 13px; margin-top: 56px; text-align: center }
     a { color: var(--accent) }
     @media (max-width: 720px) {
@@ -156,57 +154,44 @@ export function renderLandingPage(): string {
       card.type = 'button'
       card.className = 'g-card'
       const elem = ELEMENTS[entry.element] || null
-      if (elem) card.style.borderColor = elem.color + '66' // same-element visual resonance
+      if (typeof entry.epithet === 'string' && entry.epithet) card.title = entry.epithet
 
+      // 実カード SVG をそのままサムネイルとして並べる（S ティアのホロも動く）。
+      // エッジ/KV キャッシュ済みの URL なので一覧表示のコストは軽い
       const img = document.createElement('img')
-      img.className = 'g-avatar'
+      img.className = 'g-thumb'
       img.loading = 'lazy'
-      img.alt = ''
-      img.src = 'https://github.com/' + encodeURIComponent(entry.user) + '.png?size=64'
+      img.alt = '@' + entry.user + ' card'
+      img.src = '/?user=' + encodeURIComponent(entry.user) + '&theme=dark'
+      if (elem) img.style.borderColor = elem.color + '66' // same-element visual resonance
       card.appendChild(img)
 
-      const body = document.createElement('div')
-      body.className = 'g-body'
-      const name = document.createElement('div')
-      name.className = 'g-name'
-      name.textContent = '@' + entry.user
-      body.appendChild(name)
-
-      const metaRow = document.createElement('div')
-      metaRow.className = 'g-meta'
+      const cap = document.createElement('div')
+      cap.className = 'g-cap'
       if (elem) {
         const glyph = document.createElement('span')
         glyph.className = 'g-elem'
         glyph.style.color = elem.color
         glyph.textContent = elem.glyph
-        metaRow.appendChild(glyph)
+        cap.appendChild(glyph)
       }
-      if (typeof entry.grade === 'string') {
-        const tier = document.createElement('span')
-        tier.className = 'g-tier'
-        tier.textContent = entry.grade
-        metaRow.appendChild(tier)
-      }
+      const name = document.createElement('span')
+      name.className = 'g-name'
+      name.textContent = '@' + entry.user
+      cap.appendChild(name)
       if (typeof entry.power === 'number') {
         const pow = document.createElement('span')
         pow.className = 'g-pow'
         pow.textContent = entry.power.toLocaleString()
-        metaRow.appendChild(pow)
+        cap.appendChild(pow)
       }
-      body.appendChild(metaRow)
-
-      if (typeof entry.epithet === 'string' && entry.epithet) {
-        const ep = document.createElement('div')
-        ep.className = 'g-epithet'
-        ep.textContent = entry.epithet
-        body.appendChild(ep)
-      }
-      card.appendChild(body)
+      card.appendChild(cap)
 
       card.addEventListener('click', () => {
         input.value = entry.user
         location.hash = encodeURIComponent(entry.user)
         summon()
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       })
       return card
     }

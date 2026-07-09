@@ -38,11 +38,11 @@ describe('renderLandingPage v3', () => {
     expect(html).toContain('#result[hidden] { display: none }')
   })
 
-  it('fetches /api/gallery and builds avatar URLs from github.com/{user}.png', () => {
+  it('fetches /api/gallery and lines up the actual card SVGs as thumbnails', () => {
     expect(html).toContain("fetch('/api/gallery')")
-    expect(html).toContain(
-      "'https://github.com/' + encodeURIComponent(entry.user) + '.png?size=64'",
-    )
+    // ギャラリーは実カード（自ドメインの SVG）を並べる。ユーザー名は encodeURIComponent 経由
+    expect(html).toContain("'/?user=' + encodeURIComponent(entry.user) + '&theme=dark'")
+    expect(html).toContain('g-thumb')
   })
 
   it('renders usernames without innerHTML (XSS-safe: textContent/createElement only)', () => {
