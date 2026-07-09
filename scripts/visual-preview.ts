@@ -18,6 +18,7 @@ const base: CardDataV2 = {
       { toolId: 'claude', toolName: 'Claude', commitCount: 84, percentage: 70 },
       { toolId: 'cursor', toolName: 'Cursor', commitCount: 36, percentage: 30 },
     ],
+    assisted: [{ toolId: 'codex', toolName: 'Codex', count: 8 }],
     totalAiCommits: 120,
     verified: true,
   },

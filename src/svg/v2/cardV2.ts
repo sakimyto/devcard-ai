@@ -4,6 +4,13 @@ import { svgRect, svgText, wrapText } from '../utils'
 import { renderArt } from './art'
 import { renderEmblem } from './emblem'
 import { TIER_GEM_COLORS, renderFrame } from './frame'
+import { renderStatGlyph, renderToolIcon } from './icons'
+
+// Icon color per tool: the saturated brand color reads on the badge fill and gives
+// fallback runes enough contrast for the white initial. Accent covers unknown tools.
+function iconColor(theme: Theme, toolId: string): string {
+  return theme.toolColors[toolId]?.[0] ?? theme.accent
+}
 
 export const CARD_W = 750
 export const CARD_H = 1050
@@ -19,11 +26,19 @@ function nameFontSize(len: number): number {
   return Math.max(20, Math.min(42, fit))
 }
 
-function statBar(label: string, value: number, y: number, theme: Theme): string {
+function statBar(
+  label: string,
+  value: number,
+  y: number,
+  theme: Theme,
+  glyph: 'velocity' | 'diversity' | 'consistency',
+): string {
   const barX = PAD + 190
   const barW = CARD_W - barX - PAD - 64
   const filled = Math.round((barW * Math.max(0, Math.min(100, value))) / 100)
-  return `${svgText(PAD, y + 15, label, { fontSize: 18, fill: theme.textSecondary, fontWeight: '600' })}
+  // Glyph sits left of the label; label shifts right to make room (bar unchanged).
+  return `${renderStatGlyph(glyph, PAD, y, 18, theme.accent)}
+${svgText(PAD + 26, y + 15, label, { fontSize: 18, fill: theme.textSecondary, fontWeight: '600' })}
 ${svgRect(barX, y, barW, 18, { fill: theme.barBg, rx: 9 })}
 ${filled > 0 ? svgRect(barX, y, Math.max(filled, 18), 18, { fill: theme.accent, rx: 9 }) : ''}
 ${svgText(barX + barW + 16, y + 15, String(value), { fontSize: 20, fill: theme.text, fontWeight: 'bold' })}`
@@ -77,31 +92,65 @@ ${svgText(PAD, 128, data.username, { fontSize: nameFontSize(data.username.length
   // --- stats ---
   const statsY = 548
   const stats = `${svgText(PAD, statsY - 18, 'STATS', { fontSize: 15, fill: theme.textSecondary, fontWeight: '600' })}
-${statBar('VELOCITY', data.stats.velocity, statsY, theme)}
-${statBar('DIVERSITY', data.stats.diversity, statsY + 44, theme)}
-${statBar('CONSISTENCY', data.stats.consistency, statsY + 88, theme)}`
+${statBar('VELOCITY', data.stats.velocity, statsY, theme, 'velocity')}
+${statBar('DIVERSITY', data.stats.diversity, statsY + 44, theme, 'diversity')}
+${statBar('CONSISTENCY', data.stats.consistency, statsY + 88, theme, 'consistency')}`
 
   // --- tool loadout ---
   const toolsY = 716
   const CHIP_ROW_RIGHT = CARD_W - PAD // 706: chips must not cross this edge
+  const CHIP_H = 36
+  const ICON = 12
+  const ICON_X = 12 // left padding before icon
+  const ICON_GAP = 6 // gap between icon and label
+  const TEXT_X = ICON_X + ICON + ICON_GAP // where left-aligned label starts
   const toolChips: string[] = []
   let chipX = PAD
-  for (const t of data.toolAttribution.tools.slice(0, 3)) {
-    const label = `${t.toolName} ${Math.round(t.percentage)}%`
-    const cw = 24 + label.length * 11
-    if (chipX + cw > CHIP_ROW_RIGHT) break
-    toolChips.push(`${svgRect(chipX, toolsY, cw, 36, { fill: theme.badgeBg, rx: 18 })}
-${svgText(chipX + cw / 2, toolsY + 24, label, { fontSize: 17, fill: theme.text, fontWeight: '600', anchor: 'middle' })}`)
+  // Drop priority: committed > assisted > equipped. Chips are laid out in that
+  // order and the row stops entirely at the first chip that would cross the right
+  // edge, so a lower-priority chip never takes the place of a dropped higher one.
+  let rowFull = false
+  const place = (cw: number, render: () => string): void => {
+    if (rowFull) return
+    if (chipX + cw > CHIP_ROW_RIGHT) {
+      rowFull = true
+      return
+    }
+    toolChips.push(render())
     chipX += cw + 12
   }
-  const commitToolIds = new Set(data.toolAttribution.tools.map((t) => t.toolId))
-  for (const e of data.equipped.equipped.filter((e) => !commitToolIds.has(e.toolId)).slice(0, 2)) {
+  // Icon-bearing chip (committed / assisted): left-aligned icon + label, solid fill.
+  const iconChip = (toolId: string, label: string, charW: number, textColor: string): void => {
+    const cw = TEXT_X + Math.ceil(label.length * charW) + 12
+    const startX = chipX
+    place(
+      cw,
+      () =>
+        `${svgRect(startX, toolsY, cw, CHIP_H, { fill: theme.badgeBg, rx: 18 })}
+${renderToolIcon(toolId, startX + ICON_X, toolsY + (CHIP_H - ICON) / 2, ICON, iconColor(theme, toolId))}
+${svgText(startX + TEXT_X, toolsY + 24, label, { fontSize: 16, fill: textColor, fontWeight: '600', anchor: 'start' })}`,
+    )
+  }
+  for (const t of data.toolAttribution.tools.slice(0, 3)) {
+    iconChip(t.toolId, `${t.toolName} ${Math.round(t.percentage)}%`, 9, theme.text)
+  }
+  for (const a of data.toolAttribution.assisted.slice(0, 2)) {
+    iconChip(a.toolId, `${a.toolName} · assisted`, 8.5, theme.textSecondary)
+  }
+  const shownIds = new Set([
+    ...data.toolAttribution.tools.map((t) => t.toolId),
+    ...data.toolAttribution.assisted.map((a) => a.toolId),
+  ])
+  for (const e of data.equipped.equipped.filter((e) => !shownIds.has(e.toolId)).slice(0, 2)) {
     const label = `${e.toolName} · equipped`
     const cw = 24 + label.length * 10
-    if (chipX + cw > CHIP_ROW_RIGHT) break
-    toolChips.push(`<rect x="${chipX}" y="${toolsY}" width="${cw}" height="36" rx="18" fill="none" stroke="${theme.accent}" stroke-opacity="0.5" stroke-dasharray="4 3" />
-${svgText(chipX + cw / 2, toolsY + 24, label, { fontSize: 15, fill: theme.textSecondary, anchor: 'middle' })}`)
-    chipX += cw + 12
+    const startX = chipX
+    place(
+      cw,
+      () =>
+        `<rect x="${startX}" y="${toolsY}" width="${cw}" height="36" rx="18" fill="none" stroke="${theme.accent}" stroke-opacity="0.5" stroke-dasharray="4 3" />
+${svgText(startX + cw / 2, toolsY + 24, label, { fontSize: 15, fill: theme.textSecondary, anchor: 'middle' })}`,
+    )
   }
   const loadout = `${svgText(PAD, toolsY - 14, 'LOADOUT', { fontSize: 15, fill: theme.textSecondary, fontWeight: '600' })}
 ${toolChips.length > 0 ? toolChips.join('\n') : svgText(PAD, toolsY + 24, 'no tools detected yet', { fontSize: 16, fill: theme.textSecondary })}`

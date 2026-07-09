@@ -29,6 +29,7 @@ function makeData(over: Partial<CardDataV2> = {}): CardDataV2 {
           percentage: 30,
         },
       ],
+      assisted: [],
       totalAiCommits: 120,
       verified: true,
     },
@@ -79,6 +80,26 @@ describe('renderCardV2', () => {
     }
   })
 
+  it('renders assisted chips with icons and the "· assisted" label (golden)', () => {
+    const svg = renderCardV2(
+      makeData({
+        toolAttribution: {
+          tools: [{ toolId: 'claude', toolName: 'Claude', commitCount: 90, percentage: 90 }],
+          assisted: [{ toolId: 'codex', toolName: 'Codex', count: 8 }],
+          totalAiCommits: 90,
+          verified: true,
+        },
+        equipped: { equipped: [] },
+      }),
+      { theme: 'dark' },
+    )
+    expect(svg).toContain('· assisted')
+    expect(svg).toContain('Codex · assisted')
+    // no <script> ever leaks into the rendered card
+    expect(svg).not.toContain('<script')
+    expect(svg).toMatchSnapshot('card-assisted-dark')
+  })
+
   it('escapes XML in username (39-char boundary + injection attempt)', () => {
     const long = 'a'.repeat(39)
     expect(renderCardV2(makeData({ username: long }), { theme: 'dark' })).toContain(long)
@@ -108,7 +129,7 @@ describe('renderCardV2', () => {
   it('renders without tools and without commits (zero states)', () => {
     const svg = renderCardV2(
       makeData({
-        toolAttribution: { tools: [], totalAiCommits: 0, verified: false },
+        toolAttribution: { tools: [], assisted: [], totalAiCommits: 0, verified: false },
         equipped: { equipped: [] },
         usage: { categories: [], totalCommits: 0 },
         languages: { languages: [] },
@@ -147,6 +168,7 @@ describe('renderCardV2', () => {
               percentage: 50,
             },
           ],
+          assisted: [],
           totalAiCommits: 120,
           verified: true,
         },

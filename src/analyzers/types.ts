@@ -23,8 +23,16 @@ export interface ToolAttribution {
   commitCount: number
   percentage: number
 }
+// assisted: 本文文脈でレビュアー的に使われた AI ツール。committed（tools）に既に居る
+// ツールは上位証跡なのでここには重複して出さない。count 降順 → toolId 昇順。
+export interface AssistedTool {
+  toolId: string
+  toolName: string
+  count: number
+}
 export interface ToolAttributionAnalysis {
   tools: ToolAttribution[]
+  assisted: AssistedTool[]
   totalAiCommits: number
   verified: boolean
 }

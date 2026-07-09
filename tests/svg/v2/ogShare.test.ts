@@ -15,6 +15,7 @@ const data: CardDataV2 = {
   },
   toolAttribution: {
     tools: [{ toolId: 'claude', toolName: 'Claude', commitCount: 84, percentage: 70 }],
+    assisted: [],
     totalAiCommits: 120,
     verified: true,
   },

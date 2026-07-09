@@ -95,7 +95,7 @@ const PROBE_DATA: CardDataV2 = {
     aiCommitsInWindow: 120,
     activeWeeks: 9,
   },
-  toolAttribution: { tools: [], totalAiCommits: 120, verified: true },
+  toolAttribution: { tools: [], assisted: [], totalAiCommits: 120, verified: true },
   equipped: { equipped: [] },
   usage: { categories: [], totalCommits: 120 },
   languages: { languages: [] },

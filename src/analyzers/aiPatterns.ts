@@ -73,3 +73,53 @@ export function detectAiSignal(message: string, authorLogin: string | null): AiD
   }
   return { isAi: false, toolId: 'unknown' }
 }
+
+// assisted シグナル: コミット本文で AI をレビュアー的に使った文脈（ツール名 + 使用動詞の
+// 隣接）を拾う。トレーラーを残さないレビュー用途（codex exec review 等）を可視化する。
+// ツール名単独では絶対にマッチさせない — 「add Codex tool detection」「Codex対応」のような
+// 言及・機能追加コミットは非マッチ（使用動詞との隣接文脈が必須）。順序 = 優先度。
+const ASSISTED_SIGNALS: Signal[] = [
+  {
+    pattern:
+      /codex\s*(exec\s*)?(review|レビュー|指摘|plan\s*レビュー)|codexレビュー|\(codex\s*#?\d|per\s+codex|codex\s+(flagged|found|caught|suggested)/i,
+    toolId: 'codex',
+  },
+  // gpt-4/gpt-5 系のレビュー言及はこのプロジェクト文脈では codex 経由。'chatgpt' toolId は作らない
+  {
+    pattern:
+      /gpt-?[45][\w.-]*\s*(review|レビュー|指摘)|gpt-?[45][\w.-]*\s+(flagged|found|caught|suggested)/i,
+    toolId: 'codex',
+  },
+  {
+    pattern:
+      /claude\s*(review|レビュー|指摘)|claudeレビュー|per\s+claude|claude\s+(flagged|found|caught|suggested)/i,
+    toolId: 'claude',
+  },
+  {
+    pattern:
+      /copilot\s*(review|レビュー|指摘)|copilotレビュー|copilot\s+(flagged|found|caught|suggested)/i,
+    toolId: 'copilot',
+  },
+  {
+    pattern:
+      /cursor\s*(review|レビュー|指摘)|cursorレビュー|cursor\s+(flagged|found|caught|suggested)/i,
+    toolId: 'cursor',
+  },
+  {
+    pattern:
+      /gemini\s*(review|レビュー|指摘)|geminiレビュー|gemini\s+(flagged|found|caught|suggested)/i,
+    toolId: 'gemini',
+  },
+  {
+    pattern:
+      /aider\s*(review|レビュー|指摘)|aiderレビュー|aider\s+(flagged|found|caught|suggested)/i,
+    toolId: 'aider',
+  },
+]
+
+export function detectAssistedSignal(message: string): string | null {
+  for (const s of ASSISTED_SIGNALS) {
+    if (s.pattern.test(message)) return s.toolId
+  }
+  return null
+}
