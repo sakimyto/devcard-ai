@@ -45,6 +45,7 @@ describe('analyzeStats', () => {
     const s = analyzeStats({
       windowAiCommits: [],
       commitToolCount: 0,
+      assistedToolCount: 0,
       equippedOnlyCount: 0,
       usage: { categories: [], totalCommits: 0 },
       now: NOW,
@@ -64,6 +65,7 @@ describe('analyzeStats', () => {
     const s = analyzeStats({
       windowAiCommits: commitsPerWeek(25, 12),
       commitToolCount: 3,
+      assistedToolCount: 0,
       equippedOnlyCount: 2,
       usage: evenUsage,
       now: NOW,
@@ -79,6 +81,7 @@ describe('analyzeStats', () => {
   it('monotone: more velocity never lowers points', () => {
     const base = {
       commitToolCount: 1,
+      assistedToolCount: 0,
       equippedOnlyCount: 0,
       usage: singleUsage,
       now: NOW,
@@ -93,6 +96,7 @@ describe('analyzeStats', () => {
     const s = analyzeStats({
       windowAiCommits: commitsPerWeek(2, 6),
       commitToolCount: 1,
+      assistedToolCount: 0,
       equippedOnlyCount: 0,
       usage: singleUsage,
       now: NOW,
@@ -101,10 +105,58 @@ describe('analyzeStats', () => {
     expect(s.consistency).toBe(50)
   })
 
+  it('DIVERSITY weights committed 1.0 / assisted 0.75 / equipped 0.5 (numeric anchors)', () => {
+    // singleUsage → usageEntropyNorm = 0, so diversity = round(100 * 0.6 * toolScore).
+    // toolScore = (committed + 0.75*assisted + 0.5*equippedOnly) / 4, capped at 1.
+    const base = {
+      windowAiCommits: commitsPerWeek(2, 6),
+      usage: singleUsage,
+      now: NOW,
+    }
+    // committed=1 only → toolScore 0.25 → round(60 * 0.25) = 15
+    expect(
+      analyzeStats({ ...base, commitToolCount: 1, assistedToolCount: 0, equippedOnlyCount: 0 })
+        .diversity,
+    ).toBe(15)
+    // committed=1 + assisted=1 → toolScore 0.4375 → round(60 * 0.4375) = round(26.25) = 26
+    expect(
+      analyzeStats({ ...base, commitToolCount: 1, assistedToolCount: 1, equippedOnlyCount: 0 })
+        .diversity,
+    ).toBe(26)
+    // committed=1 + assisted=1 + equipped=1 → toolScore 0.5625 → round(60 * 0.5625) = 34
+    expect(
+      analyzeStats({ ...base, commitToolCount: 1, assistedToolCount: 1, equippedOnlyCount: 1 })
+        .diversity,
+    ).toBe(34)
+  })
+
+  it('assisted tools raise diversity, but less than committed (0.75 < 1.0)', () => {
+    const base = {
+      windowAiCommits: commitsPerWeek(2, 6),
+      usage: singleUsage,
+      now: NOW,
+    }
+    const committed = analyzeStats({
+      ...base,
+      commitToolCount: 2,
+      assistedToolCount: 0,
+      equippedOnlyCount: 0,
+    }).diversity
+    const assisted = analyzeStats({
+      ...base,
+      commitToolCount: 1,
+      assistedToolCount: 1,
+      equippedOnlyCount: 0,
+    }).diversity
+    // one committed + one assisted (1.75) < two committed (2.0)
+    expect(assisted).toBeLessThan(committed)
+  })
+
   it('equipped-only tools count at half weight in diversity', () => {
     const none = analyzeStats({
       windowAiCommits: commitsPerWeek(2, 6),
       commitToolCount: 1,
+      assistedToolCount: 0,
       equippedOnlyCount: 0,
       usage: singleUsage,
       now: NOW,
@@ -112,6 +164,7 @@ describe('analyzeStats', () => {
     const withEquipped = analyzeStats({
       windowAiCommits: commitsPerWeek(2, 6),
       commitToolCount: 1,
+      assistedToolCount: 0,
       equippedOnlyCount: 2,
       usage: singleUsage,
       now: NOW,
@@ -129,6 +182,7 @@ describe('analyzeStats', () => {
     const s = analyzeStats({
       windowAiCommits: [boundary],
       commitToolCount: 0,
+      assistedToolCount: 0,
       equippedOnlyCount: 0,
       usage: singleUsage,
       now: NOW,
@@ -142,6 +196,7 @@ describe('analyzeStats', () => {
     const d = analyzeStats({
       windowAiCommits: commitsPerWeek(1, 1),
       commitToolCount: 0,
+      assistedToolCount: 0,
       equippedOnlyCount: 0,
       usage: singleUsage,
       now: NOW,

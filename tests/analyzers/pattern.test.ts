@@ -57,6 +57,39 @@ describe('analyzePattern', () => {
     expect(result.alternationScore).toBeLessThanOrEqual(0.5)
   })
 
+  it('uses the involved oid set (committed OR assisted) for alternation when provided', () => {
+    // Timeline alternates human / AI-involved. The AI-involved ones are assisted-only
+    // (body mentions codexレビュー, no committed trailer), so isAiCommit() would tag
+    // them human and collapse alternationScore. The involved set must fix that.
+    const assisted = (date: string): GitHubCommit => ({
+      oid: `assisted-${++oidCounter}`,
+      message: 'fix: codexレビュー反映',
+      committedDate: date,
+      author: { user: { login: 'user' } },
+    })
+    const human = (date: string): GitHubCommit => ({
+      oid: `human-${++oidCounter}`,
+      message: 'manual commit',
+      committedDate: date,
+      author: { user: { login: 'user' } },
+    })
+    const commits = [
+      assisted('2026-03-14T10:00:00Z'),
+      human('2026-03-14T10:05:00Z'),
+      assisted('2026-03-14T10:10:00Z'),
+      human('2026-03-14T10:15:00Z'),
+      assisted('2026-03-14T10:20:00Z'),
+      human('2026-03-14T10:25:00Z'),
+    ]
+    const involved = new Set(commits.filter((c) => c.message.includes('codex')).map((c) => c.oid))
+    const withSet = analyzePattern(commits, involved.size, involved)
+    expect(withSet.alternationScore).toBeGreaterThan(0.5)
+    expect(withSet.pattern).toBe('Pair Programmer')
+    // Without the set, assisted-only commits look human → alternation collapses to 0.
+    const withoutSet = analyzePattern(commits, involved.size)
+    expect(withoutSet.alternationScore).toBe(0)
+  })
+
   it('returns Selective User for < 30% AI rate', () => {
     const commits = [
       commit(true, '2026-03-14T10:00:00Z'),

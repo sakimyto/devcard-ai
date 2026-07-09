@@ -1,10 +1,11 @@
+import { detectAssistedSignal } from './analyzers/aiPatterns'
 import { isAiCommit } from './analyzers/coauthor'
 import { analyzeEquipped } from './analyzers/equipped'
 import { flavorText } from './analyzers/flavor'
 import { analyzeLanguages } from './analyzers/languages'
 import { analyzePattern } from './analyzers/pattern'
 import { analyzeStats } from './analyzers/stats'
-import { analyzeToolAttribution } from './analyzers/toolAttribution'
+import { analyzeToolAttributionV2 } from './analyzers/toolAttribution'
 import type { CardDataV2 } from './analyzers/types'
 import { analyzeUsage } from './analyzers/usage'
 import { WINDOW_DAYS, filterToWindow } from './analyzers/window'
@@ -67,27 +68,39 @@ export async function buildCardData(
 
     // v2: 全指標を「直近12週・公開リポ」窓に統一する（since 済みだが未来時刻/クロックずれ防御で再フィルタ）
     const windowCommits = filterToWindow(allCommits, now)
-    const windowAiCommits = windowCommits.filter((c) =>
-      isAiCommit(c.message, c.author?.user?.login ?? null),
+    // AI 関与 = committed（トレーラー/マーカー/bot）または assisted（本文レビュー文脈）
+    const involvedCommits = windowCommits.filter(
+      (c) =>
+        isAiCommit(c.message, c.author?.user?.login ?? null) ||
+        detectAssistedSignal(c.message) !== null,
     )
 
     const equipped = analyzeEquipped(repos)
 
-    if (windowAiCommits.length === 0) {
+    if (involvedCommits.length === 0) {
       return { kind: 'no_ai', errorMessage: 'No public AI activity in the last 12 weeks' }
     }
 
-    const toolAttribution = analyzeToolAttribution(windowAiCommits)
-    const usage = analyzeUsage(windowAiCommits)
+    const toolAttribution = analyzeToolAttributionV2(involvedCommits)
+    const usage = analyzeUsage(involvedCommits)
     const languages = analyzeLanguages(repos)
-    const pattern = analyzePattern(windowCommits, windowAiCommits.length)
+    // alternationScore must classify assisted commits as AI too (same set as the aiRate
+    // numerator), otherwise assisted-only histories are misread as human.
+    const involvedOids = new Set(involvedCommits.map((c) => c.oid))
+    const pattern = analyzePattern(windowCommits, involvedCommits.length, involvedOids)
 
-    const commitToolIds = new Set(toolAttribution.tools.map((t) => t.toolId))
-    const equippedOnlyCount = equipped.equipped.filter((e) => !commitToolIds.has(e.toolId)).length
+    // DIVERSITY 重複排除: committed が最上位、次に assisted、最後に equipped。
+    // 同一ツールは最上位の証跡でのみ数える。
+    const committedIds = new Set(toolAttribution.tools.map((t) => t.toolId))
+    const assistedIds = new Set(toolAttribution.assisted.map((a) => a.toolId))
+    const equippedOnlyCount = equipped.equipped.filter(
+      (e) => !committedIds.has(e.toolId) && !assistedIds.has(e.toolId),
+    ).length
 
     const stats = analyzeStats({
-      windowAiCommits,
+      windowAiCommits: involvedCommits,
       commitToolCount: toolAttribution.tools.filter((t) => t.toolId !== 'unknown').length,
+      assistedToolCount: toolAttribution.assisted.filter((a) => a.toolId !== 'unknown').length,
       equippedOnlyCount,
       usage,
       now,

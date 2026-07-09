@@ -2,7 +2,14 @@ import type { GitHubCommit } from '~/github/types'
 import { isAiCommit } from './coauthor'
 import type { PatternAnalysis, PatternType } from './types'
 
-export function analyzePattern(allCommits: GitHubCommit[], aiCommitCount: number): PatternAnalysis {
+export function analyzePattern(
+  allCommits: GitHubCommit[],
+  aiCommitCount: number,
+  // AI-involved commit oids (committed OR assisted). When provided, the alternation
+  // walk uses the same definition as aiCommitCount so assisted-only commits are not
+  // mistaken for human. Omit to fall back to committed-only (isAiCommit) tagging.
+  involvedOids?: Set<string>,
+): PatternAnalysis {
   const total = allCommits.length
   if (total === 0) {
     return { pattern: 'Selective User', aiRate: 0, alternationScore: 0 }
@@ -10,11 +17,15 @@ export function analyzePattern(allCommits: GitHubCommit[], aiCommitCount: number
 
   const aiRate = aiCommitCount / total
 
-  // Tag once so the alternation walk is O(n), not O(n) × 2 isAiCommit calls.
+  const isInvolved = involvedOids
+    ? (c: GitHubCommit) => involvedOids.has(c.oid)
+    : (c: GitHubCommit) => isAiCommit(c.message, c.author?.user?.login ?? null)
+
+  // Tag once so the alternation walk is O(n), not O(n) × 2 predicate calls.
   const tagged = allCommits
     .map((c) => ({
       ts: Date.parse(c.committedDate),
-      isAi: isAiCommit(c.message, c.author?.user?.login ?? null),
+      isAi: isInvolved(c),
     }))
     .sort((a, b) => a.ts - b.ts)
 

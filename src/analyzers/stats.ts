@@ -5,12 +5,16 @@ const WINDOW_WEEKS = 12
 const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000
 // 週平均25 AIコミットで VELOCITY 100（対数正規化の上限アンカー）
 const VELOCITY_CAP_PER_WEEK = 25
-// DIVERSITY: ツール4種で満点、equipped は 0.5 重み
+// DIVERSITY: ツール4種で満点。証跡の強さで重み付け（committed 1.0 / assisted 0.75 / equipped 0.5）
 const TOOL_FULL_COUNT = 4
+const ASSISTED_TOOL_WEIGHT = 0.75
+const EQUIPPED_TOOL_WEIGHT = 0.5
 
 export interface StatsInput {
   windowAiCommits: GitHubCommit[]
   commitToolCount: number
+  // committed に居ないツールのみを算入（呼び出し側で重複排除済み）
+  assistedToolCount: number
   equippedOnlyCount: number
   usage: UsageAnalysis
   now?: Date
@@ -61,7 +65,10 @@ export function analyzeStats(input: StatsInput): StatsAnalysis {
     Math.round((100 * Math.log(1 + perWeekAvg)) / Math.log(1 + VELOCITY_CAP_PER_WEEK)),
   )
 
-  const effectiveTools = input.commitToolCount + 0.5 * input.equippedOnlyCount
+  const effectiveTools =
+    input.commitToolCount +
+    ASSISTED_TOOL_WEIGHT * input.assistedToolCount +
+    EQUIPPED_TOOL_WEIGHT * input.equippedOnlyCount
   const toolScore = Math.min(1, effectiveTools / TOOL_FULL_COUNT)
   const diversity = Math.round(100 * (0.6 * toolScore + 0.4 * usageEntropyNorm(input.usage)))
 
