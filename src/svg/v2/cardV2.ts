@@ -48,7 +48,7 @@ function statRow(
   theme: Theme,
   marker: 'velocity' | 'diversity' | 'consistency' | 'dot',
 ): string {
-  const ICON_X = PAD + 316 // numeric column sits to the right of the radar
+  const ICON_X = PAD + 324 // numeric column sits to the right of the radar (≥24px clear of its labels)
   const LABEL_X = ICON_X + 26
   const VAL_X = CARD_W - PAD
   const glyph =
@@ -108,9 +108,9 @@ export function renderCardV2(data: CardDataV2, options: { theme: string }): stri
   const grain = `<g clip-path="url(#cardClip)"><rect x="0" y="0" width="${CARD_W}" height="${CARD_H}" filter="url(#cardGrain)" opacity="0.038" /></g>`
 
   // --- name plate (embossed panel behind the identity block) ---
-  const plate = `<rect x="28" y="64" width="548" height="82" rx="14" fill="url(#plateGrad)" />
-<rect x="28" y="64" width="548" height="82" rx="14" fill="none" stroke="${theme.border}" stroke-opacity="0.6" stroke-width="1" />
-<line x1="42" y1="65.5" x2="562" y2="65.5" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1" />`
+  const plate = `<rect x="28" y="64" width="560" height="82" rx="14" fill="url(#plateGrad)" />
+<rect x="28" y="64" width="560" height="82" rx="14" fill="none" stroke="${theme.border}" stroke-opacity="0.6" stroke-width="1" />
+<line x1="42" y1="65.5" x2="574" y2="65.5" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1" />`
   const namePlate = `${plate}
 ${svgText(PAD, 84, 'AI BUILDER', { fontSize: 16, fill: theme.textSecondary, fontWeight: '600' })}
 ${svgText(PAD, 128, data.username, { fontSize: nameFontSize(data.username.length), fill: theme.text, fontWeight: 'bold' })}`
@@ -168,14 +168,18 @@ ${sparkles}</g></g>
       { label: 'RANGE', value: data.stats.range },
       { label: 'FLOW', value: data.stats.flow },
     ],
-    200,
+    188,
     588,
     82,
     theme,
   )
+  // POWER shares the STATS header line (label left, number right) so the numeric
+  // column below starts clean — the number no longer stacks onto the first row.
+  const powerStr = withCommas(power)
+  const powerLabelX = CARD_W - PAD - Math.ceil(powerStr.length * 17.5) - 12
   const stats = `${svgText(PAD, statsHeaderY, 'STATS', { fontSize: 15, fill: theme.textSecondary, fontWeight: '600' })}
-${svgText(CARD_W - PAD, statsHeaderY - 20, 'POWER', { fontSize: 13, fill: theme.textSecondary, fontWeight: '600', anchor: 'end' })}
-${svgText(CARD_W - PAD, statsHeaderY + 8, withCommas(power), { fontSize: 30, fill: powerColor, fontWeight: 'bold', anchor: 'end' })}
+${svgText(powerLabelX, statsHeaderY, 'POWER', { fontSize: 13, fill: theme.textSecondary, fontWeight: '600', anchor: 'end' })}
+${svgText(CARD_W - PAD, statsHeaderY + 4, powerStr, { fontSize: 30, fill: powerColor, fontWeight: 'bold', anchor: 'end' })}
 ${radar}
 ${statRow('VELOCITY', data.stats.velocity, 512, theme, 'velocity')}
 ${statRow('DIVERSITY', data.stats.diversity, 542, theme, 'diversity')}
@@ -244,19 +248,20 @@ ${svgText(startX + cw / 2, toolsY + 24, label, { fontSize: 15, fill: theme.textS
 ${toolChips.length > 0 ? toolChips.join('\n') : svgText(PAD, toolsY + 24, 'no tools detected yet', { fontSize: 16, fill: theme.textSecondary })}`
 
   // --- languages ---
-  const langY = 812
+  const langY = 800
   const langItems = data.languages.languages
     .map((l, i) => {
       const x = PAD + i * 180
       return `<circle cx="${x + 8}" cy="${langY + 18}" r="7" fill="${l.color}" />
-${svgText(x + 24, langY + 24, l.name, { fontSize: 18, fill: theme.text })}`
+${svgText(x + 28, langY + 24, l.name, { fontSize: 18, fill: theme.text })}`
     })
     .join('\n')
   const langs = `${svgText(PAD, langY, 'TYPES', { fontSize: 15, fill: theme.textSecondary, fontWeight: '600' })}
 ${data.languages.languages.length > 0 ? langItems : svgText(PAD, langY + 24, '—', { fontSize: 16, fill: theme.textSecondary })}`
 
   // --- flavor ---
-  const flavorY = 900
+  // y 850-910 は空きスロット（Task 17 の戦績 RECORD ストリップがここに入る予約枠）
+  const flavorY = 954
   const flavorLines = wrapText(data.flavor, 46, 2)
   const flavor = flavorLines
     .map((line, i) =>

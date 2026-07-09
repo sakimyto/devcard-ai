@@ -82,7 +82,7 @@ export function renderRadar(
       const anchor = Math.abs(cos) < 0.01 ? 'middle' : cos > 0 ? 'start' : 'end'
       // Nudge the baseline down a touch so text visually centers on the vertex.
       return svgText(Number(f(lx)), Number(f(ly + 5)), v.label, {
-        fontSize: 15,
+        fontSize: 14,
         fill: theme.textSecondary,
         anchor,
       })
