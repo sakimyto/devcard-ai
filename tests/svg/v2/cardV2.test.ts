@@ -66,6 +66,9 @@ function makeData(over: Partial<CardDataV2> = {}): CardDataV2 {
       currentStreak: 7,
       longestStreak: 15,
     },
+    element: { id: 'lumen', label: 'Lumen', color: '#a371f7' },
+    epithet: 'The Symbiont',
+    traits: [],
     flavor: 'Trades keystrokes with Claude, line for line.',
     serial: '#7F3A',
     seed: 12345,
@@ -308,6 +311,57 @@ describe('renderCardV2 RECORD strip', () => {
     expect(svg).toContain('RECORD')
     expect(svg).not.toContain('NaN')
     expect(svg).not.toContain('undefined')
+  })
+})
+
+describe('renderCardV2 ELEMENT + EPITHET + TRAITS (v2.6)', () => {
+  it('shows the epithet on the archetype row (not the raw pattern label)', () => {
+    const svg = renderCardV2(makeData({ epithet: 'The Overseer' }), { theme: 'dark' })
+    expect(svg).toContain('The Overseer')
+    // The archetype row no longer prints the PatternType class label.
+    expect(svg).not.toContain('>Pair Programmer<')
+  })
+
+  it('renders the element chip with glyph, label, and element color', () => {
+    const svg = renderCardV2(
+      makeData({ element: { id: 'blaze', label: 'Blaze', color: '#f4652f' } }),
+      { theme: 'dark' },
+    )
+    expect(svg).toContain('Blaze')
+    expect(svg).toContain('#f4652f') // outline
+    expect(svg).toContain('#f4652f26') // 15% tint fill
+  })
+
+  it('renders up to two TRAITS lines (◆ name — proof) in place of flavor', () => {
+    const svg = renderCardV2(
+      makeData({
+        traits: [
+          { id: 'centurion', name: 'Centurion', proof: '137 AI-assisted commits in 12 weeks' },
+          { id: 'ghostwriter', name: 'Ghostwriter', proof: '84% of commits ship with AI' },
+        ],
+      }),
+      { theme: 'dark' },
+    )
+    expect(svg).toContain('◆ Centurion')
+    expect(svg).toContain('137 AI-assisted commits in 12 weeks')
+    expect(svg).toContain('◆ Ghostwriter')
+    // flavor line is suppressed when traits fire
+    expect(svg).not.toContain('Trades keystrokes')
+  })
+
+  it('falls back to the flavor line when no trait fired', () => {
+    const svg = renderCardV2(makeData({ traits: [] }), { theme: 'dark' })
+    expect(svg).toContain('Trades keystrokes')
+    expect(svg).not.toContain('◆')
+  })
+
+  it('escapes XML defensively in trait name/proof', () => {
+    const svg = renderCardV2(makeData({ traits: [{ id: 'x', name: 'a<b', proof: 'c&d">' }] }), {
+      theme: 'dark',
+    })
+    expect(svg).not.toContain('a<b')
+    expect(svg).not.toContain('c&d">')
+    expect(svg).toContain('a&lt;b')
   })
 })
 

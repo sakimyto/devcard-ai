@@ -41,16 +41,24 @@ AI Native / Pair Programmer / Delegator / Selective User を「クラス」と�
 縦型トレカ比率 750×1050（現行 800×856 を廃止)。上から:
 
 1. 名前プレート: `AI BUILDER` 肩書 + username + ティアジェム
-2. アーキタイプ紋章 + クラス名
+2. アーキタイプ行: 紋章 + **二つ名（EPITHET)** + `✓ verified` + **属性チップ（ELEMENT)**（クラス名ラベルは撤去。紋章は内部 PatternType 判定を流用)
 3. **ジェネラティブアート領域**（高さ 240): username の hash をシードにした決定論的な幾何学アート。ユーザーごとに固有・再現可能。LLM 不使用。中央に**アバターメダリオン**（円形・半径56・accent 3px 縁取り + 外側 1px 暗リング）を重ねる。アバターは handler 層でサーバ取得し base64 の `data:` URI としてインライン化する（GitHub の `<img>`/camo は remote `href` を描画しないため）。取得失敗時は null → メダリオン非表示で劣化なく描画
 4. **ステータス（6角レーダー + 数値列 + POWER)**: 左に6軸レーダー（VELOCITY / DIVERSITY / SYNERGY / CONSISTENCY / RANGE / FLOW、上から時計回り、25/50/75/100 の同心6角グリッド）、右に同6軸の数値列、STATS ヘッダ右端に **POWER**（総合戦闘力・千位カンマ・9000超はゴールド）。従来の縦バー3本は廃止
 5. ツールロードアウト: ツール名 + シェア%（チップ表示）
 6. 言語タイプアイコン（上位3言語）
 7. **RECORD ストリップ**（v2.5 追加・TYPES とフレーバーの間、予約帯 y 850-910）: 左に `EXP {総コントリビューション:カンマ区切り}`（大きめの数字・accent・ミニ POWER 風。restricted 込みなら右肩に小さく `incl. private`)、中央に `{commits}c · {prs}pr · {reviews}rev`（issues は非表示)、右に `{現在ストリーク}d streak`（現在 0 なら `best {最長}d`、両方 0 なら streak 部分ごと非表示)。マーカーは絵文字（⚔/🔥）が GitHub の SVG ラスタライザで潰れるためテキストグリフ（`›`/`▲`)を採用。**Grade/POWER には一切算入しない（表示専用・ティア不変)**
-8. フレーバーテキスト: データから決定論生成する一行（テンプレート × 条件分岐。LLM 不使用）
+8. **発動型特性（TRAITS・v2.6)**（区切り線の下、y~940-1010）: 条件成立した特性を優先度上位2個まで `◆ {名} — {proof}`（名は accent 太字 17px・proof は muted 15px・各1行）で表示。**0個発動時は従来のフレーバーテキスト**（データ決定論生成の一行）に劣化（後方互換)。マーカー `◆` はテキストグリフ（絵文字回避)
 9. フッター: カードシリアル（username hash 由来 4 桁 hex + `2026`)+ データ窓表記 `public · 12wk` + devcard-ai クレジット
 
-light / dark 両テーマ維持。OGP 横長シェア画像にも名前左のアバター（半径40）と、ティアジェム下の大きな POWER を反映する（レーダーは入れず縦バー3本のまま）。
+light / dark 両テーマ維持。OGP 横長シェア画像にも名前左のアバター（半径40）と、ティアジェム下の大きな POWER を反映し、パターン行は**二つ名（EPITHET)** に差し替える（レーダーは入れず縦バー3本のまま）。
+
+### 属性 ELEMENT / 二つ名 EPITHET / 発動型特性 TRAITS（v2.6・TCG 情報密度）
+
+「カードに勝手に色々書いてある」トレカらしさを増幅する装置。**全て決定論・12週窓・表示専用（Grade/POWER に一切算入しない = ティア不変)**。アイコンは絵文字でなく SVG グリフ（GitHub の SVG ラスタライザで絵文字が潰れるため、RECORD ストリップと同方針)。
+
+- **ELEMENT（属性・6種)**: 6レーダー軸の **argmax** で1種決定（同値タイブレークは表の上から優先: velocity → synergy → consistency → flow → range → diversity)。`velocity→Bolt(#f0b429)` / `synergy→Lumen(#a371f7)` / `consistency→Tide(#58a6ff)` / `flow→Gale(#3fb950)` / `range→Terra(#2ea88f)` / `diversity→Blaze(#f4652f)`。アーキタイプ行に element 色の縁取り+15%塗りチップ（グリフ+ラベル)で表示
+- **EPITHET（二つ名・16+1)**: 内部4軸コード（**表示しない** — MBTI 風文字コードはユーザー却下)から16名を Record 型強制で網羅。軸閾値 `A/H = synergy>=50` / `F/D = flow>=40` / `S/R = consistency>=50` / `W/N = range>=50`。特例 `synergy>=75 かつ velocity>=60 → 'The Ascendant'`（17個目・最上位)。名前のみ表示（ogShare のパターン行もこれに差し替え)
+- **TRAITS（発動型特性・優先度プール20)**: 優先度順プールから条件成立の**上位2個**を表示。proof はテンプレ固定（Sentence case・数値埋め込み)。判定閾値: `ascension power>=9000` / `unbroken currentStreak>=21` / `centurion AI関与コミット>=100` / `chain-strike 1日8コミット以上の日>=3` / `burst-caster 単日最大>=20` / `perfect-attendance activeWeeks==12` / `ghostwriter synergy>=80` / `iron-hand synergy<=20 かつ 窓内総コミット>=30` / `duelist assistedツール>=1` / `one-true-blade topツール>=90%` / `multi-wielder committedツール>=3` / `armory equipped>=3` / `reviewers-eye reviews>=15 かつ reviews/(commits+1)>=0.2` / `pr-cannon prs>=25` / `monastic 1リポジトリに>=70%` / `nomad 窓内活動リポジトリ>=8` / `polyglot 言語>=3種` / `weekend-warrior 土日コミット比>=35%` / `comeback 3週以上の空白後に3週連続活動` / `fresh-summoner 初AIコミットが直近4週内`。派生値（単日/週次/リポジトリ分布)は窓内コミット配列から analyzeTraits 内で決定論導出する。**hour-of-day 系は不採用**（GraphQL タイムスタンプは UTC 正規化でタイムゾーン不明のため)。**weekend は UTC 近似**（土日判定を UTC 曜日で行う旨を明記)。fresh-summoner は履歴が窓内に限定されるため「初AIコミットが窓の直近4週内」を新規AI利用者の下限特性として採用（優先度最下位・フレーバー fallback の手前)
 
 ## Section 2: 指標再設計とデータ精度（v1 = 公開範囲で最大精度)
 

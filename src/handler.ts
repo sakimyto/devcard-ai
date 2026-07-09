@@ -1,5 +1,7 @@
 import { detectAssistedSignal } from './analyzers/aiPatterns'
+import { analyzeBuilderType } from './analyzers/builderType'
 import { isAiCommit } from './analyzers/coauthor'
+import { analyzeElement } from './analyzers/element'
 import { analyzeEquipped } from './analyzers/equipped'
 import { flavorText } from './analyzers/flavor'
 import { analyzeLanguages } from './analyzers/languages'
@@ -7,6 +9,7 @@ import { analyzePattern } from './analyzers/pattern'
 import { analyzeRecord } from './analyzers/record'
 import { analyzeStats } from './analyzers/stats'
 import { analyzeToolAttributionV2 } from './analyzers/toolAttribution'
+import { analyzeTraits } from './analyzers/traits'
 import type { CardDataV2 } from './analyzers/types'
 import { analyzeUsage } from './analyzers/usage'
 import { WINDOW_DAYS, filterToWindow } from './analyzers/window'
@@ -154,6 +157,24 @@ export async function buildCardData(
     const avatar = await avatarFetcher(userData.avatarUrl ?? '')
     const avatarDataUri = avatar ? `data:${avatar.mime};base64,${avatar.base64}` : null
 
+    // Contribution record over the same 12-week window; degrades to zeros when the field
+    // is absent/restricted. Display-only — not fed into stats/grade/power. Feeds traits.
+    const record = analyzeRecord(userData.contributionsCollection, now)
+
+    // v2.6 TCG-density signals (all display-only, no Grade/POWER impact).
+    const element = analyzeElement(stats)
+    const epithet = analyzeBuilderType(stats)
+    const traits = analyzeTraits({
+      stats,
+      record,
+      toolAttribution,
+      equipped,
+      languages,
+      involvedCommits,
+      windowCommits,
+      now,
+    })
+
     const data: CardDataV2 = {
       username: userData.login,
       stats,
@@ -162,9 +183,10 @@ export async function buildCardData(
       usage,
       languages,
       pattern,
-      // Contribution record over the same 12-week window; degrades to zeros when the
-      // field is absent/restricted. Display-only — not fed into stats/grade/power.
-      record: analyzeRecord(userData.contributionsCollection, now),
+      record,
+      element,
+      epithet,
+      traits,
       flavor: flavorText({
         pattern: pattern.pattern,
         topToolName: toolAttribution.tools.find((t) => t.toolId !== 'unknown')?.toolName ?? null,

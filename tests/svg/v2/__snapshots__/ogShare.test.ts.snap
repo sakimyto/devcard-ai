@@ -7,7 +7,7 @@ exports[`renderOgShare > renders 1200x630 with username, grade, stats, no SMIL a
 <text x="72" y="120" font-size="24" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
 
 <text x="72" y="180" font-size="56" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
-<text x="72" y="232" font-size="30" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI Native</text>
+<text x="72" y="232" font-size="30" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">The Ascendant</text>
 <text x="72" y="316" font-size="22" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
 <rect x="302" y="300" width="420" height="20" fill="#21262d" rx="10" />
 <rect x="302" y="300" width="344" height="20" fill="#a371f7" rx="10" />

@@ -47,6 +47,42 @@ export function renderToolIcon(
 </g>`
 }
 
+// Hand-drawn element glyph for the archetype-row chip, rendered into a size×size box at
+// (x, y). Text/SVG only — no emoji (they rasterize to flat monochrome in GitHub's SVG
+// pipeline). Keyed by element id; unknown ids fall back to bolt.
+export function renderElementGlyph(
+  id: string,
+  x: number,
+  y: number,
+  size: number,
+  color: string,
+): string {
+  const scale = size / 24
+  const wrap = (inner: string): string =>
+    `<g transform="translate(${r(x)} ${r(y)}) scale(${r(scale)})">${inner}</g>`
+  const stroke = `fill="none" stroke="${color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"`
+  switch (id) {
+    case 'lumen': // four-pointed sparkle (synergy)
+      return wrap(
+        `<path d="M12 1 L13.7 10.3 23 12 13.7 13.7 12 23 10.3 13.7 1 12 10.3 10.3 Z" fill="${color}" />`,
+      )
+    case 'tide': // two stacked waves (consistency)
+      return wrap(`<path d="M3 9 Q6.75 5 10.5 9 T18 9 M3 15 Q6.75 11 10.5 15 T18 15" ${stroke} />`)
+    case 'gale': // wind gusts with curled ends (flow)
+      return wrap(`<path d="M2 8 H14 Q18 8 16 4.5 M2 13 H18 Q22 13 20 17 M2 18 H11" ${stroke} />`)
+    case 'terra': // six-spoke burst + core (range)
+      return wrap(
+        `<path d="M12 2 V22 M3.3 7 L20.7 17 M3.3 17 L20.7 7" ${stroke} /><circle cx="12" cy="12" r="2.4" fill="${color}" />`,
+      )
+    case 'blaze': // flame (diversity)
+      return wrap(
+        `<path d="M12 2 C14 6.5 17 8 16.5 13 A4.5 4.5 0 1 1 7.5 13 C7.5 9.5 10 8.5 10.5 5.5 C11.2 7.5 12 6.5 12 2 Z" fill="${color}" />`,
+      )
+    default: // bolt — lightning (velocity)
+      return wrap(`<path d="M13 2 4 14 11 14 9 22 20 9 13 9 Z" fill="${color}" />`)
+  }
+}
+
 // Small hand-drawn glyph for each STATS row, rendered into a size×size box at (x, y).
 export function renderStatGlyph(
   stat: 'velocity' | 'diversity' | 'consistency',

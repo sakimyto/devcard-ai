@@ -1,10 +1,10 @@
 import type { CardDataV2 } from '~/analyzers/types'
 import { type Theme, getTheme } from '../themes'
-import { svgRect, svgText, wrapText } from '../utils'
+import { escapeXml, svgRect, svgText, wrapText } from '../utils'
 import { renderArt, renderSparkles } from './art'
 import { renderEmblem } from './emblem'
 import { TIER_GEM_GRADIENT, renderFrame } from './frame'
-import { renderStatGlyph, renderToolIcon } from './icons'
+import { renderElementGlyph, renderStatGlyph, renderToolIcon } from './icons'
 import { renderRadar } from './radar'
 
 // Icon color per tool: the saturated brand color reads on the badge fill and gives
@@ -121,17 +121,38 @@ export function renderCardV2(data: CardDataV2, options: { theme: string }): stri
 ${svgText(PAD, 84, 'AI BUILDER', { fontSize: 16, fill: theme.textSecondary, fontWeight: '600' })}
 ${svgText(PAD, 128, data.username, { fontSize: nameFontSize(data.username.length), fill: theme.text, fontWeight: 'bold' })}`
 
-  // --- archetype row ---
+  // --- archetype row: emblem + epithet name + ✓verified + element chip ---
+  // The emblem still reflects the internal PatternType (retained for flavor), but the
+  // visible label is now the epithet; the old class label ('Pair Programmer' etc.) is gone.
   const archetypeY = 156
+  const rowTextY = archetypeY + 23
   const emblem = renderEmblem(data.pattern.pattern, PAD, archetypeY, 30, theme.accent)
-  const archetypeLabel = svgText(PAD + 40, archetypeY + 23, data.pattern.pattern, {
+  const epithetX = PAD + 40
+  const archetypeLabel = svgText(epithetX, rowTextY, data.epithet, {
     fontSize: 22,
     fill: theme.accent,
     fontWeight: '600',
   })
+  // Advance estimate for the 22px bold epithet (~12px/char), matching the prior layout math.
+  const afterEpithetX = epithetX + data.epithet.length * 12 + 24
   const verified = data.toolAttribution.verified
-    ? `${svgText(PAD + 40 + data.pattern.pattern.length * 12 + 24, archetypeY + 23, '✓ verified', { fontSize: 16, fill: theme.textSecondary })}`
+    ? svgText(afterEpithetX, rowTextY, '✓ verified', { fontSize: 16, fill: theme.textSecondary })
     : ''
+  // Element chip: glyph + label, element-colored outline over a 15% tint. Sits after
+  // verified; epithets are short and this row is clear of the 39-char nameplate, so no
+  // right-edge collision. hex + '26' ≈ 15% alpha fill.
+  const chipStartX = afterEpithetX + (data.toolAttribution.verified ? 96 : 0)
+  const elLabel = data.element.label
+  const elChipGlyph = 14
+  const elChipPadX = 10
+  const elChipGap = 6
+  const elChipTextX = elChipPadX + elChipGlyph + elChipGap
+  const elChipW = elChipTextX + Math.ceil(elLabel.length * 9) + elChipPadX
+  const elChipH = 28
+  const elChipY = archetypeY + 4
+  const elementChip = `<rect x="${chipStartX}" y="${elChipY}" width="${elChipW}" height="${elChipH}" rx="14" fill="${data.element.color}26" stroke="${data.element.color}" stroke-width="1.5" />
+${renderElementGlyph(data.element.id, chipStartX + elChipPadX, elChipY + (elChipH - elChipGlyph) / 2, elChipGlyph, data.element.color)}
+${svgText(chipStartX + elChipTextX, elChipY + 19, elLabel, { fontSize: 15, fill: theme.text, fontWeight: '600', anchor: 'start' })}`
 
   // --- art area ---
   const artY = 210
@@ -294,19 +315,30 @@ ${inclPrivate}
 ${svgText(CARD_W / 2 + 30, recRowY, counts, { fontSize: 13, fill: theme.textSecondary, anchor: 'middle' })}
 ${streakText ? svgText(CARD_W - PAD, recRowY, streakText, { fontSize: 13, fill: theme.textSecondary, anchor: 'end' }) : ''}`
 
-  // --- flavor ---
+  // --- traits (activated abilities) — replaces the flavor block below the rule ---
+  // Up to 2 lines, each `◆ {name} — {proof}` (name accent bold, proof muted), left-aligned
+  // in y~940-1010 without touching the footer (y1010). When no trait fires, the legacy
+  // flavor line renders instead (backward-compatible). ◆ is a text glyph (renders crisp in
+  // GitHub's SVG rasterizer, like the RECORD strip markers) — never an emoji.
   const flavorY = 954
-  const flavorLines = wrapText(data.flavor, 46, 2)
-  const flavor = flavorLines
-    .map((line, i) =>
-      svgText(CARD_W / 2, flavorY + i * 28, line, {
-        fontSize: 19,
-        fill: theme.textSecondary,
-        anchor: 'middle',
-      }),
-    )
-    .join('\n')
   const flavorRule = `<line x1="${PAD + 60}" y1="${flavorY - 30}" x2="${CARD_W - PAD - 60}" y2="${flavorY - 30}" stroke="${theme.border}" stroke-width="1" />`
+  const traitFont = 'font-family="-apple-system, BlinkMacSystemFont, \'Segoe UI\', sans-serif"'
+  const traitLine = (name: string, proof: string, y: number): string =>
+    `<text x="${PAD}" y="${y}" ${traitFont}><tspan font-size="17" fill="${theme.accent}" font-weight="bold">◆ ${escapeXml(name)}</tspan><tspan font-size="15" fill="${theme.textSecondary}"> — ${escapeXml(proof)}</tspan></text>`
+  let flavor: string
+  if (data.traits.length > 0) {
+    flavor = data.traits.map((t, i) => traitLine(t.name, t.proof, flavorY + i * 32)).join('\n')
+  } else {
+    flavor = wrapText(data.flavor, 46, 2)
+      .map((line, i) =>
+        svgText(CARD_W / 2, flavorY + i * 28, line, {
+          fontSize: 19,
+          fill: theme.textSecondary,
+          anchor: 'middle',
+        }),
+      )
+      .join('\n')
+  }
 
   // --- footer ---
   const footer = `${svgText(PAD, CARD_H - 40, `${data.serial} · ${data.issuedYear} · public · 12wk`, { fontSize: 15, fill: theme.textSecondary })}
@@ -321,6 +353,7 @@ ${namePlate}
 ${emblem}
 ${archetypeLabel}
 ${verified}
+${elementChip}
 ${art}
 ${medallion}
 ${stats}

@@ -36,8 +36,11 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="44" y="84" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
 <text x="44" y="128" font-size="42" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
 <g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">The Symbiont</text>
+<text x="252" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<rect x="348" y="160" width="85" height="28" rx="14" fill="#a371f726" stroke="#a371f7" stroke-width="1.5" />
+<g transform="translate(358 167) scale(0.583)"><path d="M12 1 L13.7 10.3 23 12 13.7 13.7 12 23 10.3 13.7 1 12 10.3 10.3 Z" fill="#a371f7" /></g>
+<text x="378" y="179" font-size="15" fill="#c9d1d9" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Lumen</text>
 <clipPath id="artClip"><rect x="44" y="210" width="662" height="240" rx="18" /></clipPath>
 <g clip-path="url(#artClip)"><g transform="translate(44 210)"><defs><linearGradient id="artVert" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0%" stop-color="#a371f7" stop-opacity="0" />
@@ -239,8 +242,11 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="44" y="84" font-size="16" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
 <text x="44" y="128" font-size="42" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
 <g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">The Symbiont</text>
+<text x="252" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<rect x="348" y="160" width="85" height="28" rx="14" fill="#a371f726" stroke="#a371f7" stroke-width="1.5" />
+<g transform="translate(358 167) scale(0.583)"><path d="M12 1 L13.7 10.3 23 12 13.7 13.7 12 23 10.3 13.7 1 12 10.3 10.3 Z" fill="#a371f7" /></g>
+<text x="378" y="179" font-size="15" fill="#24292e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Lumen</text>
 <clipPath id="artClip"><rect x="44" y="210" width="662" height="240" rx="18" /></clipPath>
 <g clip-path="url(#artClip)"><g transform="translate(44 210)"><defs><linearGradient id="artVert" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0%" stop-color="#6f42c1" stop-opacity="0" />
@@ -442,8 +448,11 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="44" y="84" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
 <text x="44" y="128" font-size="42" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
 <g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">The Symbiont</text>
+<text x="252" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<rect x="348" y="160" width="85" height="28" rx="14" fill="#a371f726" stroke="#a371f7" stroke-width="1.5" />
+<g transform="translate(358 167) scale(0.583)"><path d="M12 1 L13.7 10.3 23 12 13.7 13.7 12 23 10.3 13.7 1 12 10.3 10.3 Z" fill="#a371f7" /></g>
+<text x="378" y="179" font-size="15" fill="#c9d1d9" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Lumen</text>
 <clipPath id="artClip"><rect x="44" y="210" width="662" height="240" rx="18" /></clipPath>
 <g clip-path="url(#artClip)"><g transform="translate(44 210)"><defs><linearGradient id="artVert" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0%" stop-color="#a371f7" stop-opacity="0" />
@@ -645,8 +654,11 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="44" y="84" font-size="16" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
 <text x="44" y="128" font-size="42" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
 <g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">The Symbiont</text>
+<text x="252" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<rect x="348" y="160" width="85" height="28" rx="14" fill="#a371f726" stroke="#a371f7" stroke-width="1.5" />
+<g transform="translate(358 167) scale(0.583)"><path d="M12 1 L13.7 10.3 23 12 13.7 13.7 12 23 10.3 13.7 1 12 10.3 10.3 Z" fill="#a371f7" /></g>
+<text x="378" y="179" font-size="15" fill="#24292e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Lumen</text>
 <clipPath id="artClip"><rect x="44" y="210" width="662" height="240" rx="18" /></clipPath>
 <g clip-path="url(#artClip)"><g transform="translate(44 210)"><defs><linearGradient id="artVert" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0%" stop-color="#6f42c1" stop-opacity="0" />
@@ -848,8 +860,11 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="44" y="84" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
 <text x="44" y="128" font-size="42" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
 <g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">The Symbiont</text>
+<text x="252" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<rect x="348" y="160" width="85" height="28" rx="14" fill="#a371f726" stroke="#a371f7" stroke-width="1.5" />
+<g transform="translate(358 167) scale(0.583)"><path d="M12 1 L13.7 10.3 23 12 13.7 13.7 12 23 10.3 13.7 1 12 10.3 10.3 Z" fill="#a371f7" /></g>
+<text x="378" y="179" font-size="15" fill="#c9d1d9" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Lumen</text>
 <clipPath id="artClip"><rect x="44" y="210" width="662" height="240" rx="18" /></clipPath>
 <g clip-path="url(#artClip)"><g transform="translate(44 210)"><defs><linearGradient id="artVert" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0%" stop-color="#a371f7" stop-opacity="0" />
@@ -1051,8 +1066,11 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="44" y="84" font-size="16" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
 <text x="44" y="128" font-size="42" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
 <g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">The Symbiont</text>
+<text x="252" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<rect x="348" y="160" width="85" height="28" rx="14" fill="#a371f726" stroke="#a371f7" stroke-width="1.5" />
+<g transform="translate(358 167) scale(0.583)"><path d="M12 1 L13.7 10.3 23 12 13.7 13.7 12 23 10.3 13.7 1 12 10.3 10.3 Z" fill="#a371f7" /></g>
+<text x="378" y="179" font-size="15" fill="#24292e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Lumen</text>
 <clipPath id="artClip"><rect x="44" y="210" width="662" height="240" rx="18" /></clipPath>
 <g clip-path="url(#artClip)"><g transform="translate(44 210)"><defs><linearGradient id="artVert" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0%" stop-color="#6f42c1" stop-opacity="0" />
@@ -1254,8 +1272,11 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="44" y="84" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
 <text x="44" y="128" font-size="42" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
 <g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">The Symbiont</text>
+<text x="252" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<rect x="348" y="160" width="85" height="28" rx="14" fill="#a371f726" stroke="#a371f7" stroke-width="1.5" />
+<g transform="translate(358 167) scale(0.583)"><path d="M12 1 L13.7 10.3 23 12 13.7 13.7 12 23 10.3 13.7 1 12 10.3 10.3 Z" fill="#a371f7" /></g>
+<text x="378" y="179" font-size="15" fill="#c9d1d9" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Lumen</text>
 <clipPath id="artClip"><rect x="44" y="210" width="662" height="240" rx="18" /></clipPath>
 <g clip-path="url(#artClip)"><g transform="translate(44 210)"><defs><linearGradient id="artVert" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0%" stop-color="#a371f7" stop-opacity="0" />
@@ -1457,8 +1478,11 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="44" y="84" font-size="16" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
 <text x="44" y="128" font-size="42" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
 <g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">The Symbiont</text>
+<text x="252" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<rect x="348" y="160" width="85" height="28" rx="14" fill="#a371f726" stroke="#a371f7" stroke-width="1.5" />
+<g transform="translate(358 167) scale(0.583)"><path d="M12 1 L13.7 10.3 23 12 13.7 13.7 12 23 10.3 13.7 1 12 10.3 10.3 Z" fill="#a371f7" /></g>
+<text x="378" y="179" font-size="15" fill="#24292e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Lumen</text>
 <clipPath id="artClip"><rect x="44" y="210" width="662" height="240" rx="18" /></clipPath>
 <g clip-path="url(#artClip)"><g transform="translate(44 210)"><defs><linearGradient id="artVert" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0%" stop-color="#6f42c1" stop-opacity="0" />
@@ -1677,8 +1701,11 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="44" y="84" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
 <text x="44" y="128" font-size="42" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
 <g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">The Symbiont</text>
+<text x="252" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<rect x="348" y="160" width="85" height="28" rx="14" fill="#a371f726" stroke="#a371f7" stroke-width="1.5" />
+<g transform="translate(358 167) scale(0.583)"><path d="M12 1 L13.7 10.3 23 12 13.7 13.7 12 23 10.3 13.7 1 12 10.3 10.3 Z" fill="#a371f7" /></g>
+<text x="378" y="179" font-size="15" fill="#c9d1d9" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Lumen</text>
 <clipPath id="artClip"><rect x="44" y="210" width="662" height="240" rx="18" /></clipPath>
 <g clip-path="url(#artClip)"><g transform="translate(44 210)"><defs><linearGradient id="artVert" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0%" stop-color="#a371f7" stop-opacity="0" />
@@ -1912,8 +1939,11 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="44" y="84" font-size="16" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
 <text x="44" y="128" font-size="42" fill="#24292e" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
 <g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#6f42c1" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<text x="84" y="179" font-size="22" fill="#6f42c1" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">The Symbiont</text>
+<text x="252" y="179" font-size="16" fill="#586069" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<rect x="348" y="160" width="85" height="28" rx="14" fill="#a371f726" stroke="#a371f7" stroke-width="1.5" />
+<g transform="translate(358 167) scale(0.583)"><path d="M12 1 L13.7 10.3 23 12 13.7 13.7 12 23 10.3 13.7 1 12 10.3 10.3 Z" fill="#a371f7" /></g>
+<text x="378" y="179" font-size="15" fill="#24292e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Lumen</text>
 <clipPath id="artClip"><rect x="44" y="210" width="662" height="240" rx="18" /></clipPath>
 <g clip-path="url(#artClip)"><g transform="translate(44 210)"><defs><linearGradient id="artVert" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0%" stop-color="#6f42c1" stop-opacity="0" />
@@ -2130,8 +2160,11 @@ exports[`renderCardV2 > renders assisted chips with icons and the "· assisted" 
 <text x="44" y="84" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
 <text x="44" y="128" font-size="42" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
 <g transform="translate(44 156) scale(1.25)"><circle cx="9" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /><circle cx="15" cy="12" r="6" fill="none" stroke="#a371f7" stroke-width="2.5" /></g>
-<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Pair Programmer</text>
-<text x="288" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">The Symbiont</text>
+<text x="252" y="179" font-size="16" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">✓ verified</text>
+<rect x="348" y="160" width="85" height="28" rx="14" fill="#a371f726" stroke="#a371f7" stroke-width="1.5" />
+<g transform="translate(358 167) scale(0.583)"><path d="M12 1 L13.7 10.3 23 12 13.7 13.7 12 23 10.3 13.7 1 12 10.3 10.3 Z" fill="#a371f7" /></g>
+<text x="378" y="179" font-size="15" fill="#c9d1d9" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Lumen</text>
 <clipPath id="artClip"><rect x="44" y="210" width="662" height="240" rx="18" /></clipPath>
 <g clip-path="url(#artClip)"><g transform="translate(44 210)"><defs><linearGradient id="artVert" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0%" stop-color="#a371f7" stop-opacity="0" />

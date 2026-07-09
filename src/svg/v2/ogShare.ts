@@ -47,7 +47,7 @@ ${svgRect(0, 0, W, H, { fill: theme.bg })}
 ${svgText(nameX, 120, 'AI BUILDER', { fontSize: 24, fill: theme.textSecondary, fontWeight: '600' })}
 ${avatar}
 ${svgText(nameX, 180, data.username, { fontSize: 56, fill: theme.text, fontWeight: 'bold' })}
-${svgText(nameX, 232, data.pattern.pattern, { fontSize: 30, fill: theme.accent, fontWeight: '600' })}
+${svgText(nameX, 232, data.epithet, { fontSize: 30, fill: theme.accent, fontWeight: '600' })}
 ${shareStatBar('VELOCITY', data.stats.velocity, 300, theme)}
 ${shareStatBar('DIVERSITY', data.stats.diversity, 356, theme)}
 ${shareStatBar('CONSISTENCY', data.stats.consistency, 412, theme)}

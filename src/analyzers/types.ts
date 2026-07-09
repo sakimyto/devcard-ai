@@ -1,4 +1,6 @@
+import type { ElementResult } from './element'
 import type { RecordAnalysis } from './record'
+import type { Trait } from './traits'
 
 export interface CoauthorAnalysis {
   totalCommits: number
@@ -104,6 +106,12 @@ export interface CardDataV2 {
   // Contribution record (EXP/streak/PR·review counts). Display-only — never feeds
   // Grade or POWER (tier-invariance rule).
   record: RecordAnalysis
+  // v2.6 TCG-density signals. Display-only — like `record`, never feed Grade or POWER.
+  // element: dominant radar axis → chip on the archetype row. epithet: builder-type name
+  // (internal 4-axis code is discarded). traits: up to 2 activated traits; [] → flavor shows.
+  element: ElementResult
+  epithet: string
+  traits: Trait[]
   flavor: string
   serial: string
   seed: number
