@@ -2,26 +2,26 @@
 
 Your AI coding style, as a trading card. Rarity frame, archetype, stats — generated from your public GitHub activity and embedded with one line of markdown.
 
-[![AI Builder Trading Card](https://devcard-ai.sakimyto.workers.dev/?user=sakimyto&theme=dark)](https://devcard-ai.sakimyto.workers.dev/#sakimyto)
+[![AI Builder Trading Card](https://devcard.sakimyto.com/?user=sakimyto&theme=dark)](https://devcard.sakimyto.com/#sakimyto)
 
 ## Add to your README
 
 Copy this into your GitHub profile README and replace `YOUR_USERNAME`:
 
 ```markdown
-[![AI Builder Trading Card](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME&theme=dark)](https://devcard-ai.sakimyto.workers.dev/#YOUR_USERNAME)
+[![AI Builder Trading Card](https://devcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark)](https://devcard.sakimyto.com/#YOUR_USERNAME)
 ```
 
 <details>
 <summary>Light theme</summary>
 
 ```markdown
-[![AI Builder Trading Card](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME&theme=light)](https://devcard-ai.sakimyto.workers.dev/#YOUR_USERNAME)
+[![AI Builder Trading Card](https://devcard.sakimyto.com/?user=YOUR_USERNAME&theme=light)](https://devcard.sakimyto.com/#YOUR_USERNAME)
 ```
 
 </details>
 
-Or visit the [card builder](https://devcard-ai.sakimyto.workers.dev/) — summon, copy, paste. Done in 60 seconds.
+Or visit the [card builder](https://devcard.sakimyto.com/) — summon, copy, paste. Done in 60 seconds.
 
 ## The card
 

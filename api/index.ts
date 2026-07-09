@@ -125,6 +125,13 @@ export default {
     const url = new URL(req.url)
     const pathname = url.pathname
 
+    // 正準ドメインへ 301 集約。既存の workers.dev 埋め込みは camo がリダイレクト追従
+    // するので壊れない。バッジ URL は他人の README に永久に残るため正準は1つに保つ
+    if (url.hostname === 'devcard-ai.sakimyto.workers.dev') {
+      url.hostname = 'devcard.sakimyto.com'
+      return Response.redirect(url.toString(), 301)
+    }
+
     // /og endpoint — returns a 1200x630 landscape PNG share image
     if (pathname === '/og') {
       const { user, theme, invalidUser } = parseParams(url)

@@ -3,6 +3,12 @@ main = "api/index.ts"
 compatibility_date = "2025-01-01"
 # account_id is set via CLOUDFLARE_ACCOUNT_ID env var
 
+# 正準ドメイン。workers.dev は残し（旧埋め込み用）、worker 内で 301 集約する
+workers_dev = true
+routes = [
+  { pattern = "devcard.sakimyto.com", custom_domain = true }
+]
+
 # Cap CPU so adversarial inputs (e.g. huge SVG → PNG paths) can't burn budget.
 [limits]
 cpu_ms = 100

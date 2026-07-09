@@ -1,0 +1,4 @@
+[install]
+# Supply chain hardening: 7 days in seconds.
+# Ref: https://blog.flatt.tech/entry/mini_shai_hulud_2nd
+minimumReleaseAge = 604800

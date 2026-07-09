@@ -49,6 +49,18 @@ beforeEach(() => {
 })
 
 describe('worker fetch routing', () => {
+  it('workers.dev host → 301 to devcard.sakimyto.com preserving path+query', async () => {
+    const res = await worker.fetch(
+      new Request('https://devcard-ai.sakimyto.workers.dev/?user=octocat&theme=dark'),
+      makeEnv(),
+    )
+    expect(res.status).toBe(301)
+    expect(res.headers.get('location')).toBe(
+      'https://devcard.sakimyto.com/?user=octocat&theme=dark',
+    )
+    expect(graphqlMock).not.toHaveBeenCalled()
+  })
+
   it('invalid user → 400, GitHub not called', async () => {
     const res = await worker.fetch(req('/?user=-bad--name-'), makeEnv())
     expect(res.status).toBe(400)

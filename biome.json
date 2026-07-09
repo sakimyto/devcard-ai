@@ -22,6 +22,6 @@
     }
   },
   "files": {
-    "ignore": ["node_modules", "dist", ".superpowers", "tests/svg/v2/__snapshots__"]
+    "ignore": ["node_modules", "dist", ".superpowers", "tests/svg/v2/__snapshots__", ".claude"]
   }
 }
