@@ -3,6 +3,22 @@ export const USER_REPOS_QUERY = `
     user(login: $login) {
       login
       avatarUrl(size: 128)
+      contributionsCollection(from: $since) {
+        totalCommitContributions
+        totalPullRequestContributions
+        totalPullRequestReviewContributions
+        totalIssueContributions
+        restrictedContributionsCount
+        contributionCalendar {
+          totalContributions
+          weeks {
+            contributionDays {
+              date
+              contributionCount
+            }
+          }
+        }
+      }
       repositories(
         first: 50
         orderBy: { field: PUSHED_AT, direction: DESC }
