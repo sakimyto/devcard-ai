@@ -18,9 +18,11 @@ describe('renderFrame', () => {
     }
   })
 
-  it('D is a plain single-color frame with empty defs', () => {
+  it('D is a beveled metal frame without animation', () => {
     const { defs, frame } = renderFrame('D', 750, 1050)
-    expect(defs).toBe('')
+    expect(defs).toContain('metalD')
+    expect(defs).not.toContain('animate')
+    expect(frame).not.toContain('animate')
     expect(frame).toContain('stroke')
   })
 })

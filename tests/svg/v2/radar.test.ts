@@ -53,9 +53,9 @@ describe('renderRadar', () => {
     expect(svg).toContain('<polygon')
   })
 
-  it('draws 4 grid rings + 1 value polygon (5 polygons) and 6 dots', () => {
+  it('draws 4 grid rings + value glow + value polygon (6 polygons) and 6 dots', () => {
     const svg = renderRadar(AXES, 200, 588, 82, getTheme('dark'))
-    expect([...svg.matchAll(/<polygon/g)].length).toBe(5)
+    expect([...svg.matchAll(/<polygon/g)].length).toBe(6)
     expect([...svg.matchAll(/<circle/g)].length).toBe(6)
   })
 })

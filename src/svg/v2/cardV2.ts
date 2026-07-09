@@ -1,9 +1,9 @@
 import type { CardDataV2 } from '~/analyzers/types'
 import { type Theme, getTheme } from '../themes'
 import { svgRect, svgText, wrapText } from '../utils'
-import { renderArt } from './art'
+import { renderArt, renderSparkles } from './art'
 import { renderEmblem } from './emblem'
-import { TIER_GEM_COLORS, renderFrame } from './frame'
+import { TIER_GEM_GRADIENT, renderFrame } from './frame'
 import { renderStatGlyph, renderToolIcon } from './icons'
 import { renderRadar } from './radar'
 
@@ -60,13 +60,24 @@ ${svgText(LABEL_X, y, label, { fontSize: 16, fill: theme.textSecondary, fontWeig
 ${svgText(VAL_X, y, String(value), { fontSize: 20, fill: theme.text, fontWeight: 'bold', anchor: 'end' })}`
 }
 
+// Faceted tier gem: jewel-gradient body, a diagonal cut cross, a bright upper-left
+// specular facet, and inner/edge outlines so it reads as cut crystal, not a flat rhombus.
 function tierGem(grade: CardDataV2['stats']['grade'], x: number, y: number): string {
-  const c = TIER_GEM_COLORS[grade]
   const size = 92
   const half = size / 2
+  const diamond = `${half},0 ${size},${half} ${half},${size} 0,${half}`
+  // S/A gems get a subtle specular shimmer; lower tiers stay static.
+  const pulse =
+    grade === 'S' || grade === 'A'
+      ? '<animate attributeName="fill-opacity" values="0.42;0.72;0.42" dur="3.5s" repeatCount="indefinite" />'
+      : ''
   return `<g transform="translate(${x} ${y})">
-<polygon points="${half},0 ${size},${half} ${half},${size} 0,${half}" fill="${c}" />
-<polygon points="${half},8 ${size - 8},${half} ${half},${size - 8} 8,${half}" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
+<polygon points="${diamond}" fill="url(#gemGrad)" />
+<polygon points="${half},0 0,${half} ${half},${half}" fill="#ffffff" fill-opacity="0.42">${pulse}</polygon>
+<line x1="${half}" y1="0" x2="${half}" y2="${size}" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1" />
+<line x1="0" y1="${half}" x2="${size}" y2="${half}" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1" />
+<polygon points="${half},8 ${size - 8},${half} ${half},${size - 8} 8,${half}" fill="none" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+<polygon points="${diamond}" fill="none" stroke="#000000" stroke-opacity="0.25" stroke-width="1.5" />
 ${svgText(half, half + 12, grade, { fontSize: 34, fill: '#ffffff', fontWeight: 'bold', anchor: 'middle' })}
 </g>`
 }
@@ -75,8 +86,33 @@ export function renderCardV2(data: CardDataV2, options: { theme: string }): stri
   const theme = getTheme(options.theme)
   const { defs, frame } = renderFrame(data.stats.grade, CARD_W, CARD_H)
 
-  // --- name plate ---
-  const namePlate = `${svgText(PAD, 84, 'AI BUILDER', { fontSize: 16, fill: theme.textSecondary, fontWeight: '600' })}
+  // Jewel gradient for the tier gem + subtle raised gradient for the nameplate.
+  const [g0, g1, g2] = TIER_GEM_GRADIENT[data.stats.grade]
+  const cardDefs = `<linearGradient id="gemGrad" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="${g0}" />
+<stop offset="50%" stop-color="${g1}" />
+<stop offset="100%" stop-color="${g2}" />
+</linearGradient>
+<linearGradient id="plateGrad" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="${theme.headerBg}" />
+<stop offset="100%" stop-color="${theme.bg}" />
+</linearGradient>
+<clipPath id="cardClip"><rect x="0" y="0" width="${CARD_W}" height="${CARD_H}" rx="36" /></clipPath>
+<filter id="cardGrain" x="0%" y="0%" width="100%" height="100%">
+<feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" stitchTiles="stitch" result="n" />
+<feColorMatrix in="n" type="saturate" values="0" result="g" />
+<feComponentTransfer in="g"><feFuncA type="linear" slope="0.5" /></feComponentTransfer>
+</filter>`
+  // Full-card film grain: monochrome fractal noise at very low opacity â€” felt, not seen.
+  // Clipped to the rounded card so corners stay clean; sits above the art but below text.
+  const grain = `<g clip-path="url(#cardClip)"><rect x="0" y="0" width="${CARD_W}" height="${CARD_H}" filter="url(#cardGrain)" opacity="0.038" /></g>`
+
+  // --- name plate (embossed panel behind the identity block) ---
+  const plate = `<rect x="28" y="64" width="548" height="82" rx="14" fill="url(#plateGrad)" />
+<rect x="28" y="64" width="548" height="82" rx="14" fill="none" stroke="${theme.border}" stroke-opacity="0.6" stroke-width="1" />
+<line x1="42" y1="65.5" x2="562" y2="65.5" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1" />`
+  const namePlate = `${plate}
+${svgText(PAD, 84, 'AI BUILDER', { fontSize: 16, fill: theme.textSecondary, fontWeight: '600' })}
 ${svgText(PAD, 128, data.username, { fontSize: nameFontSize(data.username.length), fill: theme.text, fontWeight: 'bold' })}`
 
   // --- archetype row ---
@@ -95,6 +131,8 @@ ${svgText(PAD, 128, data.username, { fontSize: nameFontSize(data.username.length
   const artY = 210
   const artH = 240
   const artW = CARD_W - PAD * 2
+  const sparkles =
+    data.stats.grade === 'S' ? renderSparkles(data.seed, artW, artH, theme.accent) : ''
   const art = `<clipPath id="artClip"><rect x="${PAD}" y="${artY}" width="${artW}" height="${artH}" rx="18" /></clipPath>
 <g clip-path="url(#artClip)"><g transform="translate(${PAD} ${artY})">${renderArt({
     seed: data.seed,
@@ -102,7 +140,8 @@ ${svgText(PAD, 128, data.username, { fontSize: nameFontSize(data.username.length
     height: artH,
     accent: theme.accent,
     bg: theme.headerBg,
-  })}</g></g>
+  })}
+${sparkles}</g></g>
 <rect x="${PAD}" y="${artY}" width="${artW}" height="${artH}" rx="18" fill="none" stroke="${theme.border}" />`
 
   // --- avatar medallion (centered over the art) ---
@@ -235,8 +274,9 @@ ${data.languages.languages.length > 0 ? langItems : svgText(PAD, langY + 24, 'â€
 ${svgText(CARD_W - PAD, CARD_H - 40, 'devcard-ai', { fontSize: 15, fill: theme.textSecondary, anchor: 'end' })}`
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${CARD_W}" height="${CARD_H}" viewBox="0 0 ${CARD_W} ${CARD_H}" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-<defs>${defs}</defs>
+<defs>${defs}${cardDefs}</defs>
 ${svgRect(0, 0, CARD_W, CARD_H, { fill: theme.bg, rx: 36 })}
+${grain}
 ${frame}
 ${namePlate}
 ${emblem}

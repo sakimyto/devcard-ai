@@ -60,6 +60,8 @@ export function renderRadar(
       return `${f(x)},${f(y)}`
     })
     .join(' ')
+  // Blurred duplicate of the value outline reads as an accent halo behind the crisp polygon.
+  const valueGlow = `<polygon points="${valuePts}" fill="none" stroke="${theme.accent}" stroke-opacity="0.55" stroke-width="3" filter="url(#radarGlow)" />`
   const valuePolygon = `<polygon points="${valuePts}" fill="${theme.accent}" fill-opacity="0.25" stroke="${theme.accent}" stroke-width="2" />`
 
   const dots = values
@@ -87,8 +89,12 @@ export function renderRadar(
     })
     .join('\n')
 
-  return `${rings}
+  const defs = `<defs><filter id="radarGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4" /></filter></defs>`
+
+  return `${defs}
+${rings}
 ${spokes}
+${valueGlow}
 ${valuePolygon}
 ${dots}
 ${labels}`
