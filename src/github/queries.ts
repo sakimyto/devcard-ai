@@ -2,6 +2,8 @@
 // 応答時間上限（~10s）を超えて 502 になるため、2クエリに分割して並列実行する
 // （2026-07-09 本番 502 を分解検証で実証: repos 5.2s + contributions 2.4s、合算で落ちる）。
 // history.since は GitTimestamp 型。
+// 2026-07-10 Task 21: languages(first:8) を各リポに追加。gh api graphql 実測で repos 7.5s /
+// contributions 2.4s（いずれも単独で上限内・502 なし）を確認済み。分割は維持する。
 export const USER_REPOS_QUERY = `
   query($login: String!, $since: GitTimestamp!) {
     user(login: $login) {
@@ -41,6 +43,13 @@ export const USER_REPOS_QUERY = `
           githubCopilot: object(expression: "HEAD:.github/copilot-instructions.md") { id }
           claudeDir: object(expression: "HEAD:.claude") { id }
           primaryLanguage { name color }
+          languages(first: 8, orderBy: { field: SIZE, direction: DESC }) {
+            totalSize
+            edges {
+              size
+              node { name color }
+            }
+          }
         }
       }
     }
@@ -58,6 +67,14 @@ export const USER_CONTRIBUTIONS_QUERY = `
         totalPullRequestReviewContributions
         totalIssueContributions
         restrictedContributionsCount
+        commitContributionsByRepository(maxRepositories: 50) {
+          repository {
+            name
+            primaryLanguage { name color }
+            isPrivate
+          }
+          contributions { totalCount }
+        }
         contributionCalendar {
           totalContributions
           weeks {

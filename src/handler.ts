@@ -4,7 +4,7 @@ import { isAiCommit } from './analyzers/coauthor'
 import { analyzeElement } from './analyzers/element'
 import { analyzeEquipped } from './analyzers/equipped'
 import { flavorText } from './analyzers/flavor'
-import { analyzeLanguages } from './analyzers/languages'
+import { analyzeLanguagesV2 } from './analyzers/languages'
 import { analyzePattern } from './analyzers/pattern'
 import { analyzeRecord } from './analyzers/record'
 import { analyzeStats } from './analyzers/stats'
@@ -128,7 +128,7 @@ export async function buildCardData(
 
     const toolAttribution = analyzeToolAttributionV2(involvedCommits)
     const usage = analyzeUsage(involvedCommits)
-    const languages = analyzeLanguages(repos)
+    const languages = analyzeLanguagesV2(repos)
     // alternationScore must classify assisted commits as AI too (same set as the aiRate
     // numerator), otherwise assisted-only histories are misread as human.
     const involvedOids = new Set(involvedCommits.map((c) => c.oid))
@@ -142,10 +142,15 @@ export async function buildCardData(
       (e) => !committedIds.has(e.toolId) && !assistedIds.has(e.toolId),
     ).length
 
-    // 窓内コミットが1件以上あるリポジトリ数（RANGE の活動リポ幅）
-    const activeRepoCount = new Set(
-      windowCommits.map((c) => c.repoFullName).filter((n): n is string => n !== undefined),
-    ).size
+    // 窓内コミットが1件以上あるリポジトリ数（RANGE の活動リポ幅）。正本は
+    // commitContributionsByRepository（正確・per-repo 100件キャップなし）。フィールド欠落時
+    // （権限制限・pre-Task-21 fixture）は従来の history 由来 repoFullName 集合へフォールバック。
+    const commitRepos = userData.contributionsCollection?.commitContributionsByRepository
+    const activeRepoCount = commitRepos
+      ? commitRepos.filter((r) => r.contributions.totalCount > 0).length
+      : new Set(
+          windowCommits.map((c) => c.repoFullName).filter((n): n is string => n !== undefined),
+        ).size
 
     const stats = analyzeStats({
       windowAiCommits: involvedCommits,

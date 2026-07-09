@@ -67,14 +67,18 @@ export interface UsageAnalysis {
   totalCommits: number
 }
 
-// === Languages ===
-export interface LanguageData {
+// === Languages (v2, bytes-based) ===
+// Byte-weighted share of one language across all of a user's repos. `percentage` is an
+// integer; the array holds the top 4, and `othersPercentage` (LanguageAnalysisV2) absorbs
+// the rest plus the rounding residual so the whole bar sums to 100.
+export interface LanguageShare {
   name: string
   color: string
-  repoCount: number
+  percentage: number // integer %, top-4 members sum ≤ 100
 }
-export interface LanguageAnalysis {
-  languages: LanguageData[]
+export interface LanguageAnalysisV2 {
+  languages: LanguageShare[] // top 4 by aggregated bytes, desc
+  othersPercentage: number // remaining languages + rounding residual, ≥ 0
 }
 
 // === Pattern ===
@@ -101,7 +105,7 @@ export interface CardDataV2 {
   toolAttribution: ToolAttributionAnalysis
   equipped: EquippedAnalysis
   usage: UsageAnalysis
-  languages: LanguageAnalysis
+  languages: LanguageAnalysisV2
   pattern: PatternAnalysis
   // Contribution record (EXP/streak/PR·review counts). Display-only — never feeds
   // Grade or POWER (tier-invariance rule).

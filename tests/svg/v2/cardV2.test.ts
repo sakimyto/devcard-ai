@@ -56,9 +56,10 @@ function makeData(over: Partial<CardDataV2> = {}): CardDataV2 {
     },
     languages: {
       languages: [
-        { name: 'TypeScript', color: '#3178c6', repoCount: 5 },
-        { name: 'Python', color: '#3572A5', repoCount: 2 },
+        { name: 'TypeScript', color: '#3178c6', percentage: 62 },
+        { name: 'Python', color: '#3572A5', percentage: 21 },
       ],
+      othersPercentage: 17,
     },
     pattern: { pattern: 'Pair Programmer', aiRate: 0.5, alternationScore: 0.6 },
     record: {
@@ -162,7 +163,7 @@ describe('renderCardV2', () => {
         toolAttribution: { tools: [], assisted: [], totalAiCommits: 0, verified: false },
         equipped: { equipped: [] },
         usage: { categories: [], totalCommits: 0 },
-        languages: { languages: [] },
+        languages: { languages: [], othersPercentage: 0 },
         stats: {
           velocity: 0,
           diversity: 0,

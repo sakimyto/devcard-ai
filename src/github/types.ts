@@ -31,6 +31,19 @@ export interface ContributionsCollection {
     totalContributions: number
     weeks: { contributionDays: ContributionDay[] }[]
   }
+  // Exact per-repo commit counts over the same 12-week window (uncapped by the 100-node
+  // history limit). Optional/null so pre-Task-21 fixtures and permission-restricted responses
+  // degrade — the RANGE analyzer falls back to the history-derived active-repo count.
+  commitContributionsByRepository?: CommitsByRepo[] | null
+}
+
+export interface CommitsByRepo {
+  repository: {
+    name: string
+    primaryLanguage: { name: string; color: string | null } | null
+    isPrivate: boolean
+  }
+  contributions: { totalCount: number }
 }
 
 // Slim 1-year calendar: only weekly contribution counts are needed for the activity graph,
@@ -61,6 +74,19 @@ export interface GitHubRepo {
   githubCopilot: FileCheck | null
   claudeDir: FileCheck | null
   primaryLanguage: { name: string; color: string } | null
+  // Per-repo byte breakdown (top 8 by size). Optional/null so pre-Task-21 fixtures and
+  // repos with no detectable languages degrade to an empty aggregation.
+  languages?: RepoLanguages | null
+}
+
+export interface LanguageEdge {
+  size: number
+  node: { name: string; color: string | null }
+}
+
+export interface RepoLanguages {
+  totalSize: number
+  edges: LanguageEdge[]
 }
 
 interface FileCheck {

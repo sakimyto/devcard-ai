@@ -2,7 +2,7 @@ import type { GitHubCommit } from '~/github/types'
 import type { RecordAnalysis } from './record'
 import type {
   EquippedAnalysis,
-  LanguageAnalysis,
+  LanguageAnalysisV2,
   StatsAnalysis,
   ToolAttributionAnalysis,
 } from './types'
@@ -20,7 +20,7 @@ export interface TraitsInput {
   record: RecordAnalysis
   toolAttribution: ToolAttributionAnalysis
   equipped: EquippedAnalysis
-  languages: LanguageAnalysis
+  languages: LanguageAnalysisV2
   involvedCommits: GitHubCommit[] // AI-involved, in-window
   windowCommits: GitHubCommit[] // all in-window (AI + human)
   now: Date

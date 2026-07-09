@@ -25,7 +25,10 @@ const data: CardDataV2 = {
   },
   equipped: { equipped: [] },
   usage: { categories: [], totalCommits: 120 },
-  languages: { languages: [{ name: 'TypeScript', color: '#3178c6', repoCount: 5 }] },
+  languages: {
+    languages: [{ name: 'TypeScript', color: '#3178c6', percentage: 71 }],
+    othersPercentage: 29,
+  },
   pattern: { pattern: 'AI Native', aiRate: 0.7, alternationScore: 0.3 },
   record: {
     exp: 1240,

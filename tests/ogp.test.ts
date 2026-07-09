@@ -102,7 +102,7 @@ const PROBE_DATA: CardDataV2 = {
   toolAttribution: { tools: [], assisted: [], totalAiCommits: 120, verified: true },
   equipped: { equipped: [] },
   usage: { categories: [], totalCommits: 120 },
-  languages: { languages: [] },
+  languages: { languages: [], othersPercentage: 0 },
   pattern: { pattern: 'AI Native', aiRate: 0.7, alternationScore: 0.3 },
   record: {
     exp: 1240,

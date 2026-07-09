@@ -67,7 +67,7 @@ function input(over: InputOverride = {}): TraitsInput {
       verified: false,
     },
     equipped: over.equipped ?? { equipped: [] },
-    languages: over.languages ?? { languages: [] },
+    languages: over.languages ?? { languages: [], othersPercentage: 0 },
     involvedCommits: over.involvedCommits ?? [],
     windowCommits: over.windowCommits ?? [],
     now: over.now ?? NOW,
@@ -259,10 +259,11 @@ describe('analyzeTraits — stat/record driven traits (fire + boundary + proof)'
       input({
         languages: {
           languages: [
-            { name: 'TypeScript', color: '#1', repoCount: 5 },
-            { name: 'Go', color: '#2', repoCount: 3 },
-            { name: 'Rust', color: '#3', repoCount: 2 },
+            { name: 'TypeScript', color: '#1', percentage: 50 },
+            { name: 'Go', color: '#2', percentage: 30 },
+            { name: 'Rust', color: '#3', percentage: 20 },
           ],
+          othersPercentage: 0,
         },
       }),
     )
