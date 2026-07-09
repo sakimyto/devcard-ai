@@ -130,12 +130,16 @@ describe('handleRequest v2', () => {
   })
 
   it('passes $since (= now - 84d) to GraphQL — 窓外データを取得しない', async () => {
-    let vars: Record<string, unknown> = {}
+    // repos/contributions の2クエリ分割後: 両呼び出しの変数を収集して検証する
+    const calls: Record<string, unknown>[] = []
     const gql = async (_q: string, v: Record<string, unknown>) => {
-      vars = v
+      calls.push(v)
       return fullUser
     }
     await handleRequest({ user: 'testuser', theme: 'dark' }, gql, NOW)
-    expect(vars.since).toBe('2026-04-15T12:00:00.000Z')
+    const reposVars = calls.find((v) => 'since' in v)
+    const contribVars = calls.find((v) => 'contribSince' in v)
+    expect(reposVars?.since).toBe('2026-04-15T12:00:00.000Z')
+    expect(contribVars?.contribSince).toBe('2026-04-15T12:00:00.000Z')
   })
 })

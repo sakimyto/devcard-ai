@@ -50,11 +50,17 @@ describe('fetchUserData', () => {
     expect(result).not.toBeNull()
     expect(result?.login).toBe('testuser')
     expect(result?.repositories.nodes).toHaveLength(1)
-    expect(mockGraphql).toHaveBeenCalledOnce()
-    // Both window bounds ride on the single request: $since (12wk) and $yearAgo (graph).
+    // repos と contributions は2クエリ並列（合算クエリは GitHub の応答時間上限で 502 —
+    // 2026-07-09 本番で実証）。contribSince は since と同値だが DateTime! 宣言が必要
+    //（contributionsCollection.from は GitTimestamp! 変数を拒否する）。
+    expect(mockGraphql).toHaveBeenCalledTimes(2)
     expect(mockGraphql).toHaveBeenCalledWith(expect.any(String), {
       login: 'testuser',
       since: '2026-04-15T12:00:00.000Z',
+    })
+    expect(mockGraphql).toHaveBeenCalledWith(expect.any(String), {
+      login: 'testuser',
+      contribSince: '2026-04-15T12:00:00.000Z',
       yearAgo: '2025-04-16T12:00:00.000Z',
     })
   })
