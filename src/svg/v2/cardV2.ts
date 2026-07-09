@@ -5,6 +5,7 @@ import { renderArt } from './art'
 import { renderEmblem } from './emblem'
 import { TIER_GEM_COLORS, renderFrame } from './frame'
 import { renderStatGlyph, renderToolIcon } from './icons'
+import { renderRadar } from './radar'
 
 // Icon color per tool: the saturated brand color reads on the badge fill and gives
 // fallback runes enough contrast for the white initial. Accent covers unknown tools.
@@ -26,22 +27,37 @@ function nameFontSize(len: number): number {
   return Math.max(20, Math.min(42, fit))
 }
 
-function statBar(
+// Thousands separator without Intl (deterministic across runtimes): 6340 → "6,340".
+function withCommas(n: number): string {
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
+// Small filled diamond marker for the derived radar axes (SYNERGY/RANGE/FLOW) that
+// have no hand-drawn glyph. Centered in a size×size box at (x, y).
+function miniDiamond(x: number, y: number, size: number, color: string): string {
+  const c = size / 2
+  const s = size * 0.62
+  return `<rect x="${x + c - s / 2}" y="${y + c - s / 2}" width="${s}" height="${s}" rx="1.5" fill="${color}" transform="rotate(45 ${x + c} ${y + c})" />`
+}
+
+// One row of the numeric stat column: marker + label (left) and value (right-aligned).
+function statRow(
   label: string,
   value: number,
   y: number,
   theme: Theme,
-  glyph: 'velocity' | 'diversity' | 'consistency',
+  marker: 'velocity' | 'diversity' | 'consistency' | 'dot',
 ): string {
-  const barX = PAD + 190
-  const barW = CARD_W - barX - PAD - 64
-  const filled = Math.round((barW * Math.max(0, Math.min(100, value))) / 100)
-  // Glyph sits left of the label; label shifts right to make room (bar unchanged).
-  return `${renderStatGlyph(glyph, PAD, y, 18, theme.accent)}
-${svgText(PAD + 26, y + 15, label, { fontSize: 18, fill: theme.textSecondary, fontWeight: '600' })}
-${svgRect(barX, y, barW, 18, { fill: theme.barBg, rx: 9 })}
-${filled > 0 ? svgRect(barX, y, Math.max(filled, 18), 18, { fill: theme.accent, rx: 9 }) : ''}
-${svgText(barX + barW + 16, y + 15, String(value), { fontSize: 20, fill: theme.text, fontWeight: 'bold' })}`
+  const ICON_X = PAD + 316 // numeric column sits to the right of the radar
+  const LABEL_X = ICON_X + 26
+  const VAL_X = CARD_W - PAD
+  const glyph =
+    marker === 'dot'
+      ? miniDiamond(ICON_X, y - 14, 16, theme.accent)
+      : renderStatGlyph(marker, ICON_X, y - 14, 16, theme.accent)
+  return `${glyph}
+${svgText(LABEL_X, y, label, { fontSize: 16, fill: theme.textSecondary, fontWeight: '600' })}
+${svgText(VAL_X, y, String(value), { fontSize: 20, fill: theme.text, fontWeight: 'bold', anchor: 'end' })}`
 }
 
 function tierGem(grade: CardDataV2['stats']['grade'], x: number, y: number): string {
@@ -77,7 +93,7 @@ ${svgText(PAD, 128, data.username, { fontSize: nameFontSize(data.username.length
 
   // --- art area ---
   const artY = 210
-  const artH = 290
+  const artH = 240
   const artW = CARD_W - PAD * 2
   const art = `<clipPath id="artClip"><rect x="${PAD}" y="${artY}" width="${artW}" height="${artH}" rx="18" /></clipPath>
 <g clip-path="url(#artClip)"><g transform="translate(${PAD} ${artY})">${renderArt({
@@ -89,12 +105,45 @@ ${svgText(PAD, 128, data.username, { fontSize: nameFontSize(data.username.length
   })}</g></g>
 <rect x="${PAD}" y="${artY}" width="${artW}" height="${artH}" rx="18" fill="none" stroke="${theme.border}" />`
 
-  // --- stats ---
-  const statsY = 548
-  const stats = `${svgText(PAD, statsY - 18, 'STATS', { fontSize: 15, fill: theme.textSecondary, fontWeight: '600' })}
-${statBar('VELOCITY', data.stats.velocity, statsY, theme, 'velocity')}
-${statBar('DIVERSITY', data.stats.diversity, statsY + 44, theme, 'diversity')}
-${statBar('CONSISTENCY', data.stats.consistency, statsY + 88, theme, 'consistency')}`
+  // --- avatar medallion (centered over the art) ---
+  const medCx = CARD_W / 2
+  const medCy = artY + artH / 2
+  const medR = 56
+  const medallion = data.avatarDataUri
+    ? `<clipPath id="avatarClip"><circle cx="${medCx}" cy="${medCy}" r="${medR}" /></clipPath>
+<image href="${data.avatarDataUri}" x="${medCx - medR}" y="${medCy - medR}" width="${medR * 2}" height="${medR * 2}" clip-path="url(#avatarClip)" preserveAspectRatio="xMidYMid slice" />
+<circle cx="${medCx}" cy="${medCy}" r="${medR}" fill="none" stroke="${theme.accent}" stroke-width="3" />
+<circle cx="${medCx}" cy="${medCy}" r="${medR + 2.5}" fill="none" stroke="#000000" stroke-opacity="0.4" stroke-width="1" />`
+    : ''
+
+  // --- stats: 6-axis radar (left) + numeric column (right) + POWER headline ---
+  const statsHeaderY = 486
+  const power = data.stats.power
+  const powerColor = power >= 9000 ? '#f0b429' : theme.accent
+  const radar = renderRadar(
+    [
+      { label: 'VELOCITY', value: data.stats.velocity },
+      { label: 'DIVERSITY', value: data.stats.diversity },
+      { label: 'SYNERGY', value: data.stats.synergy },
+      { label: 'CONSISTENCY', value: data.stats.consistency },
+      { label: 'RANGE', value: data.stats.range },
+      { label: 'FLOW', value: data.stats.flow },
+    ],
+    200,
+    588,
+    82,
+    theme,
+  )
+  const stats = `${svgText(PAD, statsHeaderY, 'STATS', { fontSize: 15, fill: theme.textSecondary, fontWeight: '600' })}
+${svgText(CARD_W - PAD, statsHeaderY - 20, 'POWER', { fontSize: 13, fill: theme.textSecondary, fontWeight: '600', anchor: 'end' })}
+${svgText(CARD_W - PAD, statsHeaderY + 8, withCommas(power), { fontSize: 30, fill: powerColor, fontWeight: 'bold', anchor: 'end' })}
+${radar}
+${statRow('VELOCITY', data.stats.velocity, 512, theme, 'velocity')}
+${statRow('DIVERSITY', data.stats.diversity, 542, theme, 'diversity')}
+${statRow('SYNERGY', data.stats.synergy, 572, theme, 'dot')}
+${statRow('CONSISTENCY', data.stats.consistency, 602, theme, 'consistency')}
+${statRow('RANGE', data.stats.range, 632, theme, 'dot')}
+${statRow('FLOW', data.stats.flow, 662, theme, 'dot')}`
 
   // --- tool loadout ---
   const toolsY = 716
@@ -194,6 +243,7 @@ ${emblem}
 ${archetypeLabel}
 ${verified}
 ${art}
+${medallion}
 ${stats}
 ${loadout}
 ${langs}

@@ -9,8 +9,12 @@ function makeData(over: Partial<CardDataV2> = {}): CardDataV2 {
       velocity: 82,
       diversity: 60,
       consistency: 74,
+      synergy: 65,
+      range: 50,
+      flow: 40,
       points: 73,
       grade: 'A',
+      power: 6307,
       aiCommitsInWindow: 120,
       activeWeeks: 9,
     },
@@ -56,9 +60,14 @@ function makeData(over: Partial<CardDataV2> = {}): CardDataV2 {
     serial: '#7F3A',
     seed: 12345,
     issuedYear: 2026,
+    avatarDataUri: null,
     ...over,
   }
 }
+
+// 1×1 transparent PNG — a fixed, safe data URI for avatar rendering assertions.
+const PNG_1PX =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M8AAAMBAQDJ/pLvAAAAAElFTkSuQmCC'
 
 describe('renderCardV2', () => {
   it('renders 750x1050 with username, serial, window label, flavor', () => {
@@ -137,8 +146,12 @@ describe('renderCardV2', () => {
           velocity: 0,
           diversity: 0,
           consistency: 0,
+          synergy: 0,
+          range: 0,
+          flow: 0,
           points: 0,
           grade: 'D',
+          power: 0,
           aiCommitsInWindow: 0,
           activeWeeks: 0,
         },
@@ -148,6 +161,40 @@ describe('renderCardV2', () => {
     expect(svg).toContain('width="750"')
     expect(svg).not.toContain('NaN')
     expect(svg).not.toContain('undefined')
+  })
+
+  it('renders the avatar medallion only from a data: URI, never a remote http(s) href', () => {
+    const withAvatar = renderCardV2(makeData({ avatarDataUri: PNG_1PX }), { theme: 'dark' })
+    expect(withAvatar).toContain('<image')
+    expect(withAvatar).toContain(PNG_1PX)
+    // No <image> may ever carry an http(s) href (blocked in GitHub's camo/img context).
+    expect(withAvatar).not.toMatch(/<image[^>]+href="http/)
+
+    // null avatar → no medallion image at all, card still renders.
+    const noAvatar = renderCardV2(makeData({ avatarDataUri: null }), { theme: 'dark' })
+    expect(noAvatar).not.toContain('<image')
+    expect(noAvatar).toContain('width="750"')
+  })
+
+  it('renders the 6-axis radar labels', () => {
+    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    for (const axis of ['VELOCITY', 'DIVERSITY', 'SYNERGY', 'CONSISTENCY', 'RANGE', 'FLOW']) {
+      expect(svg).toContain(axis)
+    }
+  })
+
+  it('POWER turns gold at 9000 (8999 stays accent)', () => {
+    const under = renderCardV2(makeData({ stats: { ...makeData().stats, power: 8999 } }), {
+      theme: 'dark',
+    })
+    expect(under).toContain('8,999')
+    expect(under).not.toContain('#f0b429')
+
+    const over = renderCardV2(makeData({ stats: { ...makeData().stats, power: 9000 } }), {
+      theme: 'dark',
+    })
+    expect(over).toContain('9,000')
+    expect(over).toContain('#f0b429')
   })
 
   it("drops loadout chips that would overflow the card's right edge", () => {

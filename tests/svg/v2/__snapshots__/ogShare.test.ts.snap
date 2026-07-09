@@ -5,6 +5,7 @@ exports[`renderOgShare > renders 1200x630 with username, grade, stats, no SMIL a
 <rect x="0" y="0" width="1200" height="630" fill="#0d1117" rx="0" />
 <rect x="10" y="10" width="1180" height="610" rx="24" fill="none" stroke="#a06eff" stroke-width="6" />
 <text x="72" y="120" font-size="24" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
+
 <text x="72" y="180" font-size="56" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">testuser</text>
 <text x="72" y="232" font-size="30" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI Native</text>
 <text x="72" y="316" font-size="22" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
@@ -19,10 +20,12 @@ exports[`renderOgShare > renders 1200x630 with username, grade, stats, no SMIL a
 <rect x="302" y="412" width="420" height="20" fill="#21262d" rx="10" />
 <rect x="302" y="412" width="311" height="20" fill="#a371f7" rx="10" />
 <text x="742" y="429" font-size="24" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">74</text>
-<g transform="translate(948 100)">
+<g transform="translate(948 80)">
 <polygon points="90,0 180,90 90,180 0,90" fill="#a06eff" />
 <text x="90" y="112" font-size="64" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">S</text>
 </g>
+<text x="1038" y="300" font-size="22" fill="#8b949e" font-weight="600" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">POWER</text>
+<text x="1038" y="356" font-size="56" fill="#a371f7" font-weight="bold" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">6,307</text>
 <text x="72" y="560" font-size="20" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">#7F3A · 2026 · public · 12wk</text>
 <text x="1128" y="560" font-size="22" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
 </svg>"

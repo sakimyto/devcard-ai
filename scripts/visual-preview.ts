@@ -8,8 +8,12 @@ const base: CardDataV2 = {
     velocity: 82,
     diversity: 60,
     consistency: 74,
+    synergy: 71,
+    range: 58,
+    flow: 46,
     points: 73,
     grade: 'A',
+    power: 6426,
     aiCommitsInWindow: 120,
     activeWeeks: 9,
   },
@@ -45,7 +49,13 @@ const base: CardDataV2 = {
   serial: '#7F3A',
   seed: 987654321,
   issuedYear: 2026,
+  avatarDataUri: null,
 }
+
+// A small but real avatar (GitHub identicon-style PNG) so the medallion renders in the
+// visual proof, not a 1×1 pixel. This is a 8×8 checker generated as an opaque PNG.
+const AVATAR_FIXTURE =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAHElEQVR4nGNkYGD4z0AEYBxVSFBhw6gCyhUCAG1nAgHUdEQnAAAAAElFTkSuQmCC'
 
 const outDir = new URL('../.superpowers/sdd/visual-t6/', import.meta.url).pathname
 mkdirSync(outDir, { recursive: true })
@@ -82,4 +92,33 @@ writeFileSync(
   ),
 )
 
-console.log(`wrote ${proofs.length + 1} cards to ${outDir}`)
+// Avatar medallion present — verifies clip/frame and art overlap.
+writeFileSync(
+  `${outDir}card-A-dark-avatar.svg`,
+  renderCardV2({ ...base, avatarDataUri: AVATAR_FIXTURE }, { theme: 'dark' }),
+)
+
+// Over-9000 POWER: all axes maxed → gold headline number + full radar.
+writeFileSync(
+  `${outDir}card-S-dark-over9000.svg`,
+  renderCardV2(
+    {
+      ...base,
+      avatarDataUri: AVATAR_FIXTURE,
+      stats: {
+        ...base.stats,
+        grade: 'S',
+        velocity: 100,
+        diversity: 100,
+        consistency: 100,
+        synergy: 100,
+        range: 100,
+        flow: 100,
+        power: 10200,
+      },
+    },
+    { theme: 'dark' },
+  ),
+)
+
+console.log(`wrote ${proofs.length + 3} cards to ${outDir}`)

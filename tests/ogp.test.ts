@@ -90,8 +90,12 @@ const PROBE_DATA: CardDataV2 = {
     velocity: 82,
     diversity: 60,
     consistency: 74,
+    synergy: 65,
+    range: 50,
+    flow: 40,
     points: 73,
     grade: 'S',
+    power: 6307,
     aiCommitsInWindow: 120,
     activeWeeks: 9,
   },
@@ -104,6 +108,7 @@ const PROBE_DATA: CardDataV2 = {
   serial: '#7F3A',
   seed: 42,
   issuedYear: 2026,
+  avatarDataUri: null,
 }
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } {

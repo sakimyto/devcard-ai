@@ -42,14 +42,14 @@ AI Native / Pair Programmer / Delegator / Selective User を「クラス」と�
 
 1. 名前プレート: `AI BUILDER` 肩書 + username + ティアジェム
 2. アーキタイプ紋章 + クラス名
-3. **ジェネラティブアート領域**: username の hash をシードにした決定論的な幾何学アート。ユーザーごとに固有・再現可能。LLM 不使用
-4. ステータスバー 3 本（0-100): VELOCITY / DIVERSITY / CONSISTENCY
+3. **ジェネラティブアート領域**（高さ 240): username の hash をシードにした決定論的な幾何学アート。ユーザーごとに固有・再現可能。LLM 不使用。中央に**アバターメダリオン**（円形・半径56・accent 3px 縁取り + 外側 1px 暗リング）を重ねる。アバターは handler 層でサーバ取得し base64 の `data:` URI としてインライン化する（GitHub の `<img>`/camo は remote `href` を描画しないため）。取得失敗時は null → メダリオン非表示で劣化なく描画
+4. **ステータス（6角レーダー + 数値列 + POWER)**: 左に6軸レーダー（VELOCITY / DIVERSITY / SYNERGY / CONSISTENCY / RANGE / FLOW、上から時計回り、25/50/75/100 の同心6角グリッド）、右に同6軸の数値列、STATS ヘッダ右端に **POWER**（総合戦闘力・千位カンマ・9000超はゴールド）。従来の縦バー3本は廃止
 5. ツールロードアウト: ツール名 + シェア%（チップ表示）
 6. 言語タイプアイコン（上位3言語）
 7. フレーバーテキスト: データから決定論生成する一行（テンプレート × 条件分岐。LLM 不使用）
 8. フッター: カードシリアル（username hash 由来 4 桁 hex + `2026`)+ データ窓表記 `public · 12wk` + devcard-ai クレジット
 
-light / dark 両テーマ維持。
+light / dark 両テーマ維持。OGP 横長シェア画像にも名前左のアバター（半径40）と、ティアジェム下の大きな POWER を反映する（レーダーは入れず縦バー3本のまま）。
 
 ## Section 2: 指標再設計とデータ精度（v1 = 公開範囲で最大精度)
 
@@ -70,7 +70,11 @@ light / dark 両テーマ維持。
 - **VELOCITY**: 12 週窓のコミット頻度（対数スケールで正規化。碌に公開活動がない場合に 0 に張り付くのは正しい挙動とする）
 - **DIVERSITY**: ツール種類 × 用途（Feature/Fix/Test/Refactor）の分散。ツール種類数は証跡の強さで重み付け（committed 1.0 / assisted 0.75 / equipped 0.5）。同一ツールは最上位の証跡でのみ算入し二重加算しない。正規化上限は4種
 - **CONSISTENCY**: アクティブ週割合（active weeks / 12）
-- **Grade**: 3 ステータスの加重合成。初期重み VELOCITY 40% / DIVERSITY 30% / CONSISTENCY 30%、閾値は現行踏襲（80/60/40/20)。実装時にサンプルユーザー群（自分 + 著名 OSS 開発者数名）で再キャリブレーションし、変更は golden file の意図した差分として記録。数字とレアリティが同じ物語を語る
+- **SYNERGY**（v2.2 追加・レーダー軸）: AI 関与コミット率。`round(100 * min(1, aiInvolvedInWindow / max(1, totalCommitsInWindow)))`
+- **RANGE**（v2.2 追加・レーダー軸）: 活動の幅。`round(100 * (0.5 * min(1, langCount/3) + 0.5 * min(1, activeRepoCount/6)))`。langCount = 言語数、activeRepoCount = 窓内コミットが1件以上あるリポジトリ数
+- **FLOW**（v2.2 追加・レーダー軸）: 窓内コミットの人間↔AI交互性。`round(100 * alternationScore)`（pattern.alternationScore を窓内コミットで算出）
+- **POWER**（v2.2 追加・総合戦闘力): `round((velocity+diversity+consistency+synergy+range+flow) * 17)`（最大 10,200）。トップ層だけが 9000 を超えられる意図的キャリブレーション（over-9000 ミーム）。9000 超で表示色をゴールドに切替
+- **Grade**: **従来 3 軸のまま**（VELOCITY 40% / DIVERSITY 30% / CONSISTENCY 30%、閾値 80/60/40/20)。v2.2 で追加した SYNERGY/RANGE/FLOW/POWER は**表示専用でティア計算に一切寄与しない**（既存ユーザーのティアは動かない — golden/anchor テストが無変更で緑であることで検証)。数字とレアリティが同じ物語を語る
 
 ## Section 3: 技術品質・堅牢性
 

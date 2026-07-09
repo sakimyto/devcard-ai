@@ -8,8 +8,12 @@ const data: CardDataV2 = {
     velocity: 82,
     diversity: 60,
     consistency: 74,
+    synergy: 65,
+    range: 50,
+    flow: 40,
     points: 73,
     grade: 'S',
+    power: 6307,
     aiCommitsInWindow: 120,
     activeWeeks: 9,
   },
@@ -27,6 +31,7 @@ const data: CardDataV2 = {
   serial: '#7F3A',
   seed: 42,
   issuedYear: 2026,
+  avatarDataUri: null,
 }
 
 describe('renderOgShare', () => {
@@ -38,7 +43,27 @@ describe('renderOgShare', () => {
     expect(svg).toContain('VELOCITY')
     // PNG-rasterized: SMIL animation is inert and must not be emitted
     expect(svg).not.toContain('animate')
+    expect(svg).toContain('POWER')
+    expect(svg).toContain('6,307')
     expect(svg).toMatchSnapshot()
+  })
+
+  it('renders the avatar only from a data: URI, never a remote http(s) href', () => {
+    const png1px =
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M8AAAMBAQDJ/pLvAAAAAElFTkSuQmCC'
+    const withAvatar = renderOgShare({ ...data, avatarDataUri: png1px }, 'dark')
+    expect(withAvatar).toContain('<image')
+    expect(withAvatar).toContain(png1px)
+    expect(withAvatar).not.toMatch(/<image[^>]+href="http/)
+    // null avatar → no <image>, and the name stays at its original x=72 position.
+    expect(renderOgShare(data, 'dark')).not.toContain('<image')
+    expect(renderOgShare(data, 'dark')).toContain('x="72" y="180"')
+  })
+
+  it('POWER turns gold past 9000 on the share image', () => {
+    const over = renderOgShare({ ...data, stats: { ...data.stats, power: 9200 } }, 'dark')
+    expect(over).toContain('9,200')
+    expect(over).toContain('#f0b429')
   })
 })
 
