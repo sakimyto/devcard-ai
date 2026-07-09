@@ -1,5 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
 import { fetchUserData } from '~/github/client'
+import {
+  USER_CONTRIBUTIONS_QUERY,
+  USER_PRIVATE_REPOS_QUERY,
+  USER_REPOS_QUERY,
+} from '~/github/queries'
 import type { GitHubQueryResponse } from '~/github/types'
 
 // Builds a repos-query response with a single named repo pushed at `pushedAt`.
@@ -41,17 +46,18 @@ function reposResponse(login: string, repoName: string, pushedAt: string): GitHu
   } as unknown as GitHubQueryResponse
 }
 
-// Dispatches the mock by which of the 3 parallel queries is being made: PUBLIC repos,
-// PRIVATE repos, or contributions (identified by the contribSince variable).
+// Dispatches the mock by which of the 3 parallel queries is being made, keyed off the query
+// string (public and private repos queries are now distinct constants; contributions is
+// identified by either its constant or the contribSince variable).
 function dispatch(opts: {
   pub?: GitHubQueryResponse
   priv?: GitHubQueryResponse | (() => Promise<never>)
   contrib?: GitHubQueryResponse
 }) {
-  return (_q: string, vars: Record<string, unknown>): Promise<GitHubQueryResponse> => {
-    if ('contribSince' in vars)
+  return (query: string, vars: Record<string, unknown>): Promise<GitHubQueryResponse> => {
+    if (query === USER_CONTRIBUTIONS_QUERY || 'contribSince' in vars)
       return Promise.resolve(opts.contrib ?? ({ user: null } as GitHubQueryResponse))
-    if (vars.privacy === 'PRIVATE') {
+    if (query === USER_PRIVATE_REPOS_QUERY) {
       if (typeof opts.priv === 'function') return opts.priv()
       return Promise.resolve(
         opts.priv ??
@@ -75,17 +81,13 @@ describe('fetchUserData', () => {
     const result = await fetchUserData('testuser', mockGraphql, SINCE, YEAR_AGO)
     expect(result?.login).toBe('testuser')
     expect(mockGraphql).toHaveBeenCalledTimes(3)
-    expect(mockGraphql).toHaveBeenCalledWith(expect.any(String), {
+    // Public and private repos are now distinct query documents; contributions is the third.
+    expect(mockGraphql).toHaveBeenCalledWith(USER_REPOS_QUERY, { login: 'testuser', since: SINCE })
+    expect(mockGraphql).toHaveBeenCalledWith(USER_PRIVATE_REPOS_QUERY, {
       login: 'testuser',
       since: SINCE,
-      privacy: 'PUBLIC',
     })
-    expect(mockGraphql).toHaveBeenCalledWith(expect.any(String), {
-      login: 'testuser',
-      since: SINCE,
-      privacy: 'PRIVATE',
-    })
-    expect(mockGraphql).toHaveBeenCalledWith(expect.any(String), {
+    expect(mockGraphql).toHaveBeenCalledWith(USER_CONTRIBUTIONS_QUERY, {
       login: 'testuser',
       contribSince: SINCE,
       yearAgo: YEAR_AGO,
@@ -193,8 +195,8 @@ describe('fetchUserData', () => {
         errors: [{ type: 'NOT_FOUND', message: 'nope' }],
       },
     )
-    const mockGraphql = vi.fn((_q: string, vars: Record<string, unknown>) => {
-      if (vars.privacy === 'PUBLIC') return Promise.reject(notFoundError)
+    const mockGraphql = vi.fn((query: string) => {
+      if (query === USER_REPOS_QUERY) return Promise.reject(notFoundError)
       return Promise.resolve({ user: null } as GitHubQueryResponse)
     })
     const result = await fetchUserData('zzz', mockGraphql, SINCE, YEAR_AGO)
@@ -206,8 +208,8 @@ describe('fetchUserData', () => {
       name: 'GraphqlResponseError',
       errors: [{ type: 'RATE_LIMITED', message: 'API rate limit exceeded' }],
     })
-    const mockGraphql = vi.fn((_q: string, vars: Record<string, unknown>) => {
-      if (vars.privacy === 'PUBLIC') return Promise.reject(rateLimitError)
+    const mockGraphql = vi.fn((query: string) => {
+      if (query === USER_REPOS_QUERY) return Promise.reject(rateLimitError)
       return Promise.resolve({ user: null } as GitHubQueryResponse)
     })
     await expect(fetchUserData('any', mockGraphql, SINCE, YEAR_AGO)).rejects.toThrow('rate limit')

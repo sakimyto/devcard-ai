@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { USER_PRIVATE_REPOS_QUERY } from '~/github/queries'
 import type { GitHubQueryResponse } from '~/github/types'
 import { buildCardData, handleRequest } from '~/handler'
 
@@ -10,8 +11,8 @@ const recent = (daysAgo: number) =>
 // By default the PRIVATE query resolves to an empty repo set so these fixtures stay
 // public-only (includesPrivate=false); pass `privateResponse` to exercise private inclusion.
 function graphqlWith(response: GitHubQueryResponse, privateResponse?: GitHubQueryResponse) {
-  return async (_q: string, vars: Record<string, unknown>): Promise<GitHubQueryResponse> => {
-    if (vars?.privacy === 'PRIVATE') {
+  return async (query: string): Promise<GitHubQueryResponse> => {
+    if (query === USER_PRIVATE_REPOS_QUERY) {
       return (
         privateResponse ?? {
           user: response.user ? { ...response.user, repositories: { nodes: [] } } : null,

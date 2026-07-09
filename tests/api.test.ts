@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import worker from '../api/index'
+import { USER_PRIVATE_REPOS_QUERY } from '../src/github/queries'
 import type { GitHubQueryResponse } from '../src/github/types'
 
 // GitHub App / Octokit は外部境界なのでここだけモックする。graphql の応答は
@@ -104,8 +105,8 @@ const NO_REPOS_RESPONSE = {
 // stays public-only (no duplicated repos, includesPrivate=false).
 function mockOkPublicOnly(login = 'octocat') {
   const ok = okResponse(login)
-  graphqlMock.mockImplementation((_q: string, vars: Record<string, unknown>) => {
-    if (vars?.privacy === 'PRIVATE') {
+  graphqlMock.mockImplementation((query: string) => {
+    if (query === USER_PRIVATE_REPOS_QUERY) {
       return Promise.resolve({ user: { login, repositories: { nodes: [] } } })
     }
     return Promise.resolve(ok)

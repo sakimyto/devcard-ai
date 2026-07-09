@@ -72,12 +72,15 @@ export interface GitHubRepo {
       }
     }
   } | null
-  claudeMd: FileCheck | null
-  agentsMd: FileCheck | null
-  cursorrules: FileCheck | null
-  cursorrulesDir: FileCheck | null
-  githubCopilot: FileCheck | null
-  claudeDir: FileCheck | null
+  // AI-tool config-file signals for the equipped analyzer. Optional because the slim PRIVATE
+  // repos query omits these object() lookups (they cost ~2s across 50 nodes); private repos
+  // therefore carry no equipped signal — undefined reads as "not equipped" in analyzeEquipped.
+  claudeMd?: FileCheck | null
+  agentsMd?: FileCheck | null
+  cursorrules?: FileCheck | null
+  cursorrulesDir?: FileCheck | null
+  githubCopilot?: FileCheck | null
+  claudeDir?: FileCheck | null
   primaryLanguage: { name: string; color: string } | null
   // Per-repo byte breakdown (top 8 by size). Optional/null so pre-Task-21 fixtures and
   // repos with no detectable languages degrade to an empty aggregation.

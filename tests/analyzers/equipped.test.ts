@@ -42,4 +42,19 @@ describe('analyzeEquipped', () => {
     expect(analyzeEquipped([repo({})]).equipped).toEqual([])
     expect(analyzeEquipped([]).equipped).toEqual([])
   })
+
+  it('treats a slim private node (config fields entirely absent) as not equipped', () => {
+    // The slim PRIVATE repos query omits the config-file object() lookups, so those keys are
+    // undefined (not null) on private nodes. analyzeEquipped must read that as "no signal".
+    const privateNode = {
+      name: 'secret',
+      pushedAt: '2026-07-01T00:00:00Z',
+      defaultBranchRef: null,
+      primaryLanguage: null,
+    } as GitHubRepo
+    expect(privateNode.claudeMd).toBeUndefined()
+    // A public node with a config file still contributes; the private node adds nothing.
+    const result = analyzeEquipped([privateNode, repo({ claudeMd: { id: '1' } })])
+    expect(result.equipped).toEqual([{ toolId: 'claude', toolName: 'Claude', repoCount: 1 }])
+  })
 })

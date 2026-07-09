@@ -59,7 +59,8 @@ AI Native / Pair Programmer / Delegator / Selective User を「クラス」と�
 - private が含まれると **`all repos · 12wk`（フッター）** と **`✓ verified+`（アーキタイプ行）** で明示。含まれなければ従来の `public 12wk` / `✓ verified`
 - `includesPrivate` は2経路のいずれかで true: ①PRIVATE リポクエリが1件以上ノードを返す（languages・コミットメッセージが流入)、②contributions の `commitContributionsByRepository` に `isPrivate` かつ件数>0 の行がある（RANGE に流入。PRIVATE リポクエリが 502 で劣化しても正確にラベルするため)
 - **リポジトリ名・URL・説明は一切カードに描画しない**（集計値とラベルのみ)。private の内容が漏れる表面は持たない
-- クエリは `$privacy` 変数で PUBLIC / PRIVATE を別クエリ化し client.ts で **3並列**（public + private + contributions)。All-repos インストールで単一 repos クエリが 9〜11s まで肥大化し本番 502 が再発するため（gh api graphql 実測: public 2.3s / private 9〜11s)、private を分離し **public は常に軽量・確実に成功する主系**、重い private が 502 しても **public のみで劣化描画**（フォールトアイソレーション。private 502 はカード全体を殺さない)
+- クエリは PUBLIC / PRIVATE を**別クエリ**（`USER_REPOS_QUERY` / `USER_PRIVATE_REPOS_QUERY`）に分け client.ts で **3並列**（public + private + contributions)。All-repos インストールで単一 repos クエリが 9〜11s まで肥大化し本番 502 が再発するため（gh api graphql 実測: public 2.3s / private 9〜11s)、private を分離し **public は常に軽量・確実に成功する主系**、重い private が 502 しても **public のみで劣化描画**（フォールトアイソレーション。private 502 はカード全体を殺さない)
+- **private クエリのスリム化（10s ゲートウェイ内に安定させる)**: PRIVATE のみ `repositories(first: 20)` + `history(first: 80)` + **config ファイル object を持たない**。public は現状維持（first:50 / history:100 / config object あり)。理由: 全指標は12週窓で、PUSHED_AT 降順 first:20 は「直近12週に動いた private リポ」を実質全捕捉する（窓外リポは窓内コミット0件で指標に寄与しない。RANGE の activeRepoCount は `commitContributionsByRepository`=uncapped 由来なので repos 件数キャップの影響を受けない)。**equipped の設定ファイル証跡は public リポ限定**に縮小（private ノードには config フィールドが無く未装備扱い。型は optional 化)。実測（USER_PRIVATE_REPOS_QUERY・5回連続）: 4.8〜5.9s・全成功・502 なし（first:30 は 6.0〜7.5s と 6s を割れないため 20 を採用)
 
 light / dark 両テーマ維持。OGP 横長シェア画像にも名前左のアバター（半径40）と、ティアジェム下の大きな POWER を反映し、パターン行は**二つ名（EPITHET)** に差し替える（レーダーは入れず縦バー3本のまま）。
 

@@ -1,4 +1,4 @@
-import { USER_CONTRIBUTIONS_QUERY, USER_REPOS_QUERY } from './queries'
+import { USER_CONTRIBUTIONS_QUERY, USER_PRIVATE_REPOS_QUERY, USER_REPOS_QUERY } from './queries'
 import type { GitHubQueryResponse, GitHubUser } from './types'
 
 type GraphqlFn = (query: string, variables: Record<string, unknown>) => Promise<GitHubQueryResponse>
@@ -28,8 +28,8 @@ export async function fetchUserData(
     // private が流入し単一 repos が 9〜11s まで肥大化して 502 が再発するため）。public は軽量で
     // 確実に成功する主系。private / contributions の失敗はカード全体を殺さず劣化描画に落とす。
     const [pubRes, privRes, contribRes] = await Promise.all([
-      graphql(USER_REPOS_QUERY, { login, since, privacy: 'PUBLIC' }),
-      graphql(USER_REPOS_QUERY, { login, since, privacy: 'PRIVATE' }).catch(
+      graphql(USER_REPOS_QUERY, { login, since }),
+      graphql(USER_PRIVATE_REPOS_QUERY, { login, since }).catch(
         (error): GitHubQueryResponse | null => {
           if (isNotFoundError(error)) return null
           console.error('private repos query failed, degrading to public-only:', error)
