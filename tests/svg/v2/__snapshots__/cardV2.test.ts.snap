@@ -190,8 +190,8 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 
 <text x="405" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
 <text x="706" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
-<line x1="104" y1="924" x2="646" y2="924" stroke="#30363d" stroke-width="1" />
-<text x="375" y="954" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<line x1="104" y1="916" x2="646" y2="916" stroke="#30363d" stroke-width="1" />
+<text x="375" y="944" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
 <polygon points="46,0 92,46 46,92 0,46" fill="url(#gemGrad)" />
 <polygon points="46,0 0,46 46,46" fill="#ffffff" fill-opacity="0.42"><animate attributeName="fill-opacity" values="0.42;0.72;0.42" dur="3.5s" repeatCount="indefinite" /></polygon>
@@ -396,8 +396,8 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 
 <text x="405" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
 <text x="706" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
-<line x1="104" y1="924" x2="646" y2="924" stroke="#e1e4e8" stroke-width="1" />
-<text x="375" y="954" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<line x1="104" y1="916" x2="646" y2="916" stroke="#e1e4e8" stroke-width="1" />
+<text x="375" y="944" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
 <polygon points="46,0 92,46 46,92 0,46" fill="url(#gemGrad)" />
 <polygon points="46,0 0,46 46,46" fill="#ffffff" fill-opacity="0.42"><animate attributeName="fill-opacity" values="0.42;0.72;0.42" dur="3.5s" repeatCount="indefinite" /></polygon>
@@ -602,8 +602,8 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 
 <text x="405" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
 <text x="706" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
-<line x1="104" y1="924" x2="646" y2="924" stroke="#30363d" stroke-width="1" />
-<text x="375" y="954" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<line x1="104" y1="916" x2="646" y2="916" stroke="#30363d" stroke-width="1" />
+<text x="375" y="944" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
 <polygon points="46,0 92,46 46,92 0,46" fill="url(#gemGrad)" />
 <polygon points="46,0 0,46 46,46" fill="#ffffff" fill-opacity="0.42"></polygon>
@@ -808,8 +808,8 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 
 <text x="405" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
 <text x="706" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
-<line x1="104" y1="924" x2="646" y2="924" stroke="#e1e4e8" stroke-width="1" />
-<text x="375" y="954" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<line x1="104" y1="916" x2="646" y2="916" stroke="#e1e4e8" stroke-width="1" />
+<text x="375" y="944" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
 <polygon points="46,0 92,46 46,92 0,46" fill="url(#gemGrad)" />
 <polygon points="46,0 0,46 46,46" fill="#ffffff" fill-opacity="0.42"></polygon>
@@ -1014,8 +1014,8 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 
 <text x="405" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
 <text x="706" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
-<line x1="104" y1="924" x2="646" y2="924" stroke="#30363d" stroke-width="1" />
-<text x="375" y="954" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<line x1="104" y1="916" x2="646" y2="916" stroke="#30363d" stroke-width="1" />
+<text x="375" y="944" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
 <polygon points="46,0 92,46 46,92 0,46" fill="url(#gemGrad)" />
 <polygon points="46,0 0,46 46,46" fill="#ffffff" fill-opacity="0.42"></polygon>
@@ -1220,8 +1220,8 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 
 <text x="405" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
 <text x="706" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
-<line x1="104" y1="924" x2="646" y2="924" stroke="#e1e4e8" stroke-width="1" />
-<text x="375" y="954" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<line x1="104" y1="916" x2="646" y2="916" stroke="#e1e4e8" stroke-width="1" />
+<text x="375" y="944" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
 <polygon points="46,0 92,46 46,92 0,46" fill="url(#gemGrad)" />
 <polygon points="46,0 0,46 46,46" fill="#ffffff" fill-opacity="0.42"></polygon>
@@ -1426,8 +1426,8 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 
 <text x="405" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
 <text x="706" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
-<line x1="104" y1="924" x2="646" y2="924" stroke="#30363d" stroke-width="1" />
-<text x="375" y="954" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<line x1="104" y1="916" x2="646" y2="916" stroke="#30363d" stroke-width="1" />
+<text x="375" y="944" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
 <polygon points="46,0 92,46 46,92 0,46" fill="url(#gemGrad)" />
 <polygon points="46,0 0,46 46,46" fill="#ffffff" fill-opacity="0.42"></polygon>
@@ -1632,8 +1632,8 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 
 <text x="405" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
 <text x="706" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
-<line x1="104" y1="924" x2="646" y2="924" stroke="#e1e4e8" stroke-width="1" />
-<text x="375" y="954" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<line x1="104" y1="916" x2="646" y2="916" stroke="#e1e4e8" stroke-width="1" />
+<text x="375" y="944" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
 <polygon points="46,0 92,46 46,92 0,46" fill="url(#gemGrad)" />
 <polygon points="46,0 0,46 46,46" fill="#ffffff" fill-opacity="0.42"></polygon>
@@ -1870,8 +1870,8 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 
 <text x="405" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
 <text x="706" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
-<line x1="104" y1="924" x2="646" y2="924" stroke="#30363d" stroke-width="1" />
-<text x="375" y="954" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<line x1="104" y1="916" x2="646" y2="916" stroke="#30363d" stroke-width="1" />
+<text x="375" y="944" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
 <polygon points="46,0 92,46 46,92 0,46" fill="url(#gemGrad)" />
 <polygon points="46,0 0,46 46,46" fill="#ffffff" fill-opacity="0.42"><animate attributeName="fill-opacity" values="0.42;0.72;0.42" dur="3.5s" repeatCount="indefinite" /></polygon>
@@ -2108,8 +2108,8 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 
 <text x="405" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
 <text x="706" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
-<line x1="104" y1="924" x2="646" y2="924" stroke="#e1e4e8" stroke-width="1" />
-<text x="375" y="954" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<line x1="104" y1="916" x2="646" y2="916" stroke="#e1e4e8" stroke-width="1" />
+<text x="375" y="944" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
 <polygon points="46,0 92,46 46,92 0,46" fill="url(#gemGrad)" />
 <polygon points="46,0 0,46 46,46" fill="#ffffff" fill-opacity="0.42"><animate attributeName="fill-opacity" values="0.42;0.72;0.42" dur="3.5s" repeatCount="indefinite" /></polygon>
@@ -2309,8 +2309,8 @@ exports[`renderCardV2 > renders assisted chips with icons and the "· assisted" 
 
 <text x="405" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
 <text x="706" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
-<line x1="104" y1="924" x2="646" y2="924" stroke="#30363d" stroke-width="1" />
-<text x="375" y="954" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
+<line x1="104" y1="916" x2="646" y2="916" stroke="#30363d" stroke-width="1" />
+<text x="375" y="944" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
 <polygon points="46,0 92,46 46,92 0,46" fill="url(#gemGrad)" />
 <polygon points="46,0 0,46 46,46" fill="#ffffff" fill-opacity="0.42"><animate attributeName="fill-opacity" values="0.42;0.72;0.42" dur="3.5s" repeatCount="indefinite" /></polygon>

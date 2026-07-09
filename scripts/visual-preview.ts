@@ -50,6 +50,22 @@ const base: CardDataV2 = {
   seed: 987654321,
   issuedYear: 2026,
   avatarDataUri: null,
+  record: {
+    exp: 1284,
+    commits: 214,
+    prs: 32,
+    reviews: 18,
+    issues: 6,
+    inclPrivate: true,
+    currentStreak: 23,
+    longestStreak: 31,
+  },
+  element: { id: 'lumen', label: 'Lumen', color: '#a371f7' },
+  epithet: 'The Ascendant',
+  traits: [
+    { id: 'unbroken', name: 'Unbroken', proof: '23-day commit streak, still alive' },
+    { id: 'centurion', name: 'Centurion', proof: '120 AI-assisted commits in 12 weeks' },
+  ],
 }
 
 // A small but real avatar (GitHub identicon-style PNG) so the medallion renders in the

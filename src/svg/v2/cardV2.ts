@@ -320,14 +320,14 @@ ${streakText ? svgText(CARD_W - PAD, recRowY, streakText, { fontSize: 13, fill: 
   // in y~940-1010 without touching the footer (y1010). When no trait fires, the legacy
   // flavor line renders instead (backward-compatible). ◆ is a text glyph (renders crisp in
   // GitHub's SVG rasterizer, like the RECORD strip markers) — never an emoji.
-  const flavorY = 954
-  const flavorRule = `<line x1="${PAD + 60}" y1="${flavorY - 30}" x2="${CARD_W - PAD - 60}" y2="${flavorY - 30}" stroke="${theme.border}" stroke-width="1" />`
+  const flavorY = 944
+  const flavorRule = `<line x1="${PAD + 60}" y1="${flavorY - 28}" x2="${CARD_W - PAD - 60}" y2="${flavorY - 28}" stroke="${theme.border}" stroke-width="1" />`
   const traitFont = 'font-family="-apple-system, BlinkMacSystemFont, \'Segoe UI\', sans-serif"'
   const traitLine = (name: string, proof: string, y: number): string =>
     `<text x="${PAD}" y="${y}" ${traitFont}><tspan font-size="17" fill="${theme.accent}" font-weight="bold">◆ ${escapeXml(name)}</tspan><tspan font-size="15" fill="${theme.textSecondary}"> — ${escapeXml(proof)}</tspan></text>`
   let flavor: string
   if (data.traits.length > 0) {
-    flavor = data.traits.map((t, i) => traitLine(t.name, t.proof, flavorY + i * 32)).join('\n')
+    flavor = data.traits.map((t, i) => traitLine(t.name, t.proof, flavorY + i * 30)).join('\n')
   } else {
     flavor = wrapText(data.flavor, 46, 2)
       .map((line, i) =>
