@@ -27,6 +27,12 @@ function nameFontSize(len: number): number {
   return Math.max(20, Math.min(42, fit))
 }
 
+// Markers for the RECORD strip. Emoji render as flat monochrome glyphs in GitHub's SVG
+// rasterizer (no color font), so plain text markers read crisper and more on-brand than
+// ⚔/🔥 — chosen after side-by-side qlmanage inspection.
+const RECORD_GLYPH = '›'
+const STREAK_GLYPH = '▲'
+
 // Thousands separator without Intl (deterministic across runtimes): 6340 → "6,340".
 function withCommas(n: number): string {
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -259,8 +265,36 @@ ${svgText(x + 28, langY + 24, l.name, { fontSize: 18, fill: theme.text })}`
   const langs = `${svgText(PAD, langY, 'TYPES', { fontSize: 15, fill: theme.textSecondary, fontWeight: '600' })}
 ${data.languages.languages.length > 0 ? langItems : svgText(PAD, langY + 24, '—', { fontSize: 16, fill: theme.textSecondary })}`
 
+  // --- record strip (EXP / commit·pr·review counts / streak) ---
+  // Occupies the reserved band y 850-910 between TYPES and the flavor rule. Display-only:
+  // never feeds Grade or POWER. All values arrive as numbers, so no injection surface.
+  const rec = data.record
+  const recLabelY = 850
+  const recRowY = 892
+  const expStr = withCommas(rec.exp)
+  const expNumX = PAD + 40
+  const expNumW = Math.ceil(expStr.length * 16.8) // ~0.6em advance at 28px bold
+  const inclPrivate = rec.inclPrivate
+    ? svgText(expNumX + expNumW + 8, recRowY - 13, 'incl. private', {
+        fontSize: 11,
+        fill: theme.textSecondary,
+      })
+    : ''
+  const counts = `${RECORD_GLYPH} ${rec.commits}c · ${rec.prs}pr · ${rec.reviews}rev`
+  const streakText =
+    rec.currentStreak > 0
+      ? `${STREAK_GLYPH} ${rec.currentStreak}d streak`
+      : rec.longestStreak > 0
+        ? `${STREAK_GLYPH} best ${rec.longestStreak}d`
+        : ''
+  const record = `${svgText(PAD, recLabelY, 'RECORD', { fontSize: 15, fill: theme.textSecondary, fontWeight: '600' })}
+${svgText(PAD, recRowY, 'EXP', { fontSize: 13, fill: theme.textSecondary, fontWeight: '600' })}
+${svgText(expNumX, recRowY, expStr, { fontSize: 28, fill: theme.accent, fontWeight: 'bold' })}
+${inclPrivate}
+${svgText(CARD_W / 2 + 30, recRowY, counts, { fontSize: 13, fill: theme.textSecondary, anchor: 'middle' })}
+${streakText ? svgText(CARD_W - PAD, recRowY, streakText, { fontSize: 13, fill: theme.textSecondary, anchor: 'end' }) : ''}`
+
   // --- flavor ---
-  // y 850-910 は空きスロット（Task 17 の戦績 RECORD ストリップがここに入る予約枠）
   const flavorY = 954
   const flavorLines = wrapText(data.flavor, 46, 2)
   const flavor = flavorLines
@@ -292,6 +326,7 @@ ${medallion}
 ${stats}
 ${loadout}
 ${langs}
+${record}
 ${flavorRule}
 ${flavor}
 ${tierGem(data.stats.grade, CARD_W - PAD - 92, 56)}

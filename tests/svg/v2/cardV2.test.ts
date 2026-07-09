@@ -56,6 +56,16 @@ function makeData(over: Partial<CardDataV2> = {}): CardDataV2 {
       ],
     },
     pattern: { pattern: 'Pair Programmer', aiRate: 0.5, alternationScore: 0.6 },
+    record: {
+      exp: 1240,
+      commits: 210,
+      prs: 18,
+      reviews: 34,
+      issues: 9,
+      inclPrivate: false,
+      currentStreak: 7,
+      longestStreak: 15,
+    },
     flavor: 'Trades keystrokes with Claude, line for line.',
     serial: '#7F3A',
     seed: 12345,
@@ -235,6 +245,69 @@ describe('renderCardV2', () => {
     for (const m of svg.matchAll(/<rect x="(\d+)" y="716" width="(\d+)"/g)) {
       expect(Number(m[1]) + Number(m[2])).toBeLessThanOrEqual(706)
     }
+  })
+})
+
+describe('renderCardV2 RECORD strip', () => {
+  it('renders the RECORD strip: EXP (comma-grouped), commit/pr/review counts, streak', () => {
+    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    expect(svg).toContain('RECORD')
+    expect(svg).toContain('EXP')
+    expect(svg).toContain('1,240')
+    expect(svg).toContain('210c')
+    expect(svg).toContain('18pr')
+    expect(svg).toContain('34rev')
+    expect(svg).toContain('7d streak')
+    // issues are intentionally not shown on the strip
+    expect(svg).not.toContain('9i')
+  })
+
+  it('shows "incl. private" only when inclPrivate is true', () => {
+    const priv = renderCardV2(makeData({ record: { ...makeData().record, inclPrivate: true } }), {
+      theme: 'dark',
+    })
+    expect(priv).toContain('incl. private')
+    const pub = renderCardV2(makeData(), { theme: 'dark' })
+    expect(pub).not.toContain('incl. private')
+  })
+
+  it('falls back to "best {n}d" when current streak is 0 but a longest exists', () => {
+    const svg = renderCardV2(
+      makeData({ record: { ...makeData().record, currentStreak: 0, longestStreak: 12 } }),
+      { theme: 'dark' },
+    )
+    expect(svg).toContain('best 12d')
+    expect(svg).not.toContain('d streak')
+  })
+
+  it('hides the streak entirely when both current and longest are 0', () => {
+    const svg = renderCardV2(
+      makeData({ record: { ...makeData().record, currentStreak: 0, longestStreak: 0 } }),
+      { theme: 'dark' },
+    )
+    expect(svg).not.toContain('streak')
+    expect(svg).not.toContain('best ')
+  })
+
+  it('renders a zero record without NaN/undefined (degraded strip)', () => {
+    const svg = renderCardV2(
+      makeData({
+        record: {
+          exp: 0,
+          commits: 0,
+          prs: 0,
+          reviews: 0,
+          issues: 0,
+          inclPrivate: false,
+          currentStreak: 0,
+          longestStreak: 0,
+        },
+      }),
+      { theme: 'light' },
+    )
+    expect(svg).toContain('RECORD')
+    expect(svg).not.toContain('NaN')
+    expect(svg).not.toContain('undefined')
   })
 })
 

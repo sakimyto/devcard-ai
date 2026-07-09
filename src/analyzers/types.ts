@@ -1,3 +1,5 @@
+import type { RecordAnalysis } from './record'
+
 export interface CoauthorAnalysis {
   totalCommits: number
   aiCommits: number
@@ -99,6 +101,9 @@ export interface CardDataV2 {
   usage: UsageAnalysis
   languages: LanguageAnalysis
   pattern: PatternAnalysis
+  // Contribution record (EXP/streak/PR·review counts). Display-only — never feeds
+  // Grade or POWER (tier-invariance rule).
+  record: RecordAnalysis
   flavor: string
   serial: string
   seed: number

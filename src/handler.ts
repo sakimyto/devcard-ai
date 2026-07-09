@@ -4,6 +4,7 @@ import { analyzeEquipped } from './analyzers/equipped'
 import { flavorText } from './analyzers/flavor'
 import { analyzeLanguages } from './analyzers/languages'
 import { analyzePattern } from './analyzers/pattern'
+import { analyzeRecord } from './analyzers/record'
 import { analyzeStats } from './analyzers/stats'
 import { analyzeToolAttributionV2 } from './analyzers/toolAttribution'
 import type { CardDataV2 } from './analyzers/types'
@@ -161,6 +162,9 @@ export async function buildCardData(
       usage,
       languages,
       pattern,
+      // Contribution record over the same 12-week window; degrades to zeros when the
+      // field is absent/restricted. Display-only — not fed into stats/grade/power.
+      record: analyzeRecord(userData.contributionsCollection, now),
       flavor: flavorText({
         pattern: pattern.pattern,
         topToolName: toolAttribution.tools.find((t) => t.toolId !== 'unknown')?.toolName ?? null,

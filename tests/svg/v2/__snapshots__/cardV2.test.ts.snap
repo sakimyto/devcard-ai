@@ -181,6 +181,12 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="72" y="824" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
 <circle cx="232" cy="818" r="7" fill="#3572A5" />
 <text x="252" y="824" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<text x="44" y="850" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">RECORD</text>
+<text x="44" y="892" font-size="13" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">EXP</text>
+<text x="84" y="892" font-size="28" fill="#a371f7" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">1,240</text>
+
+<text x="405" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
+<text x="706" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
 <line x1="104" y1="924" x2="646" y2="924" stroke="#30363d" stroke-width="1" />
 <text x="375" y="954" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
@@ -378,6 +384,12 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="72" y="824" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
 <circle cx="232" cy="818" r="7" fill="#3572A5" />
 <text x="252" y="824" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<text x="44" y="850" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">RECORD</text>
+<text x="44" y="892" font-size="13" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">EXP</text>
+<text x="84" y="892" font-size="28" fill="#6f42c1" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">1,240</text>
+
+<text x="405" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
+<text x="706" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
 <line x1="104" y1="924" x2="646" y2="924" stroke="#e1e4e8" stroke-width="1" />
 <text x="375" y="954" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
@@ -575,6 +587,12 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="72" y="824" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
 <circle cx="232" cy="818" r="7" fill="#3572A5" />
 <text x="252" y="824" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<text x="44" y="850" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">RECORD</text>
+<text x="44" y="892" font-size="13" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">EXP</text>
+<text x="84" y="892" font-size="28" fill="#a371f7" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">1,240</text>
+
+<text x="405" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
+<text x="706" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
 <line x1="104" y1="924" x2="646" y2="924" stroke="#30363d" stroke-width="1" />
 <text x="375" y="954" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
@@ -772,6 +790,12 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="72" y="824" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
 <circle cx="232" cy="818" r="7" fill="#3572A5" />
 <text x="252" y="824" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<text x="44" y="850" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">RECORD</text>
+<text x="44" y="892" font-size="13" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">EXP</text>
+<text x="84" y="892" font-size="28" fill="#6f42c1" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">1,240</text>
+
+<text x="405" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
+<text x="706" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
 <line x1="104" y1="924" x2="646" y2="924" stroke="#e1e4e8" stroke-width="1" />
 <text x="375" y="954" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
@@ -969,6 +993,12 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="72" y="824" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
 <circle cx="232" cy="818" r="7" fill="#3572A5" />
 <text x="252" y="824" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<text x="44" y="850" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">RECORD</text>
+<text x="44" y="892" font-size="13" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">EXP</text>
+<text x="84" y="892" font-size="28" fill="#a371f7" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">1,240</text>
+
+<text x="405" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
+<text x="706" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
 <line x1="104" y1="924" x2="646" y2="924" stroke="#30363d" stroke-width="1" />
 <text x="375" y="954" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
@@ -1166,6 +1196,12 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="72" y="824" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
 <circle cx="232" cy="818" r="7" fill="#3572A5" />
 <text x="252" y="824" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<text x="44" y="850" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">RECORD</text>
+<text x="44" y="892" font-size="13" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">EXP</text>
+<text x="84" y="892" font-size="28" fill="#6f42c1" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">1,240</text>
+
+<text x="405" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
+<text x="706" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
 <line x1="104" y1="924" x2="646" y2="924" stroke="#e1e4e8" stroke-width="1" />
 <text x="375" y="954" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
@@ -1363,6 +1399,12 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="72" y="824" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
 <circle cx="232" cy="818" r="7" fill="#3572A5" />
 <text x="252" y="824" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<text x="44" y="850" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">RECORD</text>
+<text x="44" y="892" font-size="13" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">EXP</text>
+<text x="84" y="892" font-size="28" fill="#a371f7" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">1,240</text>
+
+<text x="405" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
+<text x="706" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
 <line x1="104" y1="924" x2="646" y2="924" stroke="#30363d" stroke-width="1" />
 <text x="375" y="954" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
@@ -1560,6 +1602,12 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="72" y="824" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
 <circle cx="232" cy="818" r="7" fill="#3572A5" />
 <text x="252" y="824" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<text x="44" y="850" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">RECORD</text>
+<text x="44" y="892" font-size="13" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">EXP</text>
+<text x="84" y="892" font-size="28" fill="#6f42c1" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">1,240</text>
+
+<text x="405" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
+<text x="706" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
 <line x1="104" y1="924" x2="646" y2="924" stroke="#e1e4e8" stroke-width="1" />
 <text x="375" y="954" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
@@ -1789,6 +1837,12 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="72" y="824" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
 <circle cx="232" cy="818" r="7" fill="#3572A5" />
 <text x="252" y="824" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<text x="44" y="850" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">RECORD</text>
+<text x="44" y="892" font-size="13" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">EXP</text>
+<text x="84" y="892" font-size="28" fill="#a371f7" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">1,240</text>
+
+<text x="405" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
+<text x="706" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
 <line x1="104" y1="924" x2="646" y2="924" stroke="#30363d" stroke-width="1" />
 <text x="375" y="954" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
@@ -2018,6 +2072,12 @@ exports[`renderCardV2 > all five grades render for both themes (golden snapshots
 <text x="72" y="824" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
 <circle cx="232" cy="818" r="7" fill="#3572A5" />
 <text x="252" y="824" font-size="18" fill="#24292e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<text x="44" y="850" font-size="15" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">RECORD</text>
+<text x="44" y="892" font-size="13" fill="#586069" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">EXP</text>
+<text x="84" y="892" font-size="28" fill="#6f42c1" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">1,240</text>
+
+<text x="405" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
+<text x="706" y="892" font-size="13" fill="#586069" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
 <line x1="104" y1="924" x2="646" y2="924" stroke="#e1e4e8" stroke-width="1" />
 <text x="375" y="954" font-size="19" fill="#586069" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">
@@ -2210,6 +2270,12 @@ exports[`renderCardV2 > renders assisted chips with icons and the "· assisted" 
 <text x="72" y="824" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TypeScript</text>
 <circle cx="232" cy="818" r="7" fill="#3572A5" />
 <text x="252" y="824" font-size="18" fill="#c9d1d9" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Python</text>
+<text x="44" y="850" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">RECORD</text>
+<text x="44" y="892" font-size="13" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">EXP</text>
+<text x="84" y="892" font-size="28" fill="#a371f7" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">1,240</text>
+
+<text x="405" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 210c · 18pr · 34rev</text>
+<text x="706" y="892" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 7d streak</text>
 <line x1="104" y1="924" x2="646" y2="924" stroke="#30363d" stroke-width="1" />
 <text x="375" y="954" font-size="19" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Trades keystrokes with Claude, line for line.</text>
 <g transform="translate(614 56)">

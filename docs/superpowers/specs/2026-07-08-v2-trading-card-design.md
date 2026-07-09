@@ -46,8 +46,9 @@ AI Native / Pair Programmer / Delegator / Selective User を「クラス」と�
 4. **ステータス（6角レーダー + 数値列 + POWER)**: 左に6軸レーダー（VELOCITY / DIVERSITY / SYNERGY / CONSISTENCY / RANGE / FLOW、上から時計回り、25/50/75/100 の同心6角グリッド）、右に同6軸の数値列、STATS ヘッダ右端に **POWER**（総合戦闘力・千位カンマ・9000超はゴールド）。従来の縦バー3本は廃止
 5. ツールロードアウト: ツール名 + シェア%（チップ表示）
 6. 言語タイプアイコン（上位3言語）
-7. フレーバーテキスト: データから決定論生成する一行（テンプレート × 条件分岐。LLM 不使用）
-8. フッター: カードシリアル（username hash 由来 4 桁 hex + `2026`)+ データ窓表記 `public · 12wk` + devcard-ai クレジット
+7. **RECORD ストリップ**（v2.5 追加・TYPES とフレーバーの間、予約帯 y 850-910）: 左に `EXP {総コントリビューション:カンマ区切り}`（大きめの数字・accent・ミニ POWER 風。restricted 込みなら右肩に小さく `incl. private`)、中央に `{commits}c · {prs}pr · {reviews}rev`（issues は非表示)、右に `{現在ストリーク}d streak`（現在 0 なら `best {最長}d`、両方 0 なら streak 部分ごと非表示)。マーカーは絵文字（⚔/🔥）が GitHub の SVG ラスタライザで潰れるためテキストグリフ（`›`/`▲`)を採用。**Grade/POWER には一切算入しない（表示専用・ティア不変)**
+8. フレーバーテキスト: データから決定論生成する一行（テンプレート × 条件分岐。LLM 不使用）
+9. フッター: カードシリアル（username hash 由来 4 桁 hex + `2026`)+ データ窓表記 `public · 12wk` + devcard-ai クレジット
 
 light / dark 両テーマ維持。OGP 横長シェア画像にも名前左のアバター（半径40）と、ティアジェム下の大きな POWER を反映する（レーダーは入れず縦バー3本のまま）。
 
@@ -75,6 +76,7 @@ light / dark 両テーマ維持。OGP 横長シェア画像にも名前左のア
 - **FLOW**（v2.2 追加・レーダー軸）: 窓内コミットの人間↔AI交互性。`round(100 * alternationScore)`（pattern.alternationScore を窓内コミットで算出）
 - **POWER**（v2.2 追加・総合戦闘力): `round((velocity+diversity+consistency+synergy+range+flow) * 17)`（最大 10,200）。トップ層だけが 9000 を超えられる意図的キャリブレーション（over-9000 ミーム）。9000 超で表示色をゴールドに切替
 - **Grade**: **従来 3 軸のまま**（VELOCITY 40% / DIVERSITY 30% / CONSISTENCY 30%、閾値 80/60/40/20)。v2.2 で追加した SYNERGY/RANGE/FLOW/POWER は**表示専用でティア計算に一切寄与しない**（既存ユーザーのティアは動かない — golden/anchor テストが無変更で緑であることで検証)。数字とレアリティが同じ物語を語る
+- **戦績（RECORD・v2.5 追加)**: `contributionsCollection(from: $since)` で取得（同一 12 週窓・追加リクエストなし・既存クエリにフィールド追加のみ)。EXP = `contributionCalendar.totalContributions`、commits/prs/reviews = 各 `total*Contributions`。restricted（非公開）は**ユーザーが GitHub 側で公開設定にした場合のみ**含まれ、`restrictedContributionsCount > 0` のとき `incl. private` を明示。ストリークは now 注入の決定論計算（日付は UTC 日で突合、今日が 0 なら昨日から現在ストリークを数える)。フィールド欠落・権限制限時は全て 0 で劣化描画（クラッシュ禁止)。**Grade/POWER には算入しない**
 
 ## Section 3: 技術品質・堅牢性
 
