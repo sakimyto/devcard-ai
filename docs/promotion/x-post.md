@@ -1,16 +1,25 @@
-2020 年ごろ、みんな GitHub プロフィールに Stats Card 貼ってませんでした？
+# X Post (日本語) — v2 Trading Card Edition
 
-草の数、スター総数、Top Languages、Streak…
-あの「自分の開発ライフをカードで見せたい」気持ち、AI 時代にもう一回やりたくないですか。
+2020年ごろ、みんな GitHub プロフィールに Stats Card 貼ってませんでした？
 
-`devcard-ai` を作りました。あの頃の Stats Card の **AI ツール版** です 🤖
+草の数、Top Languages、Streak…
+あの「自分の開発ライフをカードで見せたい」気持ちの AI 時代版を、今度は**トレカ**にしました 🎴
 
-Co-Authored-By トレイラを解析して、どの AI ツールでどう出荷してるかをカードにします。
-Claude / Codex / Copilot / Cursor / Windsurf / Aider / Cody / Amazon Q / Gemini / Devin / Sweep 対応。
+devcard-ai — 公開コミットから「AI Builder トレーディングカード」を召喚します。
 
-12 週ぶんの ship cadence sparkline (草の AI 版) や Verified ✓、Builder Archetype チップも入ってます。
+⚡ レアリティ枠 — S ティアは README 上でホロ加工がアニメーションする
+🎭 アーキタイプ — AI Native / Pair Programmer / Delegator / Selective User
+📊 ステータス — VELOCITY / DIVERSITY / CONSISTENCY（全部同じ12週窓なので矛盾しない）
+🎨 ユーザー名シードの生成アート — 全員絵柄が違う
+🔢 カードシリアル付き
 
-README に 1 行 👇
-`![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME&theme=dark)`
+Claude / Codex / Copilot / Cursor などをコミット証跡から検出。CLAUDE.md や .cursorrules があるリポジトリを持っていると「equipped」バッジも付きます。
 
-https://devcard-ai.sakimyto.workers.dev/?user=sakimyto
+README に1行:
+`[![AI Builder Trading Card](https://devcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark)](https://devcard.sakimyto.com/#YOUR_USERNAME)`
+
+60秒で召喚 → https://devcard.sakimyto.com
+
+---
+
+投稿時メモ: 英語版の24〜48時間後に投下。カード画像を添付

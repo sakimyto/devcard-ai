@@ -1,131 +1,94 @@
-# Community Posts
+# Community Posts — v2 Trading Card Edition
+
+## Hacker News (Show HN) — 最優先
+
+**Title:** Show HN: Your AI coding style as a trading card, from Co-Authored-By trailers
+
+A few years back, every other GitHub profile README had `anuraghazra/github-readme-stats` cards — grass count, top languages, a streak counter. The whole "my README is a trading card" aesthetic that quietly faded.
+
+I took that literally and built devcard-ai: it reads your public commit history and renders an actual trading card of your AI coding style, as pure SVG you can embed with one line of markdown.
+
+The trading-card grammar:
+
+- Rarity frame decided by your tier — S renders an animated holo border (SMIL, works inside GitHub's camo-proxied `<img>`), then gold / silver / bronze / common
+- Archetype class: AI Native / Pair Programmer / Delegator / Selective User (from AI-commit ratio + how you interleave human and AI commits)
+- Stats: VELOCITY / DIVERSITY / CONSISTENCY (0-100). Every metric shares the same 12-week public window, so the card can't contradict itself
+- Generative geometric art seeded by your username hash — deterministic, unique per user
+- A card serial derived from the same hash
+
+Detection goes beyond `Co-Authored-By:` trailers: generator markers ("Generated with Claude Code" etc.), bot authors, and "equipped" badges when your repos carry CLAUDE.md / AGENTS.md / .cursorrules / copilot-instructions.
+
+Stack: Cloudflare Workers + GitHub GraphQL (`history(since:)` for the window), KV stale-if-error cache, Analytics Engine, @resvg/resvg-wasm with subset Inter fonts for the 1200×630 OGP share image. No LLM calls anywhere — everything is deterministic.
+
+Live: https://devcard.sakimyto.com/#sakimyto
+Repo: https://github.com/sakimyto/devcard-ai
+
+Honest limitation: it only sees public repos, so private-heavy builders (me included — I grade a C) rank lower than their real activity. An opt-in OAuth "Verified+" mode that counts private contribution numbers (never code) is the planned v2.x.
+
+Happy to take feedback on the rubric — archetype boundaries, tier thresholds, tools to add.
+
+---
+
+## Reddit r/ClaudeAI
+
+**Title:** I turned your Claude coding habits into a trading card for your GitHub README
+
+devcard-ai reads Co-Authored-By trailers and "Generated with Claude Code" markers in your public commits and summons an AI Builder Trading Card: rarity frame (S tier = animated holo), archetype (AI Native / Pair Programmer / Delegator / Selective User), VELOCITY / DIVERSITY / CONSISTENCY stats from a 12-week window, and generative art unique to your username.
+
+If your repos carry a CLAUDE.md, the card shows a Claude "equipped" badge even beyond the commit evidence.
+
+One line in your README:
+
+```markdown
+[![AI Builder Trading Card](https://devcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark)](https://devcard.sakimyto.com/#YOUR_USERNAME)
+```
+
+Summon: https://devcard.sakimyto.com — feedback on the tier rubric welcome.
+
+---
+
+## Reddit r/cursor
+
+**Title:** devcard-ai — a trading card of your AI coding style (Cursor detected via commit evidence + .cursorrules)
+
+Cursor users get detected two ways: commit evidence (Co-Authored-By / generator markers) and an "equipped" badge if your repos carry .cursorrules or .cursor/rules. The card shows rarity frame, archetype, 12-week stats, and generative art seeded by your username.
+
+```markdown
+[![AI Builder Trading Card](https://devcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark)](https://devcard.sakimyto.com/#YOUR_USERNAME)
+```
+
+https://devcard.sakimyto.com
+
+---
+
+## Reddit r/GithubProfileReadme
+
+**Title:** AI Builder Trading Card — rarity frames, archetypes and stats from your commit history
+
+The classic github-readme-stats energy, but as a full trading card for the AI coding era. S-tier cards get an animated holo frame that actually animates inside your README. Every stat comes from the same public 12-week window. Light/dark themes.
+
+```markdown
+[![AI Builder Trading Card](https://devcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark)](https://devcard.sakimyto.com/#YOUR_USERNAME)
+```
+
+https://devcard.sakimyto.com
+
+---
 
 ## Claude Community (Discord / Forum)
 
-**Title:** I built an AI version of the classic GitHub Stats Card
+**Title:** Your Claude coding style as a trading card
 
-Remember when everyone had a Stats Card on their GitHub profile README around 2020-2022? The `anuraghazra/github-readme-stats` one with grass count, stars, top languages, that streak counter. The whole "make your README a little personal trading card" vibe.
+Built devcard-ai — it summons an AI Builder Trading Card from your public GitHub activity: rarity frame by tier (S = animated holo), archetype class, VELOCITY / DIVERSITY / CONSISTENCY, generative art unique to your username, and a Claude "equipped" badge when your repos carry CLAUDE.md.
 
-I missed that. So I built **devcard-ai** — the AI coding tool version of the same idea.
-
-It analyzes `Co-Authored-By` trailers in your commits and renders a card showing which AI tools you use and how. 11 tools detected: Claude, Codex, Copilot, Cursor, Windsurf, Aider, Cody, Amazon Q, Gemini, Devin, Sweep.
-
-The card shows:
-
-- Tool attribution ratio (stacked bar)
-- 12-week ship cadence (sparkline + AI commits per week)
-- Usage breakdown: feature / bugfix / test / refactor (donut)
-- Achievement badges: Multi-Tool, Parallel, TDD with AI, Shipper
-- Builder Archetype: AI Native / Pair Programmer / Delegator / Selective User
-- Verified ✓ mark (derived from your commit trail — non-fakeable)
-- TIER S–D + light/dark themes
-
-One line in your README:
-
-```markdown
-![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME&theme=dark)
-```
-
-Built with Cloudflare Workers + GitHub GraphQL API. Pure SVG so it renders directly in GitHub READMEs (no JS, no external fonts).
-
-Try it: https://devcard-ai.sakimyto.workers.dev/
+Pure SVG, one line of markdown, 60 seconds: https://devcard.sakimyto.com
 
 ---
 
-## Cursor Community (Forum)
+## 投下順序（戦略文書の行動4）
 
-**Title:** devcard-ai — an AI version of the GitHub Stats Card
-
-Made a service that reads `Co-Authored-By` commit trailers to show which AI tools you use. Cursor commits (`Co-Authored-By: Cursor`) are detected alongside Claude, Codex, Copilot and 7 others.
-
-Beyond tool attribution, the card shows:
-
-- 12-week ship cadence sparkline
-- Usage categories (feature / bugfix / test / refactor)
-- Builder Archetype + TIER + Verified ✓ mark
-- Light/dark themes
-
-One line in your GitHub README:
-
-```markdown
-![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME&theme=dark)
-```
-
-Try it: https://devcard-ai.sakimyto.workers.dev/
-
----
-
-## Reddit r/programming
-
-**Title:** I built an "AI Dev Card" — that classic GitHub Stats Card vibe, but for AI tool usage
-
-Remember the era of putting `anuraghazra/github-readme-stats` cards on every GitHub profile? Top Languages, Streak counter, the whole "my README is my trading card" energy. I built the AI coding version of that. Same vibe, different signal.
-
-It analyzes your Co-Authored-By commit trailers and visualizes which AI tools you use and how.
-
-Supports 11 tools: Claude, Codex, Copilot, Cursor, Windsurf, Aider, Cody, Amazon Q, Gemini, Devin, Sweep.
-
-What it shows:
-
-- Which AI tools you use and in what mix (stacked bar)
-- A 12-week ship cadence sparkline (so it doesn't degrade to a stale snapshot)
-- Usage categories (feature / bugfix / test / refactor)
-- Builder Archetype (AI Native / Pair Programmer / Delegator / Selective User)
-- TIER S–D + Verified ✓ mark (derived from commit trailers — non-fakeable)
-
-One line in your README:
-
-```markdown
-![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME&theme=dark)
-```
-
-Built with Cloudflare Workers, GitHub GraphQL API, pure SVG. Repo: https://github.com/sakimyto/devcard-ai
-
-Try it: https://devcard-ai.sakimyto.workers.dev/
-
----
-
-## Reddit r/ChatGPT / r/ClaudeAI
-
-**Title:** devcard-ai: an AI version of the classic GitHub Stats Card
-
-Remember those GitHub profile READMEs full of Stats Cards a few years back? I missed that aesthetic, so I built the AI tool version.
-
-It analyzes your GitHub commits for `Co-Authored-By` trailers and shows your AI tool usage visually.
-
-Detects Claude, Codex, Copilot, Cursor, Windsurf, Aider, Cody, Amazon Q, Gemini, Devin, and Sweep.
-
-Beyond a tool ratio, it shows your 12-week ship cadence, builder archetype, and a Verified ✓ mark derived from the commit trail.
-
-Add to your GitHub README:
-
-```markdown
-![AI Dev Card](https://devcard-ai.sakimyto.workers.dev/?user=YOUR_USERNAME&theme=dark)
-```
-
-https://devcard-ai.sakimyto.workers.dev/
-
----
-
-## Hacker News (Show HN)
-
-**Title:** Show HN: AI Dev Card — the AI tool version of the classic GitHub Stats Card
-
-A few years back, every other GitHub profile README had `anuraghazra/github-readme-stats` cards on it — grass count, top languages, a streak counter. The whole "my README is a trading card" aesthetic that quietly faded.
-
-I built `devcard-ai` — same energy, but the metric is your AI coding tool usage instead of language stats. It parses Co-Authored-By trailers in your commit history and renders a pure-SVG card you can drop into your README.
-
-What it surfaces:
-
-- Tool attribution across 11 AI coding tools (Claude / Codex / Copilot / Cursor / Windsurf / Aider / Cody / Amazon Q / Gemini / Devin / Sweep)
-- 12-week ship cadence sparkline + AI commits per week
-- Usage categories (feature / bugfix / test / refactor) and primary languages
-- Builder Archetype (AI Native / Pair Programmer / Delegator / Selective User)
-- TIER S–D and a Verified ✓ mark derived from the commit trail
-
-Stack: Cloudflare Workers + GitHub GraphQL API + pure SVG (no JS, no external fonts — renders inline in GitHub READMEs). OGP previews via @resvg/resvg-wasm.
-
-Live: https://devcard-ai.sakimyto.workers.dev/?user=sakimyto
-Repo: https://github.com/sakimyto/devcard-ai
-
-Happy to take feedback on the rubric (archetypes, tier thresholds, tools to add).
+1. Show HN（平日 US 朝 = JST 22-24時 が初速最良）
+2. Reddit r/ClaudeAI → r/cursor → r/GithubProfileReadme（同日〜翌日、コピペでなく各 sub の文体に合わせ済み）
+3. X 英語（HN/Reddit の反応を引用できるとなお良い）
+4. 24-48h 後: X 日本語 + Zenn 公開
+5. Product Hunt は初速が付いた場合のみ
