@@ -10,7 +10,7 @@ import { analyzeRecord } from './analyzers/record'
 import { analyzeStats } from './analyzers/stats'
 import { analyzeToolAttributionV2 } from './analyzers/toolAttribution'
 import { analyzeTraits } from './analyzers/traits'
-import type { CardDataV2 } from './analyzers/types'
+import type { CardDataV2, Grade } from './analyzers/types'
 import { analyzeUsage } from './analyzers/usage'
 import { WINDOW_DAYS, filterToWindow } from './analyzers/window'
 import { artSeed, cardSerial } from './card/serial'
@@ -30,6 +30,11 @@ export interface HandlerResult {
   svg: string
   status: number
   kind: HandlerKind
+  // ギャラリー記録用の表示専用値（ok のみ設定）。element は element.id。
+  grade?: Grade
+  power?: number
+  element?: string
+  epithet?: string
 }
 
 type GraphqlFn = (query: string, variables: Record<string, unknown>) => Promise<GitHubQueryResponse>
@@ -218,7 +223,15 @@ export async function handleRequest(
   const { theme } = params
   const r = await buildCardData(params, graphql, now)
   if (r.kind === 'ok' && r.data) {
-    return { svg: renderCardV2(r.data, { theme }), status: 200, kind: 'ok' }
+    return {
+      svg: renderCardV2(r.data, { theme }),
+      status: 200,
+      kind: 'ok',
+      grade: r.data.stats.grade,
+      power: r.data.stats.power,
+      element: r.data.element.id,
+      epithet: r.data.epithet,
+    }
   }
   return {
     svg: renderErrorCard(r.errorMessage ?? 'Temporarily unavailable', theme),

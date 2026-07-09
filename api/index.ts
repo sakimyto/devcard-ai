@@ -1,6 +1,7 @@
 import { App } from '@octokit/app'
 import { recordRender } from '../src/analytics'
 import { getCachedOrProduce } from '../src/cache'
+import { listGallery, recordGallery } from '../src/gallery'
 import type { GitHubQueryResponse } from '../src/github/types'
 import { buildCardData, handleRequest } from '../src/handler'
 import { renderLandingPage } from '../src/landing'
@@ -67,6 +68,11 @@ interface ResolvedCard {
   svg: string
   kind: string
   cacheState: string
+  // ギャラリー記録用（ok の miss 時のみ意味を持つ表示値）
+  grade?: string
+  power?: number
+  element?: string
+  epithet?: string
 }
 
 // KV SWR 経由でカードを解決する。GitHub App 認証は produce 内（miss/expired 時のみ）に
@@ -87,12 +93,27 @@ async function resolveCard(user: string, theme: string, env: Env): Promise<Resol
         const result = await handleRequest({ user, theme }, createGraphql(octokit))
         // エラーカードはキャッシュせず throw して stale 供給に切り替える
         if (result.kind === 'error') throw new Error('upstream error')
-        return { svg: result.svg, kind: result.kind }
+        return {
+          svg: result.svg,
+          kind: result.kind,
+          grade: result.grade,
+          power: result.power,
+          element: result.element,
+          epithet: result.epithet,
+        }
       },
       shouldCache: (v) =>
         v.kind === 'ok' || v.kind === 'not_found' || v.kind === 'no_ai' || v.kind === 'no_repos',
     })
-    return { svg: cached.value.svg, kind: cached.value.kind, cacheState: cached.cacheState }
+    return {
+      svg: cached.value.svg,
+      kind: cached.value.kind,
+      cacheState: cached.cacheState,
+      grade: cached.value.grade,
+      power: cached.value.power,
+      element: cached.value.element,
+      epithet: cached.value.epithet,
+    }
   } catch {
     return { svg: renderPlaceholderCard(user, theme), kind: 'placeholder', cacheState: 'none' }
   }
@@ -121,7 +142,7 @@ function rateLimitedResponse(): Response {
 }
 
 export default {
-  async fetch(req: Request, env: Env): Promise<Response> {
+  async fetch(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(req.url)
     const pathname = url.pathname
 
@@ -130,6 +151,17 @@ export default {
     if (url.hostname === 'devcard-ai.sakimyto.workers.dev') {
       url.hostname = 'devcard.sakimyto.com'
       return Response.redirect(url.toString(), 301)
+    }
+
+    // 召喚ギャラリー: 直近召喚者一覧（KV metadata 由来、at 降順 top24）。60s キャッシュ。
+    if (pathname === '/api/gallery') {
+      const entries = await listGallery(env.DEVCARD_KV)
+      return new Response(JSON.stringify(entries), {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'public, max-age=60',
+        },
+      })
     }
 
     // /og endpoint — returns a 1200x630 landscape PNG share image
@@ -200,6 +232,20 @@ export default {
     if (await rateLimited(req, env)) return rateLimitedResponse()
     const card = await resolveCard(user, theme, env)
     recordRender(env.CARD_ANALYTICS, { user, theme, kind: card.kind, cacheState: card.cacheState })
+
+    // 召喚ギャラリー記録: ok の miss（fresh 生成）時のみ。fresh hit では書かず KV 無料枠に収める。
+    // fire-and-forget（waitUntil）でレスポンスをブロックしない。
+    if (card.kind === 'ok' && card.cacheState === 'miss') {
+      ctx.waitUntil(
+        recordGallery(env.DEVCARD_KV, user, {
+          at: Date.now(),
+          grade: card.grade,
+          power: card.power,
+          element: card.element,
+          epithet: card.epithet,
+        }),
+      )
+    }
 
     // not_found: HTML を明示要求するクライアント（ブラウザ直叩き）には 404、
     // 画像コンテキスト（GitHub camo / <img>）には 200 + エラーカード SVG を返す。
