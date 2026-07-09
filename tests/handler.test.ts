@@ -52,7 +52,7 @@ describe('handleRequest v2', () => {
     expect(r.kind).toBe('ok')
     expect(r.status).toBe(200)
     expect(r.svg).toContain('width="750"')
-    expect(r.svg).toContain('public · 12wk')
+    expect(r.svg).toContain('public 12wk')
     expect(r.svg).toContain('testuser')
   })
 

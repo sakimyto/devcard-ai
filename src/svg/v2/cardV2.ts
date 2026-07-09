@@ -3,7 +3,7 @@ import { type Theme, getTheme } from '../themes'
 import { escapeXml, svgRect, svgText, wrapText } from '../utils'
 import { renderArt, renderSparkles } from './art'
 import { renderEmblem } from './emblem'
-import { TIER_GEM_GRADIENT, renderFrame } from './frame'
+import { TIER_GEM_COLORS, TIER_GEM_GRADIENT, renderFrame } from './frame'
 import { renderElementGlyph, renderStatGlyph, renderToolIcon } from './icons'
 import { renderRadar } from './radar'
 
@@ -17,14 +17,15 @@ export const CARD_W = 750
 export const CARD_H = 1050
 const PAD = 44
 
-// Tier gem occupies the top-right corner (left edge at CARD_W - PAD - 92).
-// Shrink the nameplate so a max-length (39-char GitHub login) username never
-// slides under the gem. Uses an approx bold-glyph advance of 0.58em; short
-// names stay at the 42px hero size.
-const NAME_MAX_WIDTH = CARD_W - PAD - 92 - 16 - PAD // 554px, name x=PAD → gem
-function nameFontSize(len: number): number {
-  const fit = Math.floor(NAME_MAX_WIDTH / (Math.max(1, len) * 0.58))
-  return Math.max(20, Math.min(42, fit))
+// POWER now sits at the HP position on the nameplate (top-right, left of the gem),
+// so the username shares its row with the POWER block instead of the gem. The name
+// must clear the POWER block's left edge; nameFontSize takes the available width and
+// shrinks a long login to fit. Uses an approx bold-glyph advance of 0.58em; short
+// names stay at the 42px hero size. Min 17 keeps the 39-char worst case (max-length
+// login + a 6-digit gold POWER) from ever crossing into the number.
+function nameFontSize(len: number, maxWidth: number): number {
+  const fit = Math.floor(maxWidth / (Math.max(1, len) * 0.58))
+  return Math.max(17, Math.min(42, fit))
 }
 
 // Markers for the RECORD strip. Emoji render as flat monochrome glyphs in GitHub's SVG
@@ -36,6 +37,21 @@ const STREAK_GLYPH = '▲'
 // Thousands separator without Intl (deterministic across runtimes): 6340 → "6,340".
 function withCommas(n: number): string {
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
+// Pulls the headline number out of a trait proof so it can render big and right-aligned
+// like an attack's damage number. Takes the FIRST number and its immediately-following
+// unit: `65%`→"65%", `7-day`/`5 days`→"7d"/"5d", `12 weeks`→"12w", plain→the number.
+// Proofs with no number (e.g. "Ships mostly bare-handed") yield null → no right value.
+function traitMainValue(proof: string): string | null {
+  const m = proof.match(/(\d[\d,]*)(%|[\s-]days?\b|\s*weeks?\b)?/)
+  if (!m) return null
+  const n = m[1]
+  const u = m[2] ?? ''
+  if (u.includes('%')) return `${n}%`
+  if (/day/.test(u)) return `${n}d`
+  if (/week/.test(u)) return `${n}w`
+  return n
 }
 
 // Small filled diamond marker for the derived radar axes (SYNERGY/RANGE/FLOW) that
@@ -108,18 +124,49 @@ export function renderCardV2(data: CardDataV2, options: { theme: string }): stri
 <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" stitchTiles="stitch" result="n" />
 <feColorMatrix in="n" type="saturate" values="0" result="g" />
 <feComponentTransfer in="g"><feFuncA type="linear" slope="0.5" /></feComponentTransfer>
-</filter>`
+</filter>
+<filter id="powerGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3.5" /></filter>
+<radialGradient id="energyGrad" cx="34%" cy="28%" r="70%">
+<stop offset="0%" stop-color="#ffffff" stop-opacity="0.92" />
+<stop offset="26%" stop-color="${data.element.color}" />
+<stop offset="100%" stop-color="${data.element.color}" />
+</radialGradient>
+<linearGradient id="rarityHolo" x1="0" y1="0" x2="1" y2="0">
+<stop offset="0%" stop-color="#ff6ec7" />
+<stop offset="35%" stop-color="#ffc36e" />
+<stop offset="65%" stop-color="#6ef3ff" />
+<stop offset="100%" stop-color="#a06eff" />
+</linearGradient>`
   // Full-card film grain: monochrome fractal noise at very low opacity — felt, not seen.
   // Clipped to the rounded card so corners stay clean; sits above the art but below text.
   const grain = `<g clip-path="url(#cardClip)"><rect x="0" y="0" width="${CARD_W}" height="${CARD_H}" filter="url(#cardGrain)" opacity="0.038" /></g>`
 
   // --- name plate (embossed panel behind the identity block) ---
+  // POWER lives here now, at the Pokémon HP position: label on the AI BUILDER line,
+  // big number on the username baseline, both right-aligned at the plate's inner edge
+  // and left of the tier gem. Gold past 9000, with a soft glow halo on the number.
+  const power = data.stats.power
+  const powerColor = power >= 9000 ? '#f0b429' : theme.accent
+  const powerStr = withCommas(power)
+  const POWER_RIGHT = 572 // plate inner right edge (28 + 560 - 16)
+  const POWER_NUM_SIZE = 32
+  const powerNumW = Math.ceil(powerStr.length * POWER_NUM_SIZE * 0.6)
+  // Name shares the row with POWER: available width runs from the name origin to the
+  // POWER block's left edge, less an 18px gap.
+  const nameMaxW = POWER_RIGHT - powerNumW - 18 - PAD
+  const powerGlow =
+    power >= 9000
+      ? `<text x="${POWER_RIGHT}" y="128" font-size="${POWER_NUM_SIZE}" fill="${powerColor}" font-weight="bold" text-anchor="end" opacity="0.55" filter="url(#powerGlow)">${powerStr}</text>`
+      : ''
   const plate = `<rect x="28" y="64" width="560" height="82" rx="14" fill="url(#plateGrad)" />
 <rect x="28" y="64" width="560" height="82" rx="14" fill="none" stroke="${theme.border}" stroke-opacity="0.6" stroke-width="1" />
 <line x1="42" y1="65.5" x2="574" y2="65.5" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1" />`
   const namePlate = `${plate}
 ${svgText(PAD, 84, 'AI BUILDER', { fontSize: 16, fill: theme.textSecondary, fontWeight: '600' })}
-${svgText(PAD, 128, data.username, { fontSize: nameFontSize(data.username.length), fill: theme.text, fontWeight: 'bold' })}`
+<text x="${POWER_RIGHT}" y="84" font-size="12" fill="${theme.textSecondary}" font-weight="600" text-anchor="end" letter-spacing="2" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">POWER</text>
+${powerGlow}
+${svgText(POWER_RIGHT, 128, powerStr, { fontSize: POWER_NUM_SIZE, fill: powerColor, fontWeight: 'bold', anchor: 'end' })}
+${svgText(PAD, 128, data.username, { fontSize: nameFontSize(data.username.length, nameMaxW), fill: theme.text, fontWeight: 'bold' })}`
 
   // --- archetype row: emblem + epithet name + ✓verified + element chip ---
   // The emblem still reflects the internal PatternType (retained for flavor), but the
@@ -138,21 +185,25 @@ ${svgText(PAD, 128, data.username, { fontSize: nameFontSize(data.username.length
   const verified = data.toolAttribution.verified
     ? svgText(afterEpithetX, rowTextY, '✓ verified', { fontSize: 16, fill: theme.textSecondary })
     : ''
-  // Element chip: glyph + label, element-colored outline over a 15% tint. Sits after
-  // verified; epithets are short and this row is clear of the 39-char nameplate, so no
-  // right-edge collision. hex + '26' ≈ 15% alpha fill.
+  // Energy symbol: a round element-colored token (radial gradient + top-left specular
+  // + white glyph), like a Pokémon energy pip, with a short label to its right. Sits
+  // after verified; epithets are short and this row is clear of the 39-char nameplate.
   const chipStartX = afterEpithetX + (data.toolAttribution.verified ? 96 : 0)
   const elLabel = data.element.label
-  const elChipGlyph = 14
-  const elChipPadX = 10
-  const elChipGap = 6
-  const elChipTextX = elChipPadX + elChipGlyph + elChipGap
-  const elChipW = elChipTextX + Math.ceil(elLabel.length * 9) + elChipPadX
-  const elChipH = 28
-  const elChipY = archetypeY + 4
-  const elementChip = `<rect x="${chipStartX}" y="${elChipY}" width="${elChipW}" height="${elChipH}" rx="14" fill="${data.element.color}26" stroke="${data.element.color}" stroke-width="1.5" />
-${renderElementGlyph(data.element.id, chipStartX + elChipPadX, elChipY + (elChipH - elChipGlyph) / 2, elChipGlyph, data.element.color)}
-${svgText(chipStartX + elChipTextX, elChipY + 19, elLabel, { fontSize: 15, fill: theme.text, fontWeight: '600', anchor: 'start' })}`
+  const enR = 14
+  const enCx = chipStartX + enR
+  const enCy = archetypeY + 17 // centers the token on the epithet/verified row baseline
+  const enGlyph = 18
+  // Glossy energy pip: radial body, dark rim for a printed edge, a soft top-left specular
+  // plus a small bright catch-light (top light source), the white element glyph, and a
+  // faint lower-inner shade so the disc reads as a dome rather than a flat circle.
+  const energyMark = `<circle cx="${enCx}" cy="${enCy}" r="${enR}" fill="url(#energyGrad)" />
+<path d="M ${enCx - enR + 2} ${enCy + 3} A ${enR - 2} ${enR - 2} 0 0 0 ${enCx + enR - 2} ${enCy + 3}" fill="none" stroke="#000000" stroke-opacity="0.18" stroke-width="2.5" />
+<circle cx="${enCx}" cy="${enCy}" r="${enR}" fill="none" stroke="#000000" stroke-opacity="0.25" stroke-width="1" />
+<ellipse cx="${enCx - 4}" cy="${enCy - 5}" rx="6.5" ry="4.5" fill="#ffffff" fill-opacity="0.45" />
+<circle cx="${enCx - 6}" cy="${enCy - 6}" r="1.6" fill="#ffffff" fill-opacity="0.9" />
+${renderElementGlyph(data.element.id, enCx - enGlyph / 2, enCy - enGlyph / 2, enGlyph, '#ffffff')}
+${svgText(enCx + enR + 8, rowTextY, elLabel, { fontSize: 15, fill: theme.text, fontWeight: '600', anchor: 'start' })}`
 
   // --- art area ---
   const artY = 210
@@ -169,7 +220,10 @@ ${svgText(chipStartX + elChipTextX, elChipY + 19, elLabel, { fontSize: 15, fill:
     bg: theme.headerBg,
   })}
 ${sparkles}</g></g>
-<rect x="${PAD}" y="${artY}" width="${artW}" height="${artH}" rx="18" fill="none" stroke="${theme.border}" />`
+<rect x="${PAD}" y="${artY}" width="${artW}" height="${artH}" rx="18" fill="none" stroke="${theme.border}" />
+<rect x="${PAD + 4}" y="${artY + 4}" width="${artW - 8}" height="${artH - 8}" rx="14" fill="none" stroke="${TIER_GEM_COLORS[data.stats.grade]}" stroke-opacity="0.85" stroke-width="1.5" />
+<rect x="${PAD + 5.5}" y="${artY + 5.5}" width="${artW - 11}" height="${artH - 11}" rx="13" fill="none" stroke="#000000" stroke-opacity="0.25" stroke-width="1" />
+<line x1="${PAD + 14}" y1="${artY + 5}" x2="${CARD_W - PAD - 14}" y2="${artY + 5}" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1" />`
 
   // --- avatar medallion (centered over the art) ---
   const medCx = CARD_W / 2
@@ -182,10 +236,10 @@ ${sparkles}</g></g>
 <circle cx="${medCx}" cy="${medCy}" r="${medR + 2.5}" fill="none" stroke="#000000" stroke-opacity="0.4" stroke-width="1" />`
     : ''
 
-  // --- stats: 6-axis radar (left) + numeric column (right) + POWER headline ---
+  // --- stats: 6-axis radar (left) + numeric column (right) ---
+  // POWER now lives on the nameplate (HP position), so the STATS header is just its
+  // label and the numeric column reads clean.
   const statsHeaderY = 466
-  const power = data.stats.power
-  const powerColor = power >= 9000 ? '#f0b429' : theme.accent
   const radar = renderRadar(
     [
       { label: 'VELOCITY', value: data.stats.velocity },
@@ -200,13 +254,7 @@ ${sparkles}</g></g>
     82,
     theme,
   )
-  // POWER shares the STATS header line (label left, number right) so the numeric
-  // column below starts clean — the number no longer stacks onto the first row.
-  const powerStr = withCommas(power)
-  const powerLabelX = CARD_W - PAD - Math.ceil(powerStr.length * 17.5) - 12
   const stats = `${svgText(PAD, statsHeaderY, 'STATS', { fontSize: 15, fill: theme.textSecondary, fontWeight: '600' })}
-${svgText(powerLabelX, statsHeaderY, 'POWER', { fontSize: 13, fill: theme.textSecondary, fontWeight: '600', anchor: 'end' })}
-${svgText(CARD_W - PAD, statsHeaderY + 4, powerStr, { fontSize: 30, fill: powerColor, fontWeight: 'bold', anchor: 'end' })}
 ${radar}
 ${statRow('VELOCITY', data.stats.velocity, 492, theme, 'velocity')}
 ${statRow('DIVERSITY', data.stats.diversity, 522, theme, 'diversity')}
@@ -290,8 +338,8 @@ ${data.languages.languages.length > 0 ? langItems : svgText(PAD, langY + 24, '�
   // Occupies the band y 820-858 between TYPES and the CONTRIBUTIONS graph. Display-only:
   // never feeds Grade or POWER. All values arrive as numbers, so no injection surface.
   const rec = data.record
-  const recLabelY = 820
-  const recRowY = 858
+  // ラベル「RECORD」は撤去（EXP/counts/streak で自明。TYPES 行との窮屈さ解消を優先）
+  const recRowY = 852
   const expStr = withCommas(rec.exp)
   const expNumX = PAD + 40
   const expNumW = Math.ceil(expStr.length * 16.8) // ~0.6em advance at 28px bold
@@ -308,8 +356,7 @@ ${data.languages.languages.length > 0 ? langItems : svgText(PAD, langY + 24, '�
       : rec.longestStreak > 0
         ? `${STREAK_GLYPH} best ${rec.longestStreak}d`
         : ''
-  const record = `${svgText(PAD, recLabelY, 'RECORD', { fontSize: 15, fill: theme.textSecondary, fontWeight: '600' })}
-${svgText(PAD, recRowY, 'EXP', { fontSize: 13, fill: theme.textSecondary, fontWeight: '600' })}
+  const record = `${svgText(PAD, recRowY, 'EXP', { fontSize: 13, fill: theme.textSecondary, fontWeight: '600' })}
 ${svgText(expNumX, recRowY, expStr, { fontSize: 28, fill: theme.accent, fontWeight: 'bold' })}
 ${inclPrivate}
 ${svgText(CARD_W / 2 + 30, recRowY, counts, { fontSize: 13, fill: theme.textSecondary, anchor: 'middle' })}
@@ -350,14 +397,22 @@ ${svgText(CARD_W - PAD, CONTRIB_LABEL_Y, `${withCommas(data.record.yearTotal)} t
 ${bars}`
 
   // --- traits (activated abilities) — replaces the flavor block ---
-  // Up to 2 lines, each `◆ {name} — {proof}` (name accent bold, proof muted), left-aligned
-  // at y952/980 — the second line clears the footer baseline (y1010) by 30px so the 17px
+  // Pokémon 技-row format: `◆ {name} — {proof}` left-aligned, with the proof's headline
+  // number pulled out big and right-aligned at the card edge (the attack's damage number).
+  // Lines at y952/980 — the second clears the footer baseline (y1010) by 30px so the 17px
   // trait text never crowds it. When no trait fires, the legacy flavor line renders instead
-  // (backward-compatible). ◆ is a text glyph (crisp in GitHub's SVG rasterizer) — never an emoji.
+  // (backward-compatible). ◆/• are text glyphs (crisp in GitHub's SVG rasterizer), never emoji.
   const flavorY = 952
   const traitFont = 'font-family="-apple-system, BlinkMacSystemFont, \'Segoe UI\', sans-serif"'
-  const traitLine = (name: string, proof: string, y: number): string =>
-    `<text x="${PAD}" y="${y}" ${traitFont}><tspan font-size="17" fill="${theme.accent}" font-weight="bold">◆ ${escapeXml(name)}</tspan><tspan font-size="15" fill="${theme.textSecondary}"> — ${escapeXml(proof)}</tspan></text>`
+  const traitLine = (name: string, proof: string, y: number): string => {
+    const val = traitMainValue(proof)
+    const num = val
+      ? `<text x="${CARD_W - PAD}" y="${y + 1}" text-anchor="end" ${traitFont} font-size="22" fill="${theme.accent}" font-weight="bold">${escapeXml(val)}</text>
+<line x1="${CARD_W - PAD - 100}" y1="${y - 5}" x2="${CARD_W - PAD - Math.ceil(val.length * 13) - 10}" y2="${y - 5}" stroke="${theme.textSecondary}" stroke-opacity="0.35" stroke-width="1" stroke-dasharray="1.5 3.5" />`
+      : ''
+    return `<text x="${PAD}" y="${y}" ${traitFont}><tspan font-size="17" fill="${theme.accent}" font-weight="bold">◆ ${escapeXml(name)}</tspan><tspan font-size="15" fill="${theme.textSecondary}"> — ${escapeXml(proof)}</tspan></text>
+${num}`
+  }
   let flavor: string
   if (data.traits.length > 0) {
     flavor = data.traits.map((t, i) => traitLine(t.name, t.proof, flavorY + i * 28)).join('\n')
@@ -374,8 +429,27 @@ ${bars}`
   }
 
   // --- footer ---
-  const footer = `${svgText(PAD, CARD_H - 40, `${data.serial} · ${data.issuedYear} · public · 12wk`, { fontSize: 15, fill: theme.textSecondary })}
-${svgText(CARD_W - PAD, CARD_H - 40, 'devcard-ai', { fontSize: 15, fill: theme.textSecondary, anchor: 'end' })}`
+  // Card-number line (left): `No.7F3A · S1 ’26 · public 12wk` — serial without the #,
+  // a fixed Season 1 tag, and the two-digit issue year. Rarity mark (right, left of the
+  // devcard-ai credit): D=● C=◆ B=★ A=★★ S=★★★, the S mark filled with the holo rainbow.
+  const footerY = CARD_H - 40
+  const serialNo = data.serial.replace(/^#/, '')
+  const yy = String(data.issuedYear).slice(-2)
+  const RARITY_MARK: Record<CardDataV2['stats']['grade'], string> = {
+    S: '★★★',
+    A: '★★',
+    B: '★',
+    C: '◆',
+    D: '●',
+  }
+  const mark = RARITY_MARK[data.stats.grade]
+  const rarityFill =
+    data.stats.grade === 'S' ? 'url(#rarityHolo)' : TIER_GEM_COLORS[data.stats.grade]
+  const rarityRight = CARD_W - PAD - 88 // clears the right-aligned "devcard-ai" credit
+  const rarity = `<text x="${rarityRight}" y="${footerY}" font-size="16" fill="${rarityFill}" text-anchor="end" letter-spacing="1.5">${mark}</text>`
+  const footer = `${svgText(PAD, footerY, `No.${serialNo} · S1 ’${yy} · public 12wk`, { fontSize: 15, fill: theme.textSecondary })}
+${rarity}
+${svgText(CARD_W - PAD, footerY, 'devcard-ai', { fontSize: 15, fill: theme.textSecondary, anchor: 'end' })}`
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${CARD_W}" height="${CARD_H}" viewBox="0 0 ${CARD_W} ${CARD_H}" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
 <defs>${defs}${cardDefs}</defs>
@@ -386,7 +460,7 @@ ${namePlate}
 ${emblem}
 ${archetypeLabel}
 ${verified}
-${elementChip}
+${energyMark}
 ${art}
 ${medallion}
 ${stats}
