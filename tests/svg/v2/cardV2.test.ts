@@ -252,7 +252,7 @@ describe('renderCardV2', () => {
     expect(svg).toContain('Codex · equipped')
     expect(svg).not.toContain('Copilot')
     // No chip rect may start+extend past the content edge (CARD_W - PAD = 706).
-    for (const m of svg.matchAll(/<rect x="(\d+)" y="716" width="(\d+)"/g)) {
+    for (const m of svg.matchAll(/<rect x="(\d+)" y="696" width="(\d+)"/g)) {
       expect(Number(m[1]) + Number(m[2])).toBeLessThanOrEqual(706)
     }
   })
@@ -320,6 +320,86 @@ describe('renderCardV2 RECORD strip', () => {
     expect(svg).toContain('RECORD')
     expect(svg).not.toContain('NaN')
     expect(svg).not.toContain('undefined')
+  })
+})
+
+describe('renderCardV2 CONTRIBUTIONS graph (v2.7)', () => {
+  // Bar rects are the only <rect> carrying a fill-opacity attribute in the card.
+  const BAR_RE =
+    /<rect x="[0-9.]+" y="[0-9.]+" width="[0-9.]+" height="([0-9.]+)" rx="1" fill="[^"]*" fill-opacity="[0-9.]+"/g
+  const barHeights = (svg: string): number[] => [...svg.matchAll(BAR_RE)].map((m) => Number(m[1]))
+
+  it('renders the section label + comma-grouped yearly total', () => {
+    const svg = renderCardV2(makeData({ record: { ...makeData().record, yearTotal: 3480 } }), {
+      theme: 'dark',
+    })
+    expect(svg).toContain('CONTRIBUTIONS · 1y')
+    expect(svg).toContain('3,480 total')
+  })
+
+  it('renders exactly 52 bars', () => {
+    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    expect(barHeights(svg)).toHaveLength(52)
+  })
+
+  it('uses toFixed(2) coordinates for golden stability', () => {
+    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    // Every bar rect x/width is rendered with exactly two decimals.
+    for (const m of svg.matchAll(
+      /<rect x="([0-9.]+)" y="([0-9.]+)" width="([0-9.]+)" height="([0-9.]+)" rx="1" fill="[^"]*" fill-opacity/g,
+    )) {
+      for (const coord of [m[1], m[2], m[3], m[4]]) {
+        expect(coord).toMatch(/^\d+\.\d{2}$/)
+      }
+    }
+  })
+
+  it('an all-zero year renders a flat row of minimum-height bars (no NaN)', () => {
+    const svg = renderCardV2(
+      makeData({
+        record: { ...makeData().record, yearTotal: 0, weeklyContributions: new Array(52).fill(0) },
+      }),
+      { theme: 'light' },
+    )
+    const heights = barHeights(svg)
+    expect(heights).toHaveLength(52)
+    expect(heights.every((h) => h === 4)).toBe(true)
+    expect(svg).not.toContain('NaN')
+    expect(svg).toContain('0 total')
+  })
+
+  it('sqrt scaling keeps small weeks visible next to one dominant week (not linear crush)', () => {
+    const weekly = new Array(52).fill(1)
+    weekly[25] = 100 // one dominant week mid-series (not the current-week slot)
+    const svg = renderCardV2(
+      makeData({ record: { ...makeData().record, weeklyContributions: weekly } }),
+      { theme: 'dark' },
+    )
+    const heights = barHeights(svg)
+    // sqrt(1)/sqrt(100)=0.1 → h≈6.8; a linear scale would give ≈4.28 (crushed to the floor).
+    const smallBars = heights.filter((h) => h > 4 && h < 32)
+    expect(smallBars.length).toBeGreaterThan(0)
+    expect(Math.min(...smallBars)).toBeGreaterThan(6) // proves sqrt, not linear
+  })
+
+  it('marks the current (rightmost) week with a full-opacity bar + 1px outline ring', () => {
+    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    // Exactly one bar at full opacity (the current week).
+    const full = [...svg.matchAll(/fill-opacity="1(?:\.00)?"/g)]
+    expect(full.length).toBe(1)
+    // And exactly one hollow accent ring (fill="none" stroke width 1) in the graph band.
+    const rings = [
+      ...svg.matchAll(
+        /<rect x="[0-9.]+" y="[0-9.]+" width="[0-9.]+" height="[0-9.]+" rx="1" fill="none" stroke="[^"]*" stroke-width="1"/g,
+      ),
+    ]
+    expect(rings.length).toBe(1)
+  })
+
+  it('no longer draws the removed flavor divider rule', () => {
+    // The old <line> divider above the flavor block is gone now that the graph separates content.
+    const svg = renderCardV2(makeData({ traits: [] }), { theme: 'dark' })
+    expect(svg).not.toMatch(/<line x1="104"/) // PAD+60 divider start
   })
 })
 

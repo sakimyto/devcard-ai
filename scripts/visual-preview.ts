@@ -59,6 +59,13 @@ const base: CardDataV2 = {
     inclPrivate: true,
     currentStreak: 23,
     longestStreak: 31,
+    yearTotal: 3218,
+    // Real-looking 52-week activity: quiet start, a mid-year ramp, a couple of spikes,
+    // and a busy current week — proves bars don't collapse and the tail highlight reads.
+    weeklyContributions: [
+      2, 0, 4, 1, 6, 3, 0, 8, 5, 2, 11, 4, 0, 7, 3, 9, 14, 6, 2, 0, 12, 18, 7, 4, 21, 9, 3, 15, 28,
+      11, 6, 2, 19, 33, 8, 4, 24, 13, 0, 41, 17, 9, 5, 26, 12, 7, 31, 15, 3, 22, 38, 46,
+    ],
   },
   element: { id: 'lumen', label: 'Lumen', color: '#a371f7' },
   epithet: 'The Ascendant',

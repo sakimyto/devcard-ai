@@ -156,7 +156,7 @@ ${svgText(chipStartX + elChipTextX, elChipY + 19, elLabel, { fontSize: 15, fill:
 
   // --- art area ---
   const artY = 210
-  const artH = 240
+  const artH = 220 // shrunk 20px vs v2.6 to free vertical budget for the CONTRIBUTIONS graph
   const artW = CARD_W - PAD * 2
   const sparkles =
     data.stats.grade === 'S' ? renderSparkles(data.seed, artW, artH, theme.accent) : ''
@@ -183,7 +183,7 @@ ${sparkles}</g></g>
     : ''
 
   // --- stats: 6-axis radar (left) + numeric column (right) + POWER headline ---
-  const statsHeaderY = 486
+  const statsHeaderY = 466
   const power = data.stats.power
   const powerColor = power >= 9000 ? '#f0b429' : theme.accent
   const radar = renderRadar(
@@ -196,7 +196,7 @@ ${sparkles}</g></g>
       { label: 'FLOW', value: data.stats.flow },
     ],
     188,
-    588,
+    568,
     82,
     theme,
   )
@@ -208,15 +208,15 @@ ${sparkles}</g></g>
 ${svgText(powerLabelX, statsHeaderY, 'POWER', { fontSize: 13, fill: theme.textSecondary, fontWeight: '600', anchor: 'end' })}
 ${svgText(CARD_W - PAD, statsHeaderY + 4, powerStr, { fontSize: 30, fill: powerColor, fontWeight: 'bold', anchor: 'end' })}
 ${radar}
-${statRow('VELOCITY', data.stats.velocity, 512, theme, 'velocity')}
-${statRow('DIVERSITY', data.stats.diversity, 542, theme, 'diversity')}
-${statRow('SYNERGY', data.stats.synergy, 572, theme, 'dot')}
-${statRow('CONSISTENCY', data.stats.consistency, 602, theme, 'consistency')}
-${statRow('RANGE', data.stats.range, 632, theme, 'dot')}
-${statRow('FLOW', data.stats.flow, 662, theme, 'dot')}`
+${statRow('VELOCITY', data.stats.velocity, 492, theme, 'velocity')}
+${statRow('DIVERSITY', data.stats.diversity, 522, theme, 'diversity')}
+${statRow('SYNERGY', data.stats.synergy, 552, theme, 'dot')}
+${statRow('CONSISTENCY', data.stats.consistency, 582, theme, 'consistency')}
+${statRow('RANGE', data.stats.range, 612, theme, 'dot')}
+${statRow('FLOW', data.stats.flow, 642, theme, 'dot')}`
 
   // --- tool loadout ---
-  const toolsY = 716
+  const toolsY = 696
   const CHIP_ROW_RIGHT = CARD_W - PAD // 706: chips must not cross this edge
   const CHIP_H = 36
   const ICON = 12
@@ -275,7 +275,7 @@ ${svgText(startX + cw / 2, toolsY + 24, label, { fontSize: 15, fill: theme.textS
 ${toolChips.length > 0 ? toolChips.join('\n') : svgText(PAD, toolsY + 24, 'no tools detected yet', { fontSize: 16, fill: theme.textSecondary })}`
 
   // --- languages ---
-  const langY = 800
+  const langY = 780
   const langItems = data.languages.languages
     .map((l, i) => {
       const x = PAD + i * 180
@@ -287,11 +287,11 @@ ${svgText(x + 28, langY + 24, l.name, { fontSize: 18, fill: theme.text })}`
 ${data.languages.languages.length > 0 ? langItems : svgText(PAD, langY + 24, '—', { fontSize: 16, fill: theme.textSecondary })}`
 
   // --- record strip (EXP / commit·pr·review counts / streak) ---
-  // Occupies the reserved band y 850-910 between TYPES and the flavor rule. Display-only:
+  // Occupies the band y 820-858 between TYPES and the CONTRIBUTIONS graph. Display-only:
   // never feeds Grade or POWER. All values arrive as numbers, so no injection surface.
   const rec = data.record
-  const recLabelY = 850
-  const recRowY = 892
+  const recLabelY = 820
+  const recRowY = 858
   const expStr = withCommas(rec.exp)
   const expNumX = PAD + 40
   const expNumW = Math.ceil(expStr.length * 16.8) // ~0.6em advance at 28px bold
@@ -315,19 +315,52 @@ ${inclPrivate}
 ${svgText(CARD_W / 2 + 30, recRowY, counts, { fontSize: 13, fill: theme.textSecondary, anchor: 'middle' })}
 ${streakText ? svgText(CARD_W - PAD, recRowY, streakText, { fontSize: 13, fill: theme.textSecondary, anchor: 'end' }) : ''}`
 
-  // --- traits (activated abilities) — replaces the flavor block below the rule ---
+  // --- contributions graph (52-week, 1y) — display-only activity log ---
+  // Sits between the RECORD strip and TRAITS. Independent of the 12-week metric window
+  // (labeled `· 1y` on the card); never feeds Grade or POWER. 52 upward bars grow from a
+  // baseline; heights use a sqrt scale so a single busy week doesn't crush the rest, and the
+  // current (rightmost) week is drawn at full opacity with a 1px outline to read as "now".
+  const CONTRIB_BASE_Y = 928 // baseline the bars grow up from
+  const CONTRIB_LABEL_Y = 886
+  const BAR_MIN_H = 4
+  const BAR_MAX_H = 32
+  const graphW = CARD_W - PAD * 2
+  const barSlot = graphW / 52
+  const barW = barSlot - 1 // 1px gap between bars
+  const weekly = data.record.weeklyContributions
+  const maxWeek = Math.max(0, ...weekly)
+  const bars = weekly
+    .map((v, i) => {
+      const norm = maxWeek > 0 ? Math.sqrt(Math.max(0, v)) / Math.sqrt(maxWeek) : 0
+      const h = maxWeek > 0 ? BAR_MIN_H + norm * (BAR_MAX_H - BAR_MIN_H) : BAR_MIN_H
+      const x = PAD + i * barSlot
+      const y = CONTRIB_BASE_Y - h
+      const isCurrent = i === weekly.length - 1
+      const opacity = isCurrent ? 1 : 0.35 + norm * 0.55 // value-proportional 0.35→0.9
+      const base = `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${barW.toFixed(2)}" height="${h.toFixed(2)}" rx="1" fill="${theme.accent}" fill-opacity="${opacity.toFixed(2)}" />`
+      // The current week gets a crisp 1px accent outline so "now" stands out even when small.
+      const nowRing = isCurrent
+        ? `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${barW.toFixed(2)}" height="${h.toFixed(2)}" rx="1" fill="none" stroke="${theme.accent}" stroke-width="1" />`
+        : ''
+      return base + nowRing
+    })
+    .join('\n')
+  const contrib = `${svgText(PAD, CONTRIB_LABEL_Y, 'CONTRIBUTIONS · 1y', { fontSize: 15, fill: theme.textSecondary, fontWeight: '600' })}
+${svgText(CARD_W - PAD, CONTRIB_LABEL_Y, `${withCommas(data.record.yearTotal)} total`, { fontSize: 13, fill: theme.textSecondary, anchor: 'end' })}
+${bars}`
+
+  // --- traits (activated abilities) — replaces the flavor block ---
   // Up to 2 lines, each `◆ {name} — {proof}` (name accent bold, proof muted), left-aligned
-  // in y~940-1010 without touching the footer (y1010). When no trait fires, the legacy
-  // flavor line renders instead (backward-compatible). ◆ is a text glyph (renders crisp in
-  // GitHub's SVG rasterizer, like the RECORD strip markers) — never an emoji.
-  const flavorY = 944
-  const flavorRule = `<line x1="${PAD + 60}" y1="${flavorY - 28}" x2="${CARD_W - PAD - 60}" y2="${flavorY - 28}" stroke="${theme.border}" stroke-width="1" />`
+  // at y952/980 — the second line clears the footer baseline (y1010) by 30px so the 17px
+  // trait text never crowds it. When no trait fires, the legacy flavor line renders instead
+  // (backward-compatible). ◆ is a text glyph (crisp in GitHub's SVG rasterizer) — never an emoji.
+  const flavorY = 952
   const traitFont = 'font-family="-apple-system, BlinkMacSystemFont, \'Segoe UI\', sans-serif"'
   const traitLine = (name: string, proof: string, y: number): string =>
     `<text x="${PAD}" y="${y}" ${traitFont}><tspan font-size="17" fill="${theme.accent}" font-weight="bold">◆ ${escapeXml(name)}</tspan><tspan font-size="15" fill="${theme.textSecondary}"> — ${escapeXml(proof)}</tspan></text>`
   let flavor: string
   if (data.traits.length > 0) {
-    flavor = data.traits.map((t, i) => traitLine(t.name, t.proof, flavorY + i * 30)).join('\n')
+    flavor = data.traits.map((t, i) => traitLine(t.name, t.proof, flavorY + i * 28)).join('\n')
   } else {
     flavor = wrapText(data.flavor, 46, 2)
       .map((line, i) =>
@@ -360,7 +393,7 @@ ${stats}
 ${loadout}
 ${langs}
 ${record}
-${flavorRule}
+${contrib}
 ${flavor}
 ${tierGem(data.stats.grade, CARD_W - PAD - 92, 56)}
 ${footer}
