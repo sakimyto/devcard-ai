@@ -202,11 +202,250 @@
     "note": "decoy assisted: Codex対応（言及のみ）は非マッチ — 落ちるならパターンを狭める"
   },
   {
+    "message": "fix: address codex API timeout",
+    "authorLogin": null,
+    "expected": false,
+    "expectedAssisted": null,
+    "note": "t23 decoy assisted: address/apply codex は review シグナル併記が必須（機能作業は非マッチ）"
+  },
+  {
+    "message": "chore: apply codex migration",
+    "authorLogin": null,
+    "expected": false,
+    "expectedAssisted": null,
+    "note": "t23 decoy assisted: apply codex + 非 review 文脈は非マッチ"
+  },
+  {
+    "message": "fix: codex 2FA docs",
+    "authorLogin": null,
+    "expected": false,
+    "expectedAssisted": null,
+    "note": "t23 decoy assisted: codex + 数字（#なし）はバージョン言及なので非マッチ"
+  },
+  {
     "message": "fix: null guard\n\ncodexレビュー(#4)で検出した3点を修正\n\nCo-Authored-By: Claude <noreply@anthropic.com>",
     "authorLogin": null,
     "expected": true,
     "expectedTool": "claude",
     "expectedAssisted": "codex",
     "note": "併存: Claude committed（トレーラー）+ Codex assisted（本文レビュー）を両方カウント"
+  },
+  {
+    "message": "feat: reasoning module\n\nCo-authored-by: DeepSeek <noreply@deepseek.com>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "deepseek",
+    "expectedAssisted": null,
+    "note": "t23: deepseek trailer"
+  },
+  {
+    "message": "fix: tokenizer edge\n\nCo-authored-by: Qwen <qwen@alibabacloud.com>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "qwen",
+    "expectedAssisted": null,
+    "note": "t23: qwen trailer"
+  },
+  {
+    "message": "feat: long-context loader\n\nCo-authored-by: Kimi <kimi@moonshot.cn>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "kimi",
+    "expectedAssisted": null,
+    "note": "t23: kimi trailer"
+  },
+  {
+    "message": "feat: codegen\n\nCo-authored-by: Codestral <codestral@mistral.ai>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "mistral",
+    "expectedAssisted": null,
+    "note": "t23: mistral/codestral trailer alt"
+  },
+  {
+    "message": "docs: prompt tweaks\n\nCo-authored-by: Grok <grok@x.ai>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "grok",
+    "expectedAssisted": null,
+    "note": "t23: grok trailer"
+  },
+  {
+    "message": "feat: autonomous edit\n\nGenerated with Cline",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "cline",
+    "expectedAssisted": null,
+    "note": "t23: cline generation marker"
+  },
+  {
+    "message": "refactor: extract hook\n\nCo-authored-by: Roo Code <roo@roocode.com>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "roo",
+    "expectedAssisted": null,
+    "note": "t23: roo code trailer"
+  },
+  {
+    "message": "feat: inline suggest\n\nCo-authored-by: Continue <noreply@continue.dev>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "continue",
+    "expectedAssisted": null,
+    "note": "t23: continue trailer"
+  },
+  {
+    "message": "fix: buffer bounds\n\nCo-authored-by: Zed AI <ai@zed.dev>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "zed",
+    "expectedAssisted": null,
+    "note": "t23: zed ai trailer"
+  },
+  {
+    "message": "feat: refactor assist\n\nCo-authored-by: Junie <junie@jetbrains.com>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "junie",
+    "expectedAssisted": null,
+    "note": "t23: junie (jetbrains) trailer"
+  },
+  {
+    "message": "fix: threading bug\n\nCo-authored-by: Amp <amp@ampcode.com>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "amp",
+    "expectedAssisted": null,
+    "note": "t23: amp trailer (\\bamp\\b 語境界)"
+  },
+  {
+    "message": "feat: multi-file plan",
+    "authorLogin": "openhands-agent[bot]",
+    "expected": true,
+    "expectedTool": "openhands",
+    "expectedAssisted": null,
+    "note": "t23: openhands bot login"
+  },
+  {
+    "message": "chore: dep bump\n\nCo-authored-by: Goose <goose@block.xyz>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "goose",
+    "expectedAssisted": null,
+    "note": "t23: goose trailer"
+  },
+  {
+    "message": "feat: spec-first flow\n\nCo-authored-by: Kiro <kiro@amazon.com>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "kiro",
+    "expectedAssisted": null,
+    "note": "t23: kiro trailer"
+  },
+  {
+    "message": "fix: layout jump\n\nCo-authored-by: Trae <trae@bytedance.com>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "trae",
+    "expectedAssisted": null,
+    "note": "t23: trae trailer"
+  },
+  {
+    "message": "refactor: context engine\n\nCo-authored-by: Augment Code <augment@augmentcode.com>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "augment",
+    "expectedAssisted": null,
+    "note": "t23: augment code trailer"
+  },
+  {
+    "message": "feat: async task",
+    "authorLogin": "google-labs-jules[bot]",
+    "expected": true,
+    "expectedTool": "jules",
+    "expectedAssisted": null,
+    "note": "t23: jules bot login (google-labs-jules)"
+  },
+  {
+    "message": "feat: scaffold app\n\nCo-authored-by: Replit Agent <agent@replit.com>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "replit",
+    "expectedAssisted": null,
+    "note": "t23: replit agent trailer"
+  },
+  {
+    "message": "feat: generative ui\n\nCo-authored-by: v0 <v0@vercel.com>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "v0",
+    "expectedAssisted": null,
+    "note": "t23: v0 trailer (\\bv0\\b)"
+  },
+  {
+    "message": "feat: instant app\n\nCo-authored-by: Bolt <noreply@bolt.new>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "bolt",
+    "expectedAssisted": null,
+    "note": "t23: bolt.new trailer"
+  },
+  {
+    "message": "feat: landing page\n\nCo-authored-by: Lovable <noreply@lovable.dev>",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "lovable",
+    "expectedAssisted": null,
+    "note": "t23: lovable trailer"
+  },
+  {
+    "message": "feat: DeepSeek対応を追加",
+    "authorLogin": null,
+    "expected": false,
+    "expectedAssisted": null,
+    "note": "t23 decoy: ツール名の機能追加言及（トレーラーなし）は非マッチ"
+  },
+  {
+    "message": "feat: add Cursor Composer support",
+    "authorLogin": null,
+    "expected": false,
+    "expectedAssisted": null,
+    "note": "t23 decoy: 裸の 'Cursor Composer' 言及は committed 非マッチ（生成マーカー必須）"
+  },
+  {
+    "message": "feat: dashboard\n\nGenerated with Cursor Composer",
+    "authorLogin": null,
+    "expected": true,
+    "expectedTool": "cursor",
+    "expectedAssisted": null,
+    "note": "t23: 'Generated with Cursor Composer' は生成マーカーとして cursor 帰属"
+  },
+  {
+    "message": "fix: typo",
+    "authorLogin": "cursoragent-demo",
+    "expected": false,
+    "expectedAssisted": null,
+    "note": "t23 decoy: cursoragent 接頭辞だけの人間ユーザーは非マッチ（[bot]接尾辞が必要）"
+  },
+  {
+    "message": "fix: amplify signal chain\n\nCo-authored-by: Alex <alex@amplify.com>",
+    "authorLogin": null,
+    "expected": false,
+    "expectedAssisted": null,
+    "note": "t23 decoy: 'amplify' は \\bamp\\b の語境界で除外（amp 誤爆防止）"
+  },
+  {
+    "message": "chore: bump v0.1.0 to v0.2.0",
+    "authorLogin": null,
+    "expected": false,
+    "expectedAssisted": null,
+    "note": "t23 decoy: バージョン文字列 v0.x はトレーラーなしで v0 誤爆しない"
+  },
+  {
+    "message": "feat: continue on error handling",
+    "authorLogin": null,
+    "expected": false,
+    "expectedAssisted": null,
+    "note": "t23 decoy: 英単語 continue はトレーラーなしで continue 誤爆しない"
   }
 ]

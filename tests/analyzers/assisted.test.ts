@@ -3,6 +3,7 @@ import { detectAssistedSignal } from '~/analyzers/aiPatterns'
 import { analyzeToolAttributionV2 } from '~/analyzers/toolAttribution'
 import type { GitHubCommit } from '~/github/types'
 import corpus from './__fixtures__/commit-corpus.json'
+import ownerCorpus from './__fixtures__/owner-codex-corpus.json'
 
 interface CorpusEntry {
   message: string
@@ -25,6 +26,34 @@ describe('detectAssistedSignal corpus (reviewer-context oracle)', () => {
   for (const c of corpus as CorpusEntry[]) {
     it(`${c.note} → assisted=${c.expectedAssisted}`, () => {
       expect(detectAssistedSignal(c.message)).toBe(c.expectedAssisted)
+    })
+  }
+})
+
+// 所有者コーパスの実測アンカー: 直近12週の codex 言及 17 件のうち、旧 ASSISTED_SIGNALS が
+// 拾えていたのは 11 件（6 件取りこぼし）。Task 23 のパターン精緻化で全 17 件を拾えることを固定する。
+describe('owner codex-assisted corpus (11→17 anchor)', () => {
+  interface OwnerEntry {
+    message: string
+    previouslyCaught: boolean
+    note: string
+  }
+  const entries = ownerCorpus as OwnerEntry[]
+
+  it('has 17 owner codex commits: 11 previously caught + 6 previously missed', () => {
+    expect(entries).toHaveLength(17)
+    expect(entries.filter((e) => e.previouslyCaught)).toHaveLength(11)
+    expect(entries.filter((e) => !e.previouslyCaught)).toHaveLength(6)
+  })
+
+  it('now detects codex on all 17 (11→17)', () => {
+    const hits = entries.filter((e) => detectAssistedSignal(e.message) === 'codex')
+    expect(hits).toHaveLength(17)
+  })
+
+  for (const e of entries) {
+    it(`${e.note} → codex`, () => {
+      expect(detectAssistedSignal(e.message)).toBe('codex')
     })
   }
 })

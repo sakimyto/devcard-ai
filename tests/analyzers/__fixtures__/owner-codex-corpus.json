@@ -1,0 +1,87 @@
+[
+  {
+    "message": "fix: null guard\n\ncodexレビュー反映で3点修正",
+    "previouslyCaught": true,
+    "note": "codexレビュー"
+  },
+  {
+    "message": "refactor: split module\n\ncodex review (4 rounds) で発見・修正",
+    "previouslyCaught": true,
+    "note": "codex review（英語）"
+  },
+  {
+    "message": "fix: retry logic\n\ncodex exec review 指摘対応",
+    "previouslyCaught": true,
+    "note": "codex exec review"
+  },
+  {
+    "message": "refactor: extract helper\n\nper codex, dedupe the guard",
+    "previouslyCaught": true,
+    "note": "per codex"
+  },
+  {
+    "message": "fix: auth split (codex #4) の指摘を反映",
+    "previouslyCaught": true,
+    "note": "ASCII 括弧 + #N"
+  },
+  {
+    "message": "perf: hot loop\n\ncodex flagged an O(n^2) scan",
+    "previouslyCaught": true,
+    "note": "codex flagged"
+  },
+  {
+    "message": "docs(plan): codex planレビュー4件を反映",
+    "previouslyCaught": true,
+    "note": "codex planレビュー"
+  },
+  {
+    "message": "fix: codex 指摘の null guard",
+    "previouslyCaught": true,
+    "note": "codex 指摘"
+  },
+  {
+    "message": "fix: off-by-one\n\ncodex found an edge case",
+    "previouslyCaught": true,
+    "note": "codex found"
+  },
+  {
+    "message": "chore: cleanup\n\ncodexレビュー",
+    "previouslyCaught": true,
+    "note": "codexレビュー bare"
+  },
+  {
+    "message": "fix: race condition\n\ncodex caught a data race",
+    "previouslyCaught": true,
+    "note": "codex caught"
+  },
+  {
+    "message": "fix: null guard（codex #4 指摘）",
+    "previouslyCaught": false,
+    "note": "取りこぼしA: 全角括弧 + #N が指摘の間に割り込み"
+  },
+  {
+    "message": "fix: codex #4 P2 の対応",
+    "previouslyCaught": false,
+    "note": "取りこぼしB: 裸の #N（括弧・review 語なし）"
+  },
+  {
+    "message": "refactor: codex致命点反映済",
+    "previouslyCaught": false,
+    "note": "取りこぼしC: codex致命点反映"
+  },
+  {
+    "message": "fix: address codex plan review comments",
+    "previouslyCaught": false,
+    "note": "取りこぼしD: 英語 address + plan review"
+  },
+  {
+    "message": "fix: codex #2 の指摘対応",
+    "previouslyCaught": false,
+    "note": "取りこぼしE: 裸の #N（#2 が codex と指摘の間）"
+  },
+  {
+    "message": "chore: apply codex plan feedback",
+    "previouslyCaught": false,
+    "note": "取りこぼしF: 英語 apply codex（review 語なし）"
+  }
+]

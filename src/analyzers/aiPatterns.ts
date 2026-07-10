@@ -16,6 +16,11 @@ const BOT_SIGNALS: Signal[] = [
   // 具体ツールへ帰属させないため。旧 attributeTool の完全一致相当の精度を維持）
   { pattern: /^devin-ai.*\[bot\]$/, toolId: 'devin' },
   { pattern: /^sweep-ai.*\[bot\]$/, toolId: 'sweep' },
+  // Task 23: 世界の AI ツールの bot login。具体 bot は汎用 [bot] より前に評価。
+  // [bot] 必須（devin/sweep と同じく、cursoragent 接頭辞だけの人間ユーザー誤帰属を防ぐ）
+  { pattern: /^cursoragent.*\[bot\]$/, toolId: 'cursor' },
+  { pattern: /^openhands.*\[bot\]$/, toolId: 'openhands' },
+  { pattern: /^google-labs-jules\[bot\]$/, toolId: 'jules' },
   { pattern: /^dependabot/, toolId: 'unknown' },
   { pattern: /^renovate/, toolId: 'unknown' },
   { pattern: /^github-actions/, toolId: 'unknown' },
@@ -36,6 +41,8 @@ const MESSAGE_SIGNALS: Signal[] = [
   { pattern: /co-authored-by:.*\bcodex\b|via codex\b/i, toolId: 'codex' },
   { pattern: /co-authored-by:.*\bcopilot\b|assisted-by:.*\bcopilot\b/i, toolId: 'copilot' },
   {
+    // Composer 利用は生成マーカー `generated with cursor` で捕捉済み（"cursor composer" 併記も
+    // 同マーカーがカバー）。裸の "cursor composer" 言及は committed 契約に反するため拾わない
     pattern: /co-authored-by:.*\bcursor\b|generated with cursor\b|via cursor\b/i,
     toolId: 'cursor',
   },
@@ -52,6 +59,30 @@ const MESSAGE_SIGNALS: Signal[] = [
   },
   { pattern: /co-authored-by:.*\bdevin\b|via devin\b/i, toolId: 'devin' },
   { pattern: /co-authored-by:.*\bsweep\b/i, toolId: 'sweep' },
+  // ---- Task 23: 世界の AI ツール（トレーラー名 / 生成マーカー由来）----
+  // 既存原則を踏襲: ベンダードメイン単独では判定せず、ツール名の語境界一致のみ。
+  { pattern: /co-authored-by:.*\bdeepseek\b/i, toolId: 'deepseek' },
+  { pattern: /co-authored-by:.*\bqwen\b/i, toolId: 'qwen' },
+  { pattern: /co-authored-by:.*\bkimi\b/i, toolId: 'kimi' },
+  { pattern: /co-authored-by:.*\b(mistral|codestral)\b/i, toolId: 'mistral' },
+  { pattern: /co-authored-by:.*\bgrok\b/i, toolId: 'grok' },
+  { pattern: /co-authored-by:.*\bcline\b|generated with cline\b/i, toolId: 'cline' },
+  { pattern: /co-authored-by:.*\broo( ?code)?\b/i, toolId: 'roo' },
+  { pattern: /co-authored-by:.*\bcontinue(\.dev)?\b/i, toolId: 'continue' },
+  { pattern: /co-authored-by:.*\bzed( ai)?\b/i, toolId: 'zed' },
+  { pattern: /co-authored-by:.*\b(junie|jetbrains ai)\b/i, toolId: 'junie' },
+  // Amp: `\bamp\b` の語境界で "amplify" を除外（誤爆防止）
+  { pattern: /co-authored-by:.*\bamp\b/i, toolId: 'amp' },
+  { pattern: /co-authored-by:.*\bopenhands\b/i, toolId: 'openhands' },
+  { pattern: /co-authored-by:.*\bgoose\b/i, toolId: 'goose' },
+  { pattern: /co-authored-by:.*\bkiro\b/i, toolId: 'kiro' },
+  { pattern: /co-authored-by:.*\btrae\b/i, toolId: 'trae' },
+  { pattern: /co-authored-by:.*\baugment( ?code)?\b/i, toolId: 'augment' },
+  { pattern: /co-authored-by:.*\bjules\b/i, toolId: 'jules' },
+  { pattern: /co-authored-by:.*\breplit( agent)?\b/i, toolId: 'replit' },
+  { pattern: /co-authored-by:.*\bv0\b/i, toolId: 'v0' },
+  { pattern: /co-authored-by:.*bolt\.new\b/i, toolId: 'bolt' },
+  { pattern: /co-authored-by:.*\blovable\b/i, toolId: 'lovable' },
   // ---- 汎用AIマーカー（AI とは判るがツール特定不能 = 正当な unknown）----
   { pattern: /co-authored-by:\s.*\d+\+[^@]+@users\.noreply\.github\.com/i, toolId: 'unknown' },
   { pattern: /co-authored-by:\s.*noreply@/i, toolId: 'unknown' },
@@ -80,8 +111,12 @@ export function detectAiSignal(message: string, authorLogin: string | null): AiD
 // 言及・機能追加コミットは非マッチ（使用動詞との隣接文脈が必須）。順序 = 優先度。
 const ASSISTED_SIGNALS: Signal[] = [
   {
+    // 実測ギャップ反映（Task 23）: 裸の #N `codex #4`（全角括弧 `（codex #4 指摘）` もこれで捕捉）/
+    // `codex致命点反映` / 英語 review 文脈。既存の review 文脈も維持。
+    // 誤爆防止: `#` 必須で「codex 2FA」等を除外。address/apply codex も review シグナル
+    // （review/指摘/feedback/comment）併記を必須にし、「address codex API timeout」等の機能作業を除外
     pattern:
-      /codex\s*(exec\s*)?(review|レビュー|指摘|plan\s*レビュー)|codexレビュー|\(codex\s*#?\d|per\s+codex|codex\s+(flagged|found|caught|suggested)/i,
+      /codex\s*(exec\s*)?(review|レビュー|指摘|plan\s*(review|レビュー))|codexレビュー|codex\s*#\d|per\s+codex|codex(の)?致命点|codex指摘反映|codex反映|(address(ed)?|apply)\s+codex\b.*(review|レビュー|指摘|feedback|comment)|codex\s+(flagged|found|caught|suggested)/i,
     toolId: 'codex',
   },
   // gpt-4/gpt-5 系のレビュー言及はこのプロジェクト文脈では codex 経由。'chatgpt' toolId は作らない
@@ -92,22 +127,22 @@ const ASSISTED_SIGNALS: Signal[] = [
   },
   {
     pattern:
-      /claude\s*(review|レビュー|指摘)|claudeレビュー|per\s+claude|claude\s+(flagged|found|caught|suggested)/i,
+      /claude\s*(review|レビュー|指摘)|claudeレビュー|[（(]\s*claude\s*#\d|per\s+claude|claude\s+(flagged|found|caught|suggested)/i,
     toolId: 'claude',
   },
   {
     pattern:
-      /copilot\s*(review|レビュー|指摘)|copilotレビュー|copilot\s+(flagged|found|caught|suggested)/i,
+      /copilot\s*(review|レビュー|指摘)|copilotレビュー|[（(]\s*copilot\s*#\d|copilot\s+(flagged|found|caught|suggested)/i,
     toolId: 'copilot',
   },
   {
     pattern:
-      /cursor\s*(review|レビュー|指摘)|cursorレビュー|cursor\s+(flagged|found|caught|suggested)/i,
+      /cursor\s*(review|レビュー|指摘)|cursorレビュー|[（(]\s*cursor\s*#\d|cursor\s+(flagged|found|caught|suggested)/i,
     toolId: 'cursor',
   },
   {
     pattern:
-      /gemini\s*(review|レビュー|指摘)|geminiレビュー|gemini\s+(flagged|found|caught|suggested)/i,
+      /gemini\s*(review|レビュー|指摘)|geminiレビュー|[（(]\s*gemini\s*#\d|gemini\s+(flagged|found|caught|suggested)/i,
     toolId: 'gemini',
   },
   {
