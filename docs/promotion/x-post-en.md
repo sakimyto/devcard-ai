@@ -1,18 +1,18 @@
-# X Post (English) — v2 Trading Card Edition
+# X Post (English) — v3.1 Launch Final
 
 Remember when everyone slapped a GitHub Stats Card on their profile README? The grass, the streak, the top languages we all kind of cared about for a week.
 
-I turned the AI-coding version of that into an actual trading card 🎴
+I turned the AI-coding version of that into an actual Pokémon-style trading card 🎴
 
 devcard-ai summons your **AI Builder Trading Card** from your public commits:
 
 ⚡ Rarity frame — S tier gets an animated holo border, right inside your README
-🎭 Archetype — AI Native / Pair Programmer / Delegator / Selective User
-📊 Stats — VELOCITY / DIVERSITY / CONSISTENCY, all from the same 12-week window
+🎭 Epithet + element — The Strategist, The Lone Wolf... × Bolt/Lumen/Terra...
+📊 6-axis radar + POWER (only the top tier crosses 9000) + activated traits
 🎨 Generative art seeded by your username — no two cards look alike
 🔢 Card serial from your username hash
 
-Detects Claude, Codex, Copilot, Cursor, Windsurf, Aider and more from commit evidence — plus "equipped" badges when your repos carry CLAUDE.md / .cursorrules.
+Detects 33 AI tools (Claude, Codex, Copilot, Cursor, Cline, DeepSeek, v0...) across 3 evidence tiers — even reviewer-style usage: my card says "Codex x27" though Codex never leaves a trailer. CLAUDE.md / .cursorrules = equipped badges. Private repos opt-in via the GitHub App → verified+.
 
 One line of markdown:
 `[![AI Builder Trading Card](https://devcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark)](https://devcard.sakimyto.com/#YOUR_USERNAME)`

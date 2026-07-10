@@ -1,4 +1,4 @@
-# X Post (日本語) — v2 Trading Card Edition
+# X Post (日本語) — v3.1 Launch Final
 
 2020年ごろ、みんな GitHub プロフィールに Stats Card 貼ってませんでした？
 
@@ -8,12 +8,12 @@
 devcard-ai — 公開コミットから「AI Builder トレーディングカード」を召喚します。
 
 ⚡ レアリティ枠 — S ティアは README 上でホロ加工がアニメーションする
-🎭 アーキタイプ — AI Native / Pair Programmer / Delegator / Selective User
-📊 ステータス — VELOCITY / DIVERSITY / CONSISTENCY（全部同じ12週窓なので矛盾しない）
+🎭 二つ名＋属性 — The Strategist / The Lone Wolf… × 雷・光・森…
+📊 6角レーダー + POWER（9000 を超えられるのは最上位だけ）+ 発動型特性
 🎨 ユーザー名シードの生成アート — 全員絵柄が違う
 🔢 カードシリアル付き
 
-Claude / Codex / Copilot / Cursor などをコミット証跡から検出。CLAUDE.md や .cursorrules があるリポジトリを持っていると「equipped」バッジも付きます。
+AIツール33種を3層の証跡で検出。レビュアー型の使い方も拾うので、トレーラーを残さない Codex が私のカードでは「Codex x27」と刻まれてます。GitHub App を入れるとプライベートリポも集計（件数のみ・コードは見ない）→ verified+ 表示。
 
 README に1行:
 `[![AI Builder Trading Card](https://devcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark)](https://devcard.sakimyto.com/#YOUR_USERNAME)`
