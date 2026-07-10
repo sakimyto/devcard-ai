@@ -80,7 +80,8 @@ light / dark 両テーマ維持。OGP 横長シェア画像にも名前左のア
 - 追加①: コミット本文の AI マーカー（`Generated with [Claude Code]`、`🤖 Generated with` 等のパターン集)
 - 追加②: 設定ファイルシグナル（CLAUDE.md / AGENTS.md / .cursorrules / .cursor/rules / copilot-instructions.md / .claude — **GraphQL で取得済みだが未活用**)。ツールロードアウトに「equipped」バッジ（設定ファイル由来）として表示し、コミット由来のシェア%とは混ぜない（%はコミット実績のみ)。DIVERSITY のツール種類数には equipped も 0.5 重みで算入
 - 追加③: bot author（`*[bot]` login）
-- 追加④: assisted シグナル（コミット本文の「ツール名 + 使用動詞」文脈 — 例 `codex exec review` / `codexレビュー反映` / `gpt-5 review で指摘`）。トレーラーを残さないレビュアー用途の AI 使用（codex 等）を可視化する。committed（トレーラー/マーカー/bot）とは別軸で評価し、AI 関与 = committed または assisted と定義。ツールロードアウトに「· assisted」チップ（実線・アイコン付き、equipped の破線チップと区別）。同一ツールが committed に居れば上位証跡として assisted からは除外。ツール名単独の言及（「Codex対応」「add Codex tool」）は使用動詞がないため非マッチ
+- 追加④: assisted シグナル（コミット本文の「ツール名 + 使用動詞」文脈 — 例 `codex exec review` / `codexレビュー反映` / `gpt-5 review で指摘`）。トレーラーを残さないレビュアー用途の AI 使用（codex 等）を可視化する。committed（トレーラー/マーカー/bot）とは別軸で評価し、AI 関与 = committed または assisted と定義。ツールロードアウトに「xN」チップ（実線・アイコン付き・件数を定量表示、equipped の破線チップと区別。乗算記号は同梱サブセットフォント都合で ASCII `x` を使用）。同一ツールが committed に居れば上位証跡として assisted からは除外。ツール名単独の言及（「Codex対応」「add Codex tool」）は使用動詞がないため非マッチ。全角括弧・裸の #N（`（codex #4 指摘）` / `codex #4 P2`）・`codex致命点反映`・英語 plan review（`address codex plan review`）も実測ギャップとして拾う
+- 追加⑤（Task 23・世界の AI ツール網羅）: co-authored-by トレーラー名 / 生成マーカー / bot login の 3 系統で以下 21 ツールを帰属。DeepSeek / Qwen / Kimi / Mistral(Codestral) / Grok / Cline / Roo Code / Continue / Zed AI / Junie / Amp / OpenHands / Goose / Kiro / Trae / Augment / Jules / Replit / v0 / Bolt / Lovable。加えて Cursor（`cursor composer` 併記・`cursoragent` bot）を強化。ベンダードメイン単独では判定せず、ツール名の語境界一致のみ（人間の社員 co-author 誤検出を防止）。`amp` は `\bamp\b` の語境界で "amplify" を除外
 
 ### 時間窓の統一
 

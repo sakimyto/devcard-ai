@@ -113,12 +113,12 @@ describe('renderCardV2', () => {
     }
   })
 
-  it('renders assisted chips with icons and the "· assisted" label (golden)', () => {
+  it('renders assisted chips with icons and the quantified "xN" label (golden)', () => {
     const svg = renderCardV2(
       makeData({
         toolAttribution: {
           tools: [{ toolId: 'claude', toolName: 'Claude', commitCount: 90, percentage: 90 }],
-          assisted: [{ toolId: 'codex', toolName: 'Codex', count: 8 }],
+          assisted: [{ toolId: 'codex', toolName: 'Codex', count: 17 }],
           totalAiCommits: 90,
           verified: true,
         },
@@ -126,11 +126,28 @@ describe('renderCardV2', () => {
       }),
       { theme: 'dark' },
     )
-    expect(svg).toContain('· assisted')
-    expect(svg).toContain('Codex · assisted')
+    expect(svg).toContain('Codex x17')
+    // the old "· assisted" wording is fully replaced by the count
+    expect(svg).not.toContain('· assisted')
     // no <script> ever leaks into the rendered card
     expect(svg).not.toContain('<script')
     expect(svg).toMatchSnapshot('card-assisted-dark')
+  })
+
+  it('quantifies a single assisted commit as x1 (count boundary)', () => {
+    const svg = renderCardV2(
+      makeData({
+        toolAttribution: {
+          tools: [],
+          assisted: [{ toolId: 'codex', toolName: 'Codex', count: 1 }],
+          totalAiCommits: 1,
+          verified: true,
+        },
+        equipped: { equipped: [] },
+      }),
+      { theme: 'dark' },
+    )
+    expect(svg).toContain('Codex x1')
   })
 
   it('escapes XML in username (39-char boundary + injection attempt)', () => {

@@ -305,7 +305,10 @@ ${svgText(startX + TEXT_X, toolsY + 24, label, { fontSize: 16, fill: textColor, 
     iconChip(t.toolId, `${t.toolName} ${Math.round(t.percentage)}%`, 9, theme.text)
   }
   for (const a of data.toolAttribution.assisted.slice(0, 2)) {
-    iconChip(a.toolId, `${a.toolName} · assisted`, 8.5, theme.textSecondary)
+    // assisted は件数を定量表示（`Codex x17`）。count==1 も `x1` で統一。
+    // 乗算記号は ASCII 'x' を使う（同梱サブセットフォントに × U+00D7 が無く、
+    // resvg は loadSystemFonts:false で描画するため未収録字は空白になる）
+    iconChip(a.toolId, `${a.toolName} x${a.count}`, 9, theme.textSecondary)
   }
   const shownIds = new Set([
     ...data.toolAttribution.tools.map((t) => t.toolId),
