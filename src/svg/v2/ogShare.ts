@@ -58,7 +58,7 @@ ${svgText(90, 112, data.stats.grade, { fontSize: 64, fill: '#ffffff', fontWeight
 ${svgText(W - PAD - 90, 300, 'POWER', { fontSize: 22, fill: theme.textSecondary, fontWeight: '600', anchor: 'middle' })}
 ${svgText(W - PAD - 90, 356, powerStr, { fontSize: 56, fill: powerColor, fontWeight: 'bold', anchor: 'middle' })}
 ${svgText(PAD, H - 70, `${data.serial} · ${data.issuedYear} · public · 12wk`, { fontSize: 20, fill: theme.textSecondary })}
-${svgText(W - PAD, H - 70, 'devcard-ai', { fontSize: 22, fill: theme.textSecondary, anchor: 'end' })}
+${svgText(W - PAD, H - 70, 'PullCard AI', { fontSize: 22, fill: theme.textSecondary, anchor: 'end' })}
 </svg>`
 }
 
@@ -71,6 +71,6 @@ export function renderOgError(message: string, themeName: string): string {
 ${svgRect(0, 0, W, H, { fill: theme.bg })}
 <rect x="10" y="10" width="${W - 20}" height="${H - 20}" rx="24" fill="none" stroke="${theme.border}" stroke-width="6" />
 ${svgText(W / 2, H / 2 - 10, message, { fontSize: 40, fill: theme.text, fontWeight: 'bold', anchor: 'middle' })}
-${svgText(W / 2, H / 2 + 44, 'devcard-ai', { fontSize: 24, fill: theme.textSecondary, anchor: 'middle' })}
+${svgText(W / 2, H / 2 + 44, 'PullCard AI', { fontSize: 24, fill: theme.textSecondary, anchor: 'middle' })}
 </svg>`
 }

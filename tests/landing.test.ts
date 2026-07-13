@@ -6,7 +6,7 @@ describe('renderLandingPage v3', () => {
 
   it('has trading-card concept copy and title', () => {
     expect(html).toContain('AI Builder Trading Card')
-    expect(html).toContain('devcard-ai')
+    expect(html).toContain('PullCard AI')
     expect(html).toContain('Your GitHub,')
   })
 

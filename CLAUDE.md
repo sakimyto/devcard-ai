@@ -1,6 +1,6 @@
-# devcard-ai
+# PullCard AI (repo: pullcard-ai)
 
-AI coding style trading card generator for GitHub profiles.
+AI coding style trading card generator for GitHub profiles. Canonical URL: https://pullcard.sakimyto.com (legacy devcard.sakimyto.com 301s here — never remove that route).
 
 ## Commands
 - `bun run test` — run tests (Vitest; loads vitest.config.ts binary loader for wasm/fonts — `bun test` native can't run the resvg pixel test)

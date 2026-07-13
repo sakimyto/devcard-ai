@@ -473,7 +473,7 @@ ${num}`
   // Card-number line (left): `No.7F3A · S1 ’26 · public 12wk` — serial without the #,
   // a fixed Season 1 tag, and the two-digit issue year. When private repos are included the
   // window token becomes `all repos · 12wk` (honest label — the card is no longer public-only).
-  // Rarity mark (right, left of the devcard-ai credit): D=● C=◆ B=★ A=★★ S=★★★, S = holo.
+  // Rarity mark (right, left of the PullCard AI credit): D=● C=◆ B=★ A=★★ S=★★★, S = holo.
   const footerY = CARD_H - 40
   const serialNo = data.serial.replace(/^#/, '')
   const yy = String(data.issuedYear).slice(-2)
@@ -488,11 +488,11 @@ ${num}`
   const mark = RARITY_MARK[data.stats.grade]
   const rarityFill =
     data.stats.grade === 'S' ? 'url(#rarityHolo)' : TIER_GEM_COLORS[data.stats.grade]
-  const rarityRight = CARD_W - PAD - 88 // clears the right-aligned "devcard-ai" credit
+  const rarityRight = CARD_W - PAD - 88 // clears the right-aligned "PullCard AI" credit
   const rarity = `<text x="${rarityRight}" y="${footerY}" font-size="16" fill="${rarityFill}" text-anchor="end" letter-spacing="1.5">${mark}</text>`
   const footer = `${svgText(PAD, footerY, `No.${serialNo} · S1 ’${yy} · ${scopeLabel}`, { fontSize: 15, fill: theme.textSecondary })}
 ${rarity}
-${svgText(CARD_W - PAD, footerY, 'devcard-ai', { fontSize: 15, fill: theme.textSecondary, anchor: 'end' })}`
+${svgText(CARD_W - PAD, footerY, 'PullCard AI', { fontSize: 15, fill: theme.textSecondary, anchor: 'end' })}`
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${CARD_W}" height="${CARD_H}" viewBox="0 0 ${CARD_W} ${CARD_H}" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
 <defs>${defs}${cardDefs}</defs>
@@ -524,6 +524,6 @@ ${svgRect(0, 0, CARD_W, CARD_H, { fill: theme.bg, rx: 36 })}
 <rect x="10" y="10" width="${CARD_W - 20}" height="${CARD_H - 20}" rx="28" fill="none" stroke="${theme.border}" stroke-width="6" stroke-dasharray="10 8" />
 ${svgText(CARD_W / 2, CARD_H / 2 - 20, 'Summoning…', { fontSize: 34, fill: theme.text, fontWeight: 'bold', anchor: 'middle' })}
 ${svgText(CARD_W / 2, CARD_H / 2 + 24, `${username}'s card is being drawn`, { fontSize: 18, fill: theme.textSecondary, anchor: 'middle' })}
-${svgText(CARD_W / 2, CARD_H - 48, 'devcard-ai', { fontSize: 15, fill: theme.textSecondary, anchor: 'middle' })}
+${svgText(CARD_W / 2, CARD_H - 48, 'PullCard AI', { fontSize: 15, fill: theme.textSecondary, anchor: 'middle' })}
 </svg>`
 }

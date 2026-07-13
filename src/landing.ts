@@ -4,9 +4,9 @@ export function renderLandingPage(): string {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>devcard-ai — AI Builder Trading Card</title>
+  <title>PullCard AI — AI Builder Trading Card</title>
   <meta name="description" content="Your GitHub, as a trading card. Rarity frame, archetype, POWER — generated from your public GitHub activity. One line of markdown." />
-  <meta property="og:title" content="devcard-ai — AI Builder Trading Card" />
+  <meta property="og:title" content="PullCard AI — AI Builder Trading Card" />
   <meta property="og:description" content="Your GitHub, as a trading card. Proof you ship with AI." />
   <style>
     :root { --bg: #0d1117; --panel: #161b22; --border: #30363d; --text: #c9d1d9; --muted: #8b949e; --accent: #a371f7 }
@@ -62,7 +62,7 @@ export function renderLandingPage(): string {
     <section id="hero" class="hero">
       <div class="hero-copy">
         <h1>Your GitHub,<br/>as a trading card.</h1>
-        <p class="sub">devcard-ai reads your public GitHub activity and mints an AI Builder trading card — rarity frame, archetype, POWER. Summon yours in seconds.</p>
+        <p class="sub">PullCard AI reads your public GitHub activity and mints an AI Builder trading card — rarity frame, archetype, POWER. Summon yours in seconds.</p>
         <div class="row">
           <input id="username-input" placeholder="octocat" autocomplete="off" spellcheck="false" aria-label="GitHub username" />
           <button id="generate-button">Summon my card</button>
@@ -97,7 +97,7 @@ export function renderLandingPage(): string {
     </section>
 
     <footer>
-      <a href="https://github.com/sakimyto/devcard-ai">GitHub</a> · MIT · stats from public repos, last 12 weeks
+      <a href="https://github.com/sakimyto/pullcard-ai">GitHub</a> · MIT · stats from public repos, last 12 weeks
     </footer>
   </div>
   <script>
@@ -134,7 +134,7 @@ export function renderLandingPage(): string {
       repoHint.textContent = u + '/' + u
       newRepoLink.href = 'https://github.com/new?name=' + encodeURIComponent(u)
       shareX.href = 'https://twitter.com/intent/tweet?text=' +
-        encodeURIComponent('Summoned my AI Builder Trading Card 🃏 ' + base + '/#' + u + ' #devcardai')
+        encodeURIComponent('Summoned my AI Builder Trading Card 🃏 ' + base + '/#' + u + ' #pullcardai')
       result.hidden = false
       result.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }

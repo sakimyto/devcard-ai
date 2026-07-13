@@ -114,7 +114,7 @@ function mockOkPublicOnly(login = 'octocat') {
 }
 
 function req(path: string, headers: Record<string, string> = {}) {
-  return new Request(`https://devcard.example${path}`, { headers })
+  return new Request(`https://pullcard.example${path}`, { headers })
 }
 
 beforeEach(() => {

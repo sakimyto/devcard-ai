@@ -33,7 +33,7 @@ describe('isBotRequest', () => {
 
 describe('renderOgpHtml', () => {
   it('includes og:image with correct URL (HTML-escaped ampersand)', () => {
-    const html = renderOgpHtml('testuser', 'https://devcard-ai.example.com', 'dark')
+    const html = renderOgpHtml('testuser', 'https://pullcard-ai.example.com', 'dark')
     expect(html).toContain('og:image')
     expect(html).toContain('/og?user=testuser&amp;theme=dark')
   })

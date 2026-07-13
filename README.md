@@ -1,27 +1,27 @@
-# devcard-ai
+# PullCard AI
 
 Your AI coding style, as a trading card. Rarity frame, archetype, stats — generated from your public GitHub activity and embedded with one line of markdown.
 
-[![AI Builder Trading Card](https://devcard.sakimyto.com/?user=sakimyto&theme=dark)](https://devcard.sakimyto.com/#sakimyto)
+[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=sakimyto&theme=dark)](https://pullcard.sakimyto.com/#sakimyto)
 
 ## Add to your README
 
 Copy this into your GitHub profile README and replace `YOUR_USERNAME`:
 
 ```markdown
-[![AI Builder Trading Card](https://devcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark)](https://devcard.sakimyto.com/#YOUR_USERNAME)
+[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark)](https://pullcard.sakimyto.com/#YOUR_USERNAME)
 ```
 
 <details>
 <summary>Light theme</summary>
 
 ```markdown
-[![AI Builder Trading Card](https://devcard.sakimyto.com/?user=YOUR_USERNAME&theme=light)](https://devcard.sakimyto.com/#YOUR_USERNAME)
+[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=YOUR_USERNAME&theme=light)](https://pullcard.sakimyto.com/#YOUR_USERNAME)
 ```
 
 </details>
 
-Or visit the [card builder](https://devcard.sakimyto.com/) — summon, copy, paste. Done in 60 seconds.
+Or visit the [card builder](https://pullcard.sakimyto.com/) — summon, copy, paste. Done in 60 seconds.
 
 ## The card
 

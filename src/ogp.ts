@@ -68,7 +68,7 @@ export function renderOgpHtml(user: string, baseUrl: string, theme: string): str
   )
   const safeUser = escapeHtml(user)
   const title = `${safeUser}&#39;s AI Builder Passport`
-  const description = `See how ${safeUser} ships with AI — devcard-ai`
+  const description = `See how ${safeUser} ships with AI — PullCard AI`
 
   return `<!DOCTYPE html>
 <html>
