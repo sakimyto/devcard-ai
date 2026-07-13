@@ -1,3 +1,5 @@
+# name は変更不可: devcard-ai.sakimyto.workers.dev（旧バッジの埋め込み先）がこの名前から
+# 派生する。変えると api/index.ts の LEGACY_HOSTS 301 が届かなくなり旧バッジが死ぬ
 name = "devcard-ai"
 main = "api/index.ts"
 compatibility_date = "2025-01-01"

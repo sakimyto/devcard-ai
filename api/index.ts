@@ -141,16 +141,19 @@ function rateLimitedResponse(): Response {
   })
 }
 
+// 正準ドメイン（pullcard.sakimyto.com）へ 301 集約するレガシーホスト。旧バッジ URL は
+// 他人の README に永久に残る。camo はリダイレクト追従するので 301 で全部生かす。
+// workers.dev エントリは wrangler.toml の `name = "devcard-ai"` から派生しており、
+// worker 名を変えるとこのホストが dead になる（wrangler.toml 側のコメントも参照）
+const LEGACY_HOSTS = new Set(['devcard-ai.sakimyto.workers.dev', 'devcard.sakimyto.com'])
+
 export default {
   async fetch(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(req.url)
     const pathname = url.pathname
 
-    // 正準ドメイン（pullcard.sakimyto.com）へ 301 集約。旧 devcard.sakimyto.com と
-    // workers.dev のバッジ URL は他人の README に永久に残る。camo はリダイレクト追従
-    // するので 301 で全部生かす。このブロックは絶対に消さない
-    const LEGACY_HOSTS = ['devcard-ai.sakimyto.workers.dev', 'devcard.sakimyto.com']
-    if (LEGACY_HOSTS.includes(url.hostname)) {
+    // このブロックは絶対に消さない（旧バッジの生存線）
+    if (LEGACY_HOSTS.has(url.hostname)) {
       url.hostname = 'pullcard.sakimyto.com'
       return Response.redirect(url.toString(), 301)
     }

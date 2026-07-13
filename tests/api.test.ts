@@ -122,31 +122,21 @@ beforeEach(() => {
 })
 
 describe('worker fetch routing', () => {
-  it('workers.dev host → 301 to pullcard.sakimyto.com preserving path+query', async () => {
-    const res = await worker.fetch(
-      new Request('https://devcard-ai.sakimyto.workers.dev/?user=octocat&theme=dark'),
-      makeEnv(),
-      fakeCtx().ctx,
-    )
-    expect(res.status).toBe(301)
-    expect(res.headers.get('location')).toBe(
-      'https://pullcard.sakimyto.com/?user=octocat&theme=dark',
-    )
-    expect(graphqlMock).not.toHaveBeenCalled()
-  })
-
-  it('legacy devcard.sakimyto.com host → 301 to pullcard.sakimyto.com preserving path+query', async () => {
-    const res = await worker.fetch(
-      new Request('https://devcard.sakimyto.com/?user=octocat&theme=dark'),
-      makeEnv(),
-      fakeCtx().ctx,
-    )
-    expect(res.status).toBe(301)
-    expect(res.headers.get('location')).toBe(
-      'https://pullcard.sakimyto.com/?user=octocat&theme=dark',
-    )
-    expect(graphqlMock).not.toHaveBeenCalled()
-  })
+  it.each(['devcard-ai.sakimyto.workers.dev', 'devcard.sakimyto.com'])(
+    'legacy host %s → 301 to pullcard.sakimyto.com preserving path+query',
+    async (host) => {
+      const res = await worker.fetch(
+        new Request(`https://${host}/?user=octocat&theme=dark`),
+        makeEnv(),
+        fakeCtx().ctx,
+      )
+      expect(res.status).toBe(301)
+      expect(res.headers.get('location')).toBe(
+        'https://pullcard.sakimyto.com/?user=octocat&theme=dark',
+      )
+      expect(graphqlMock).not.toHaveBeenCalled()
+    },
+  )
 
   it('invalid user → 400, GitHub not called', async () => {
     const res = await worker.fetch(req('/?user=-bad--name-'), makeEnv(), fakeCtx().ctx)
