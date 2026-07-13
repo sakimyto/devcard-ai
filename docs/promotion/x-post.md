@@ -5,7 +5,7 @@
 草の数、Top Languages、Streak…
 あの「自分の開発ライフをカードで見せたい」気持ちの AI 時代版を、今度は**トレカ**にしました 🎴
 
-devcard-ai — 公開コミットから「AI Builder トレーディングカード」を召喚します。
+PullCard AI — 公開コミットから「AI Builder トレーディングカード」を召喚します。
 
 ⚡ レアリティ枠 — S ティアは README 上でホロ加工がアニメーションする
 🎭 二つ名＋属性 — The Strategist / The Lone Wolf… × 雷・光・森…
@@ -16,9 +16,9 @@ devcard-ai — 公開コミットから「AI Builder トレーディングカー
 AIツール33種を3層の証跡で検出。レビュアー型の使い方も拾うので、トレーラーを残さない Codex が私のカードでは「Codex x27」と刻まれてます。GitHub App を入れるとプライベートリポも集計（件数のみ・コードは見ない）→ verified+ 表示。
 
 README に1行:
-`[![AI Builder Trading Card](https://devcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark)](https://devcard.sakimyto.com/#YOUR_USERNAME)`
+`[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark)](https://pullcard.sakimyto.com/#YOUR_USERNAME)`
 
-60秒で召喚 → https://devcard.sakimyto.com
+60秒で召喚 → https://pullcard.sakimyto.com
 
 ---
 

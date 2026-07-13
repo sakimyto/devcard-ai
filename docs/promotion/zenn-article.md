@@ -12,15 +12,15 @@ published: false
 
 あの「自分の開発ライフをカードで見せたい」気持ちは AI 時代にも生きているはず — と思って AI ツール版を作っていたのですが、途中で気づきました。**カードなら、いっそ本物のトレカにすべきでは？**
 
-というわけで devcard-ai v2 は「AI Builder トレーディングカード」です。
+というわけで PullCard AI（旧 devcard-ai）v2 は「AI Builder トレーディングカード」です。
 
-[![AI Builder Trading Card](https://devcard.sakimyto.com/?user=sakimyto&theme=dark)](https://devcard.sakimyto.com/#sakimyto)
+[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=sakimyto&theme=dark)](https://pullcard.sakimyto.com/#sakimyto)
 
 ```markdown
-[![AI Builder Trading Card](https://devcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark)](https://devcard.sakimyto.com/#YOUR_USERNAME)
+[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark)](https://pullcard.sakimyto.com/#YOUR_USERNAME)
 ```
 
-README にこの 1 行を貼るだけ。https://devcard.sakimyto.com で 60 秒で作れます。
+README にこの 1 行を貼るだけ。https://pullcard.sakimyto.com で 60 秒で作れます。
 
 ## トレカの文法をどう実装したか
 
@@ -85,6 +85,6 @@ LLM は一切呼んでいません。全部決定論です。
 
 公開リポジトリのみが対象なので、プライベート中心の人（私も）は低めに出ます。カードには C と正直に刻まれました。悔しいので、プライベート活動の「件数だけ」をオプトインで集計する Verified+ を次に作ります。
 
-まずは自分のカードを召喚してみてください → https://devcard.sakimyto.com
+まずは自分のカードを召喚してみてください → https://pullcard.sakimyto.com
 
-リポジトリ: https://github.com/sakimyto/devcard-ai （MIT）
+リポジトリ: https://github.com/sakimyto/pullcard-ai （MIT）

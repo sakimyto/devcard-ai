@@ -2,16 +2,16 @@
 
 ## 基本情報
 
-- **Name:** devcard-ai
+- **Name:** PullCard AI
 - **Tagline（60字以内）:** Your GitHub, as a holographic trading card
 - **代替 tagline 案:** Turn your AI coding style into a collectible card
 - **Topics:** Developer Tools, GitHub, Artificial Intelligence, Design Tools
 - **First comment（メーカーコメント）:** 下記
-- **URL:** https://devcard.sakimyto.com
+- **URL:** https://pullcard.sakimyto.com
 
 ## Description（PH 説明・260字前後）
 
-devcard-ai reads your GitHub activity and mints a Pokémon-style trading card of how you build with AI — rarity frames (S tier gets an animated holo border that works right inside your README), a 6-axis radar, POWER, an element and epithet, and condition-triggered traits written on the card automatically. Detects 33 AI tools across commit evidence, and opts into private-repo stats via the GitHub App (counts only, never code). One line of markdown. No signup.
+PullCard AI reads your GitHub activity and mints a Pokémon-style trading card of how you build with AI — rarity frames (S tier gets an animated holo border that works right inside your README), a 6-axis radar, POWER, an element and epithet, and condition-triggered traits written on the card automatically. Detects 33 AI tools across commit evidence, and opts into private-repo stats via the GitHub App (counts only, never code). One line of markdown. No signup.
 
 ## First comment（メーカー投稿）
 
