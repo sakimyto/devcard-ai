@@ -40,9 +40,10 @@ const base: CardDataV2 = {
   },
   languages: {
     languages: [
-      { name: 'TypeScript', color: '#3178c6', repoCount: 5 },
-      { name: 'Python', color: '#3572A5', repoCount: 2 },
+      { name: 'TypeScript', color: '#3178c6', percentage: 68 },
+      { name: 'Python', color: '#3572A5', percentage: 24 },
     ],
+    othersPercentage: 8,
   },
   pattern: { pattern: 'Pair Programmer', aiRate: 0.5, alternationScore: 0.6 },
   flavor: 'Trades keystrokes with Claude, line for line.',

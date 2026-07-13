@@ -45,7 +45,7 @@
 <text x="44" y="84" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">AI BUILDER</text>
 <text x="572" y="84" font-size="12" fill="#8b949e" font-weight="600" text-anchor="end" letter-spacing="2" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">POWER</text>
 
-<text x="572" y="128" font-size="32" fill="#a371f7" font-weight="bold" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">6,528</text>
+<text x="572" y="128" font-size="32" fill="#a371f7" font-weight="bold" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">6,545</text>
 <text x="44" y="128" font-size="42" fill="#c9d1d9" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">sakimyto</text>
 <g transform="translate(44 156) scale(1.25)"><path d="M4 12 H12 M12 12 L18 6 M12 12 L18 18 M18 6 l-3 0 m3 0 l0 3 M18 18 l-3 0 m3 0 l0 -3" fill="none" stroke="#a371f7" stroke-width="2.5" stroke-linecap="round" /></g>
 <text x="84" y="179" font-size="22" fill="#a371f7" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">The Strategist</text>
@@ -149,9 +149,9 @@
 <line x1="188.00" y1="568.00" x2="188.00" y2="650.00" stroke="#30363d" stroke-width="1" />
 <line x1="188.00" y1="568.00" x2="116.99" y2="609.00" stroke="#30363d" stroke-width="1" />
 <line x1="188.00" y1="568.00" x2="116.99" y2="527.00" stroke="#30363d" stroke-width="1" />
-<polygon points="188.00,493.38 231.32,542.99 214.99,583.58 188.00,629.50 116.99,609.00 174.51,560.21" fill="none" stroke="#a371f7" stroke-opacity="0.55" stroke-width="3" filter="url(#radarGlow)" />
-<polygon points="188.00,493.38 231.32,542.99 214.99,583.58 188.00,629.50 116.99,609.00 174.51,560.21" fill="#a371f7" fill-opacity="0.25" stroke="#a371f7" stroke-width="2" />
-<circle cx="188.00" cy="493.38" r="3" fill="#a371f7" />
+<polygon points="188.00,492.56 231.32,542.99 214.99,583.58 188.00,629.50 116.99,609.00 174.51,560.21" fill="none" stroke="#a371f7" stroke-opacity="0.55" stroke-width="3" filter="url(#radarGlow)" />
+<polygon points="188.00,492.56 231.32,542.99 214.99,583.58 188.00,629.50 116.99,609.00 174.51,560.21" fill="#a371f7" fill-opacity="0.25" stroke="#a371f7" stroke-width="2" />
+<circle cx="188.00" cy="492.56" r="3" fill="#a371f7" />
 <circle cx="231.32" cy="542.99" r="3" fill="#a371f7" />
 <circle cx="214.99" cy="583.58" r="3" fill="#a371f7" />
 <circle cx="188.00" cy="629.50" r="3" fill="#a371f7" />
@@ -165,7 +165,7 @@
 <text x="103.13" y="524" font-size="14" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">FLOW</text>
 <g transform="translate(368 478) scale(0.667)"><path d="M13 2 4 14 11 14 9 22 20 9 13 9 Z" fill="#a371f7" /></g>
 <text x="394" y="492" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">VELOCITY</text>
-<text x="706" y="492" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">91</text>
+<text x="706" y="492" font-size="20" fill="#c9d1d9" font-weight="bold" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">92</text>
 <g transform="translate(368 508)">
 <circle cx="8" cy="4.16" r="2.08" fill="#a371f7" />
 <circle cx="4.16" cy="11.52" r="2.08" fill="#a371f7" />
@@ -199,7 +199,7 @@
 <text x="218" y="720" font-size="16" fill="#c9d1d9" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Other 1%</text>
 <rect x="314" y="696" width="123" height="36" fill="#1f2937" rx="18" />
 <g transform="translate(326 708) scale(0.5)"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z" fill="#10a37f" /></g>
-<text x="344" y="720" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex x28</text>
+<text x="344" y="720" font-size="16" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Codex x30</text>
 <text x="44" y="780" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">TYPES</text>
 <clipPath id="langBarClip"><rect x="44" y="786" width="662" height="10" rx="5" /></clipPath>
 <g clip-path="url(#langBarClip)"><rect x="44" y="786" width="662" height="10" fill="#8b949e" fill-opacity="0.25" />
@@ -210,66 +210,66 @@
 <rect x="686.14" y="786.00" width="19.86" height="10.00" fill="#8b949e" /></g>
 <text x="44" y="812" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"><tspan fill="#3178c6" font-size="12">●</tspan><tspan fill="#c9d1d9" font-size="12"> TypeScript </tspan><tspan fill="#8b949e" font-size="12">57%</tspan><tspan fill="#8b949e" font-size="12"> · </tspan><tspan fill="#3572A5" font-size="12">●</tspan><tspan fill="#c9d1d9" font-size="12"> Python </tspan><tspan fill="#8b949e" font-size="12">27%</tspan><tspan fill="#8b949e" font-size="12"> · </tspan><tspan fill="#e34c26" font-size="12">●</tspan><tspan fill="#c9d1d9" font-size="12"> HTML </tspan><tspan fill="#8b949e" font-size="12">8%</tspan><tspan fill="#8b949e" font-size="12"> · </tspan><tspan fill="#663399" font-size="12">●</tspan><tspan fill="#c9d1d9" font-size="12"> CSS </tspan><tspan fill="#8b949e" font-size="12">5%</tspan></text>
 <text x="44" y="852" font-size="13" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">EXP</text>
-<text x="84" y="852" font-size="28" fill="#a371f7" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">10,505</text>
-<text x="193" y="839" font-size="11" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">incl. private</text>
-<text x="405" y="852" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 1618c · 27pr · 0rev</text>
-<text x="706" y="852" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 12d streak</text>
+<text x="84" y="852" font-size="28" fill="#a371f7" font-weight="bold" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">9,966</text>
+<text x="176" y="839" font-size="11" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">incl. private</text>
+<text x="405" y="852" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">› 1589c · 26pr · 0rev</text>
+<text x="706" y="852" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">▲ 15d streak</text>
 <text x="44" y="886" font-size="15" fill="#8b949e" font-weight="600" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">CONTRIBUTIONS · 1y</text>
-<text x="706" y="886" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">17,069 total</text>
+<text x="706" y="886" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">17,229 total</text>
 <rect x="44.00" y="924.00" width="11.73" height="4.00" rx="1" fill="#a371f7" fill-opacity="0.35" />
 <rect x="56.73" y="924.00" width="11.73" height="4.00" rx="1" fill="#a371f7" fill-opacity="0.35" />
 <rect x="69.46" y="924.00" width="11.73" height="4.00" rx="1" fill="#a371f7" fill-opacity="0.35" />
 <rect x="82.19" y="924.00" width="11.73" height="4.00" rx="1" fill="#a371f7" fill-opacity="0.35" />
 <rect x="94.92" y="924.00" width="11.73" height="4.00" rx="1" fill="#a371f7" fill-opacity="0.35" />
 <rect x="107.65" y="924.00" width="11.73" height="4.00" rx="1" fill="#a371f7" fill-opacity="0.35" />
-<rect x="120.38" y="924.00" width="11.73" height="4.00" rx="1" fill="#a371f7" fill-opacity="0.35" />
-<rect x="133.12" y="922.73" width="11.73" height="5.27" rx="1" fill="#a371f7" fill-opacity="0.37" />
+<rect x="120.38" y="922.73" width="11.73" height="5.27" rx="1" fill="#a371f7" fill-opacity="0.37" />
+<rect x="133.12" y="924.00" width="11.73" height="4.00" rx="1" fill="#a371f7" fill-opacity="0.35" />
 <rect x="145.85" y="924.00" width="11.73" height="4.00" rx="1" fill="#a371f7" fill-opacity="0.35" />
-<rect x="158.58" y="924.00" width="11.73" height="4.00" rx="1" fill="#a371f7" fill-opacity="0.35" />
-<rect x="171.31" y="922.73" width="11.73" height="5.27" rx="1" fill="#a371f7" fill-opacity="0.37" />
-<rect x="184.04" y="922.97" width="11.73" height="5.03" rx="1" fill="#a371f7" fill-opacity="0.37" />
-<rect x="196.77" y="922.21" width="11.73" height="5.79" rx="1" fill="#a371f7" fill-opacity="0.39" />
-<rect x="209.50" y="922.37" width="11.73" height="5.63" rx="1" fill="#a371f7" fill-opacity="0.38" />
-<rect x="222.23" y="924.00" width="11.73" height="4.00" rx="1" fill="#a371f7" fill-opacity="0.35" />
-<rect x="234.96" y="920.99" width="11.73" height="7.01" rx="1" fill="#a371f7" fill-opacity="0.41" />
-<rect x="247.69" y="921.27" width="11.73" height="6.73" rx="1" fill="#a371f7" fill-opacity="0.40" />
-<rect x="260.42" y="919.32" width="11.73" height="8.68" rx="1" fill="#a371f7" fill-opacity="0.44" />
-<rect x="273.15" y="922.54" width="11.73" height="5.46" rx="1" fill="#a371f7" fill-opacity="0.38" />
-<rect x="285.88" y="922.73" width="11.73" height="5.27" rx="1" fill="#a371f7" fill-opacity="0.37" />
-<rect x="298.62" y="924.00" width="11.73" height="4.00" rx="1" fill="#a371f7" fill-opacity="0.35" />
-<rect x="311.35" y="921.93" width="11.73" height="6.07" rx="1" fill="#a371f7" fill-opacity="0.39" />
-<rect x="324.08" y="921.81" width="11.73" height="6.19" rx="1" fill="#a371f7" fill-opacity="0.39" />
-<rect x="336.81" y="922.37" width="11.73" height="5.63" rx="1" fill="#a371f7" fill-opacity="0.38" />
-<rect x="349.54" y="922.54" width="11.73" height="5.46" rx="1" fill="#a371f7" fill-opacity="0.38" />
-<rect x="362.27" y="923.27" width="11.73" height="4.73" rx="1" fill="#a371f7" fill-opacity="0.36" />
-<rect x="375.00" y="922.07" width="11.73" height="5.93" rx="1" fill="#a371f7" fill-opacity="0.39" />
-<rect x="387.73" y="919.74" width="11.73" height="8.26" rx="1" fill="#a371f7" fill-opacity="0.43" />
-<rect x="400.46" y="909.83" width="11.73" height="18.17" rx="1" fill="#a371f7" fill-opacity="0.63" />
-<rect x="413.19" y="911.68" width="11.73" height="16.32" rx="1" fill="#a371f7" fill-opacity="0.59" />
-<rect x="425.92" y="910.45" width="11.73" height="17.55" rx="1" fill="#a371f7" fill-opacity="0.62" />
-<rect x="438.65" y="908.16" width="11.73" height="19.84" rx="1" fill="#a371f7" fill-opacity="0.66" />
-<rect x="451.38" y="908.83" width="11.73" height="19.17" rx="1" fill="#a371f7" fill-opacity="0.65" />
-<rect x="464.12" y="913.06" width="11.73" height="14.94" rx="1" fill="#a371f7" fill-opacity="0.56" />
-<rect x="476.85" y="908.45" width="11.73" height="19.55" rx="1" fill="#a371f7" fill-opacity="0.66" />
-<rect x="489.58" y="906.51" width="11.73" height="21.49" rx="1" fill="#a371f7" fill-opacity="0.69" />
-<rect x="502.31" y="905.34" width="11.73" height="22.66" rx="1" fill="#a371f7" fill-opacity="0.72" />
-<rect x="515.04" y="903.43" width="11.73" height="24.57" rx="1" fill="#a371f7" fill-opacity="0.75" />
-<rect x="527.77" y="900.74" width="11.73" height="27.26" rx="1" fill="#a371f7" fill-opacity="0.81" />
-<rect x="540.50" y="897.24" width="11.73" height="30.76" rx="1" fill="#a371f7" fill-opacity="0.88" />
-<rect x="553.23" y="900.12" width="11.73" height="27.88" rx="1" fill="#a371f7" fill-opacity="0.82" />
-<rect x="565.96" y="903.39" width="11.73" height="24.61" rx="1" fill="#a371f7" fill-opacity="0.75" />
-<rect x="578.69" y="905.95" width="11.73" height="22.05" rx="1" fill="#a371f7" fill-opacity="0.70" />
-<rect x="591.42" y="899.11" width="11.73" height="28.89" rx="1" fill="#a371f7" fill-opacity="0.84" />
-<rect x="604.15" y="899.06" width="11.73" height="28.94" rx="1" fill="#a371f7" fill-opacity="0.84" />
-<rect x="616.88" y="900.35" width="11.73" height="27.65" rx="1" fill="#a371f7" fill-opacity="0.81" />
-<rect x="629.62" y="906.66" width="11.73" height="21.34" rx="1" fill="#a371f7" fill-opacity="0.69" />
-<rect x="642.35" y="896.00" width="11.73" height="32.00" rx="1" fill="#a371f7" fill-opacity="0.90" />
-<rect x="655.08" y="909.74" width="11.73" height="18.26" rx="1" fill="#a371f7" fill-opacity="0.63" />
-<rect x="667.81" y="916.48" width="11.73" height="11.52" rx="1" fill="#a371f7" fill-opacity="0.50" />
-<rect x="680.54" y="908.93" width="11.73" height="19.07" rx="1" fill="#a371f7" fill-opacity="0.65" />
-<rect x="693.27" y="899.09" width="11.73" height="28.91" rx="1" fill="#a371f7" fill-opacity="1.00" /><rect x="693.27" y="899.09" width="11.73" height="28.91" rx="1" fill="none" stroke="#a371f7" stroke-width="1" />
-<text x="44" y="952" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"><tspan font-size="17" fill="#a371f7" font-weight="bold">◆ Centurion</tspan><tspan font-size="15" fill="#8b949e"> — 223 AI-assisted commits in 12 weeks</tspan></text>
-<text x="706" y="953" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="22" fill="#a371f7" font-weight="bold">223</text>
+<rect x="158.58" y="922.73" width="11.73" height="5.27" rx="1" fill="#a371f7" fill-opacity="0.37" />
+<rect x="171.31" y="922.97" width="11.73" height="5.03" rx="1" fill="#a371f7" fill-opacity="0.37" />
+<rect x="184.04" y="922.21" width="11.73" height="5.79" rx="1" fill="#a371f7" fill-opacity="0.39" />
+<rect x="196.77" y="922.37" width="11.73" height="5.63" rx="1" fill="#a371f7" fill-opacity="0.38" />
+<rect x="209.50" y="924.00" width="11.73" height="4.00" rx="1" fill="#a371f7" fill-opacity="0.35" />
+<rect x="222.23" y="920.99" width="11.73" height="7.01" rx="1" fill="#a371f7" fill-opacity="0.41" />
+<rect x="234.96" y="921.27" width="11.73" height="6.73" rx="1" fill="#a371f7" fill-opacity="0.40" />
+<rect x="247.69" y="919.32" width="11.73" height="8.68" rx="1" fill="#a371f7" fill-opacity="0.44" />
+<rect x="260.42" y="922.54" width="11.73" height="5.46" rx="1" fill="#a371f7" fill-opacity="0.38" />
+<rect x="273.15" y="922.73" width="11.73" height="5.27" rx="1" fill="#a371f7" fill-opacity="0.37" />
+<rect x="285.88" y="924.00" width="11.73" height="4.00" rx="1" fill="#a371f7" fill-opacity="0.35" />
+<rect x="298.62" y="921.93" width="11.73" height="6.07" rx="1" fill="#a371f7" fill-opacity="0.39" />
+<rect x="311.35" y="921.81" width="11.73" height="6.19" rx="1" fill="#a371f7" fill-opacity="0.39" />
+<rect x="324.08" y="922.37" width="11.73" height="5.63" rx="1" fill="#a371f7" fill-opacity="0.38" />
+<rect x="336.81" y="922.54" width="11.73" height="5.46" rx="1" fill="#a371f7" fill-opacity="0.38" />
+<rect x="349.54" y="923.27" width="11.73" height="4.73" rx="1" fill="#a371f7" fill-opacity="0.36" />
+<rect x="362.27" y="922.07" width="11.73" height="5.93" rx="1" fill="#a371f7" fill-opacity="0.39" />
+<rect x="375.00" y="919.74" width="11.73" height="8.26" rx="1" fill="#a371f7" fill-opacity="0.43" />
+<rect x="387.73" y="909.83" width="11.73" height="18.17" rx="1" fill="#a371f7" fill-opacity="0.63" />
+<rect x="400.46" y="911.68" width="11.73" height="16.32" rx="1" fill="#a371f7" fill-opacity="0.59" />
+<rect x="413.19" y="910.45" width="11.73" height="17.55" rx="1" fill="#a371f7" fill-opacity="0.62" />
+<rect x="425.92" y="908.16" width="11.73" height="19.84" rx="1" fill="#a371f7" fill-opacity="0.66" />
+<rect x="438.65" y="908.83" width="11.73" height="19.17" rx="1" fill="#a371f7" fill-opacity="0.65" />
+<rect x="451.38" y="913.06" width="11.73" height="14.94" rx="1" fill="#a371f7" fill-opacity="0.56" />
+<rect x="464.12" y="908.45" width="11.73" height="19.55" rx="1" fill="#a371f7" fill-opacity="0.66" />
+<rect x="476.85" y="906.51" width="11.73" height="21.49" rx="1" fill="#a371f7" fill-opacity="0.69" />
+<rect x="489.58" y="905.34" width="11.73" height="22.66" rx="1" fill="#a371f7" fill-opacity="0.72" />
+<rect x="502.31" y="903.43" width="11.73" height="24.57" rx="1" fill="#a371f7" fill-opacity="0.75" />
+<rect x="515.04" y="900.74" width="11.73" height="27.26" rx="1" fill="#a371f7" fill-opacity="0.81" />
+<rect x="527.77" y="897.24" width="11.73" height="30.76" rx="1" fill="#a371f7" fill-opacity="0.88" />
+<rect x="540.50" y="900.12" width="11.73" height="27.88" rx="1" fill="#a371f7" fill-opacity="0.82" />
+<rect x="553.23" y="903.39" width="11.73" height="24.61" rx="1" fill="#a371f7" fill-opacity="0.75" />
+<rect x="565.96" y="905.95" width="11.73" height="22.05" rx="1" fill="#a371f7" fill-opacity="0.70" />
+<rect x="578.69" y="899.11" width="11.73" height="28.89" rx="1" fill="#a371f7" fill-opacity="0.84" />
+<rect x="591.42" y="899.06" width="11.73" height="28.94" rx="1" fill="#a371f7" fill-opacity="0.84" />
+<rect x="604.15" y="900.35" width="11.73" height="27.65" rx="1" fill="#a371f7" fill-opacity="0.81" />
+<rect x="616.88" y="906.66" width="11.73" height="21.34" rx="1" fill="#a371f7" fill-opacity="0.69" />
+<rect x="629.62" y="896.00" width="11.73" height="32.00" rx="1" fill="#a371f7" fill-opacity="0.90" />
+<rect x="642.35" y="909.74" width="11.73" height="18.26" rx="1" fill="#a371f7" fill-opacity="0.63" />
+<rect x="655.08" y="916.48" width="11.73" height="11.52" rx="1" fill="#a371f7" fill-opacity="0.50" />
+<rect x="667.81" y="908.93" width="11.73" height="19.07" rx="1" fill="#a371f7" fill-opacity="0.65" />
+<rect x="680.54" y="897.97" width="11.73" height="30.03" rx="1" fill="#a371f7" fill-opacity="0.86" />
+<rect x="693.27" y="918.68" width="11.73" height="9.32" rx="1" fill="#a371f7" fill-opacity="1.00" /><rect x="693.27" y="918.68" width="11.73" height="9.32" rx="1" fill="none" stroke="#a371f7" stroke-width="1" />
+<text x="44" y="952" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"><tspan font-size="17" fill="#a371f7" font-weight="bold">◆ Centurion</tspan><tspan font-size="15" fill="#8b949e"> — 229 AI-assisted commits in 12 weeks</tspan></text>
+<text x="706" y="953" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="22" fill="#a371f7" font-weight="bold">229</text>
 <line x1="606" y1="947" x2="657" y2="947" stroke="#8b949e" stroke-opacity="0.35" stroke-width="1" stroke-dasharray="1.5 3.5" />
 <text x="44" y="980" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"><tspan font-size="17" fill="#a371f7" font-weight="bold">◆ Chain strike</tspan><tspan font-size="15" fill="#8b949e"> — 10 days of 8+ commits</tspan></text>
 <text x="706" y="981" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="22" fill="#a371f7" font-weight="bold">10d</text>
@@ -285,5 +285,5 @@
 </g>
 <text x="44" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">No.64BD · S1 ’26 · all repos · 12wk</text>
 <text x="618" y="1010" font-size="16" fill="#b8860b" text-anchor="end" letter-spacing="1.5">★★</text>
-<text x="706" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">devcard-ai</text>
+<text x="706" y="1010" font-size="15" fill="#8b949e" font-weight="normal" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">PullCard AI</text>
 </svg>
