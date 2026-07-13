@@ -3,9 +3,11 @@ main = "api/index.ts"
 compatibility_date = "2025-01-01"
 # account_id is set via CLOUDFLARE_ACCOUNT_ID env var
 
-# 正準ドメイン。workers.dev は残し（旧埋め込み用）、worker 内で 301 集約する
+# 正準ドメインは pullcard.sakimyto.com。devcard.sakimyto.com と workers.dev は
+# 旧バッジ埋め込み用に残し、worker 内で 301 集約する（消すと既存バッジが死ぬ）
 workers_dev = true
 routes = [
+  { pattern = "pullcard.sakimyto.com", custom_domain = true },
   { pattern = "devcard.sakimyto.com", custom_domain = true }
 ]
 
