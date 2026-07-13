@@ -222,6 +222,42 @@ describe('worker fetch routing', () => {
   })
 })
 
+describe('/og GitHub クォータ保護（KV SWR キャッシュ）', () => {
+  it('同一 user への 2 回目の /og は KV fresh hit で GitHub を叩かない', async () => {
+    mockOkPublicOnly('octocat')
+    const kv = fakeKv()
+    const first = await worker.fetch(req('/og?user=octocat&theme=dark'), makeEnv(kv), fakeCtx().ctx)
+    expect(first.status).toBe(200)
+    expect(first.headers.get('content-type')).toContain('image/png')
+    // buildCardData は 3 本の並列 GraphQL を撃つ（public/private/contributions）
+    const callsAfterFirst = graphqlMock.mock.calls.length
+    expect(callsAfterFirst).toBe(3)
+
+    const second = await worker.fetch(
+      req('/og?user=octocat&theme=dark'),
+      makeEnv(kv),
+      fakeCtx().ctx,
+    )
+    expect(second.status).toBe(200)
+    // 2 回目は KV fresh hit。GraphQL 追加消費ゼロ = クォータ枯渇攻撃を吸収
+    expect(graphqlMock.mock.calls.length).toBe(callsAfterFirst)
+  })
+
+  it('存在しない user の /og も not_found をキャッシュし、2 回目は GitHub を叩かない', async () => {
+    graphqlMock.mockResolvedValue(NOT_FOUND_RESPONSE)
+    const kv = fakeKv()
+    const first = await worker.fetch(req('/og?user=ghost&theme=dark'), makeEnv(kv), fakeCtx().ctx)
+    expect(first.status).toBe(200)
+    const callsAfterFirst = graphqlMock.mock.calls.length
+    expect(callsAfterFirst).toBe(3)
+
+    const second = await worker.fetch(req('/og?user=ghost&theme=dark'), makeEnv(kv), fakeCtx().ctx)
+    expect(second.status).toBe(200)
+    // ゴミ username の連打でも GraphQL 消費は user あたり 1 世代に上限される
+    expect(graphqlMock.mock.calls.length).toBe(callsAfterFirst)
+  })
+})
+
 describe('召喚ギャラリー', () => {
   it('GET /api/gallery → at 降順 top24 JSON, Cache-Control 60s', async () => {
     const kv = fakeKv()

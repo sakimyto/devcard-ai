@@ -119,6 +119,46 @@ async function resolveCard(user: string, theme: string, env: Env): Promise<Resol
   }
 }
 
+// /og の共有画像 SVG を KV SWR 経由で解決する。resolveCard と対称で、GitHub App 認証と
+// GraphQL(×3) を produce 内（miss/expired 時のみ）に遅延させる。カード本体とは別キー
+// （og:v2:）で、fresh hit 中は GitHub を一切叩かない = 単一 IP からの /og 連打による
+// GitHub App クォータ枯渇を吸収する（not_found のゴミ username も 1 世代だけ消費）。
+async function resolveOgSvg(
+  user: string,
+  theme: string,
+  env: Env,
+): Promise<{ svg: string; cacheState: string }> {
+  try {
+    const cached = await getCachedOrProduce({
+      kv: env.DEVCARD_KV,
+      key: `og:v2:${user}:${theme}`,
+      freshTtlSec: 3600,
+      staleTtlSec: 86400,
+      produce: async () => {
+        const githubApp = getApp(env)
+        const octokit = await githubApp.getInstallationOctokit(
+          Number(env.GITHUB_APP_INSTALLATION_ID),
+        )
+        const r = await buildCardData({ user, theme }, createGraphql(octokit))
+        // 一過性エラー（rate limit・upstream 障害）はキャッシュせず throw して stale 供給へ。
+        // 終端状態（not_found/no_ai/no_repos）は renderOgError を確定結果としてキャッシュする
+        if (r.kind === 'error') throw new Error('upstream error')
+        const svg =
+          r.kind === 'ok' && r.data
+            ? renderOgShare(r.data, theme)
+            : renderOgError(r.errorMessage ?? 'Temporarily unavailable', theme)
+        return { svg, kind: r.kind }
+      },
+      shouldCache: (v) =>
+        v.kind === 'ok' || v.kind === 'not_found' || v.kind === 'no_ai' || v.kind === 'no_repos',
+    })
+    return { svg: cached.value.svg, cacheState: cached.cacheState }
+  } catch {
+    // fresh も stale も無い完全失敗のみ。キャッシュしない一過性エラー画像を返す
+    return { svg: renderOgError('Temporarily unavailable', theme), cacheState: 'none' }
+  }
+}
+
 function createGraphql(octokit: Awaited<ReturnType<App['getInstallationOctokit']>>) {
   return async (query: string, variables: Record<string, unknown>) => {
     return octokit.graphql<GitHubQueryResponse>(query, variables)
@@ -176,18 +216,11 @@ export default {
       if (!user) return badRequestResponse('User parameter required')
       if (await rateLimited(req, env)) return rateLimitedResponse()
 
-      const githubApp = getApp(env)
-      const octokit = await githubApp.getInstallationOctokit(Number(env.GITHUB_APP_INSTALLATION_ID))
-
-      const r = await buildCardData({ user, theme }, createGraphql(octokit))
-      const svg =
-        r.kind === 'ok' && r.data
-          ? renderOgShare(r.data, theme)
-          : renderOgError(r.errorMessage ?? 'Temporarily unavailable', theme)
+      const { svg, cacheState } = await resolveOgSvg(user, theme, env)
 
       try {
         const png = await svgToPng(svg, 1200)
-        recordRender(env.CARD_ANALYTICS, { user, theme, kind: 'og', cacheState: 'none' })
+        recordRender(env.CARD_ANALYTICS, { user, theme, kind: 'og', cacheState })
         return new Response(png as unknown as BodyInit, {
           headers: {
             'Content-Type': 'image/png',
