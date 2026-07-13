@@ -126,13 +126,13 @@ describe('worker fetch routing', () => {
     'legacy host %s → 301 to pullcard.sakimyto.com preserving path+query',
     async (host) => {
       const res = await worker.fetch(
-        new Request(`https://${host}/?user=octocat&theme=dark`),
+        new Request(`https://${host}/api/gallery?user=octocat&theme=dark`),
         makeEnv(),
         fakeCtx().ctx,
       )
       expect(res.status).toBe(301)
       expect(res.headers.get('location')).toBe(
-        'https://pullcard.sakimyto.com/?user=octocat&theme=dark',
+        'https://pullcard.sakimyto.com/api/gallery?user=octocat&theme=dark',
       )
       expect(graphqlMock).not.toHaveBeenCalled()
     },
