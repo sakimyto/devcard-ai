@@ -24,7 +24,7 @@ Unlike session-stats cards (e.g. codecard.dev), PullCard reads your actual GitHu
 
 Privacy: public repos by default. Installing the GitHub App with "All repositories" opts you into private-inclusive stats — counts only, never code, never repo names — and the card labels itself `all repos · verified+` so nobody can quietly inflate.
 
-Stack: Cloudflare Workers + GitHub GraphQL (3 parallel queries — the combined one 502s past the gateway limit), KV stale-if-error cache, Analytics Engine, resvg-wasm with subset Inter for the OGP share image. No LLM calls; everything is deterministic and unit-tested (465 tests).
+Stack: Cloudflare Workers + GitHub GraphQL (3 parallel queries — the combined one 502s past the gateway limit), KV stale-if-error cache, Analytics Engine, resvg-wasm with subset Inter for the OGP share image. No LLM calls; everything is deterministic and unit-tested (468 tests).
 
 Summon yours: https://pullcard.sakimyto.com
 Repo: https://github.com/sakimyto/pullcard-ai (MIT)
