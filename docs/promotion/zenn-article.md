@@ -35,22 +35,25 @@ README にこの 1 行を貼るだけ。https://pullcard.sakimyto.com で 60 秒
 
 「README の中で動くホロカード」が最大の見せ場です。script も foreignObject も使えない制約下で、`<animateTransform>` と `<animate>` だけで作っています。
 
-### アーキタイプ（クラス）
+### 二つ名（アーキタイプ）
 
-AI コミット比率と「人間コミットと AI コミットの交互性」から4クラスに分類します。
+内部で 4 軸（AI 依存度／作業の集中・分散／単発・継続／広さ）からビルダータイプを判定し、**16 種類の「二つ名」**に写像します。さらに図抜けたステータスには特別枠 **The Ascendant** を1つ。
 
-- **AI Native** — AI 比率 60% 以上
-- **Pair Programmer** — 交互に刻むスタイル
-- **Delegator** — まとめて任せるスタイル
-- **Selective User** — 要所で使うスタイル
+- 例: The Strategist / The Architect / The Maverick / The Lone Wolf / The Summoner …
+- **MBTI 的な 4 文字コードは意図的にカードに出しません**。コード（`HDSW` のような内部表現）は計算して即捨て、表に乗るのは二つ名だけ。「HDSW」より「The Strategist」の方がトレカに映えるので
 
-### ステータス
+初期版では `Pair Programmer` のような素の分類ラベルを出していましたが、味気ないので二つ名に差し替えました。
+
+### ステータス（6軸レーダー）
 
 - **VELOCITY** — コミット頻度（対数正規化）
 - **DIVERSITY** — ツール種類 × 用途（feature/fix/test/refactor）の分散
+- **SYNERGY** — 人間コミットと AI コミットの噛み合い
 - **CONSISTENCY** — アクティブ週割合
+- **RANGE** — 触れている技術・リポジトリの広さ
+- **FLOW** — 連続性・リズム
 
-3 本とも 0-100 で、**全て同じ「公開リポジトリ・直近 12 週」窓**から計算します。v1 では指標ごとに集計窓が違い「TIER A なのに 1/12 active weeks」のような矛盾が起きえたので、v2 では窓を 1 つに統一しました（GraphQL の `history(since:)` で取得段階から絞っています）。カードにも `public · 12wk` と明記します。
+6 本とも 0-100 で、**全て同じ「公開リポジトリ・直近 12 週」窓**から計算します。初期版では指標ごとに集計窓が違い「TIER A なのに 1/12 active weeks」のような矛盾が起きえたので、窓を 1 つに統一しました（GraphQL の `history(since:)` で取得段階から絞っています）。カードにも `public · 12wk` と明記します。
 
 ### ジェネラティブアート & シリアル
 
@@ -77,7 +80,7 @@ LLM は一切呼んでいません。全部決定論です。
 
 ## ハマりどころ
 
-1. **octokit は存在しないユーザーで `user: null` を返さない** — GraphqlResponseError（`errors[].type === 'NOT_FOUND'`）を投げます。これを正規化しないと 404 が返せず、存在しないユーザー名の連打が毎回 GitHub クォータを消費します
+1. **octokit は存在しないユーザーで `user: null` を返さない** — GraphqlResponseError（`errors[].type === 'NOT_FOUND'`）を投げます。これを正規化しないと 404 が返せず、存在しないユーザー名の連打が毎回 GitHub クォータを消費します。対策として `not_found` も 10 分だけ KV にネガティブキャッシュし、ゴミ username の連打を吸収するようにしました（OGP 経路もカード本体と同じ KV キャッシュを共有させ、`/og` だけキャッシュを素通りしてクォータを溶かす穴も塞いでいます）
 2. **404 を画像に返してはいけない** — GitHub camo 経由の 4xx は README 上で壊れ画像アイコンになります。画像コンテキストには 200 + エラーカード SVG、`Accept: text/html` のブラウザ直叩きにだけ 404 を返す設計にしました
 3. **`bun test` と `bun run test` は別物** — native の `bun test` は vitest.config の WASM ローダーを通らないため resvg のテストが動きません。CI が silently 素通りしていたのに気づいて修正しました
 
