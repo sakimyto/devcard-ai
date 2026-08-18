@@ -1,7 +1,8 @@
 import type { CardDataV2 } from '~/analyzers/types'
+import { glowLabel, normalizeGlow } from '~/card/customization'
 import { type Theme, getTheme } from '../themes'
 import { svgRect, svgText } from '../utils'
-import { TIER_GEM_COLORS } from './frame'
+import { renderFrame } from './frame'
 
 const W = 1200
 const H = 630
@@ -17,11 +18,12 @@ ${filled > 0 ? svgRect(barX, y, Math.max(filled, 20), 20, { fill: theme.accent, 
 ${svgText(barX + barW + 20, y + 17, String(value), { fontSize: 24, fill: theme.text, fontWeight: 'bold' })}`
 }
 
-// 1200x630 landscape share image: a summary (name / tier gem / stat bars / POWER), NOT
+// 1200x630 landscape share image: a summary (name / stat bars / POWER), NOT
 // the 750x1050 vertical card scaled down. PNG-rasterized downstream, so no SMIL.
-export function renderOgShare(data: CardDataV2, themeName: string): string {
+export function renderOgShare(data: CardDataV2, themeName: string, glowName = 'soft'): string {
   const theme = getTheme(themeName)
-  const gemColor = TIER_GEM_COLORS[data.stats.grade]
+  const glow = normalizeGlow(glowName)
+  const { defs, frame } = renderFrame(glow, W, H, theme.accent, { animated: false })
 
   // Circular avatar to the left of the name. When absent, the name keeps its original
   // x=PAD position (text placement is invariant to the avatar being present or not).
@@ -36,14 +38,17 @@ export function renderOgShare(data: CardDataV2, themeName: string): string {
 <circle cx="${avCx}" cy="${avCy}" r="${avR}" fill="none" stroke="${theme.accent}" stroke-width="3" />`
     : ''
 
-  // POWER — the share image's headline number, under the tier gem. Gold past 9000.
+  // POWER — the share image's headline number. Gold past 9000.
   const power = data.stats.power
   const powerColor = power >= 9000 ? '#f0b429' : theme.accent
   const powerStr = power.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
+  const powerX = W - PAD - 90
+
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="Inter">
+<defs>${defs}</defs>
 ${svgRect(0, 0, W, H, { fill: theme.bg })}
-<rect x="10" y="10" width="${W - 20}" height="${H - 20}" rx="24" fill="none" stroke="${gemColor}" stroke-width="6" />
+${frame}
 ${svgText(nameX, 120, 'AI BUILDER', { fontSize: 24, fill: theme.textSecondary, fontWeight: '600' })}
 ${avatar}
 ${svgText(nameX, 180, data.username, { fontSize: 56, fill: theme.text, fontWeight: 'bold' })}
@@ -51,12 +56,9 @@ ${svgText(nameX, 232, data.epithet, { fontSize: 30, fill: theme.accent, fontWeig
 ${shareStatBar('VELOCITY', data.stats.velocity, 300, theme)}
 ${shareStatBar('DIVERSITY', data.stats.diversity, 356, theme)}
 ${shareStatBar('CONSISTENCY', data.stats.consistency, 412, theme)}
-<g transform="translate(${W - PAD - 180} 80)">
-<polygon points="90,0 180,90 90,180 0,90" fill="${gemColor}" />
-${svgText(90, 112, data.stats.grade, { fontSize: 64, fill: '#ffffff', fontWeight: 'bold', anchor: 'middle' })}
-</g>
-${svgText(W - PAD - 90, 300, 'POWER', { fontSize: 22, fill: theme.textSecondary, fontWeight: '600', anchor: 'middle' })}
-${svgText(W - PAD - 90, 356, powerStr, { fontSize: 56, fill: powerColor, fontWeight: 'bold', anchor: 'middle' })}
+${svgText(powerX, 130, 'POWER', { fontSize: 22, fill: theme.textSecondary, fontWeight: '600', anchor: 'middle' })}
+${svgText(powerX, 198, powerStr, { fontSize: 56, fill: powerColor, fontWeight: 'bold', anchor: 'middle' })}
+${svgText(powerX, 240, glowLabel(glow), { fontSize: 18, fill: theme.accent, fontWeight: '600', anchor: 'middle' })}
 ${svgText(PAD, H - 70, `${data.serial} · ${data.issuedYear} · public · 12wk`, { fontSize: 20, fill: theme.textSecondary })}
 ${svgText(W - PAD, H - 70, 'PullCard AI', { fontSize: 22, fill: theme.textSecondary, anchor: 'end' })}
 </svg>`

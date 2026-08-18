@@ -10,9 +10,10 @@ import { analyzeRecord } from './analyzers/record'
 import { analyzeStats } from './analyzers/stats'
 import { analyzeToolAttributionV2 } from './analyzers/toolAttribution'
 import { analyzeTraits } from './analyzers/traits'
-import type { CardDataV2, Grade } from './analyzers/types'
+import type { CardDataV2 } from './analyzers/types'
 import { analyzeUsage } from './analyzers/usage'
 import { WINDOW_DAYS, filterToWindow } from './analyzers/window'
+import { normalizeGlow } from './card/customization'
 import { artSeed, cardSerial } from './card/serial'
 import { fetchUserData } from './github/client'
 import type { GitHubCommit, GitHubQueryResponse } from './github/types'
@@ -22,6 +23,7 @@ import { renderCardV2 } from './svg/v2/cardV2'
 export interface RequestParams {
   user: string
   theme: string
+  glow?: string
 }
 
 export type HandlerKind = 'ok' | 'not_found' | 'no_repos' | 'no_ai' | 'error'
@@ -31,7 +33,6 @@ export interface HandlerResult {
   status: number
   kind: HandlerKind
   // ギャラリー記録用の表示専用値（ok のみ設定）。element は element.id。
-  grade?: Grade
   power?: number
   element?: string
   epithet?: string
@@ -92,7 +93,7 @@ export async function buildCardData(
     // 12週窓の下限を GraphQL 側にも伝え、窓外コミットの取得自体を止める（per-repo 100件上限を窓内に使う）
     const since = new Date(now.getTime() - WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString()
     // 表示専用の 1 年アクティビティグラフ用。contributionsCollection の from/to は最大1年なので
-    // 364d で安全側に寄せる（12週窓の指標とは独立、Grade/POWER には算入しない）
+    // 364d で安全側に寄せる（12週窓の指標とは独立、POWER には算入しない）
     const yearAgo = new Date(now.getTime() - 364 * 24 * 60 * 60 * 1000).toISOString()
     const userData = await fetchUserData(user, graphql, since, yearAgo)
     if (!userData) {
@@ -171,10 +172,10 @@ export async function buildCardData(
     const avatarDataUri = avatar ? `data:${avatar.mime};base64,${avatar.base64}` : null
 
     // Contribution record over the same 12-week window; degrades to zeros when the field
-    // is absent/restricted. Display-only — not fed into stats/grade/power. Feeds traits.
+    // is absent/restricted. Display-only — not fed into stats/power. Feeds traits.
     const record = analyzeRecord(userData.contributionsCollection, now, userData.yearContributions)
 
-    // v2.6 TCG-density signals (all display-only, no Grade/POWER impact).
+    // v2.6 TCG-density signals (all display-only, no POWER impact).
     const element = analyzeElement(stats)
     const epithet = analyzeBuilderType(stats)
     const traits = analyzeTraits({
@@ -227,13 +228,13 @@ export async function handleRequest(
   now: Date = new Date(),
 ): Promise<HandlerResult> {
   const { theme } = params
+  const glow = normalizeGlow(params.glow)
   const r = await buildCardData(params, graphql, now)
   if (r.kind === 'ok' && r.data) {
     return {
-      svg: renderCardV2(r.data, { theme }),
+      svg: renderCardV2(r.data, { theme, glow }),
       status: 200,
       kind: 'ok',
-      grade: r.data.stats.grade,
       power: r.data.stats.power,
       element: r.data.element.id,
       epithet: r.data.epithet,

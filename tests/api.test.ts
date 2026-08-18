@@ -189,13 +189,29 @@ describe('worker fetch routing', () => {
   it('fresh KV hit → served without touching GitHub', async () => {
     const kv = fakeKv()
     kv.store.set(
-      'card:v2:cacheduser:light',
+      'card:v3:cacheduser:light:soft',
       JSON.stringify({ v: { svg: '<svg>cached</svg>', kind: 'ok' }, at: Date.now() - 60_000 }),
     )
     const res = await worker.fetch(req('/?user=cacheduser'), makeEnv(kv), fakeCtx().ctx)
     expect(res.status).toBe(200)
     expect(res.headers.get('x-cache-state')).toBe('fresh')
     expect(await res.text()).toBe('<svg>cached</svg>')
+    expect(graphqlMock).not.toHaveBeenCalled()
+  })
+
+  it('invalid appearance values fall back to the safe default cache key', async () => {
+    const kv = fakeKv()
+    kv.store.set(
+      'card:v3:cacheduser:light:soft',
+      JSON.stringify({ v: { svg: '<svg>safe</svg>', kind: 'ok' }, at: Date.now() - 60_000 }),
+    )
+    const res = await worker.fetch(
+      req('/?user=cacheduser&theme=%3Cscript%3E&glow=holo%22%20onload%3Dalert(1)'),
+      makeEnv(kv),
+      fakeCtx().ctx,
+    )
+    expect(res.headers.get('x-cache-state')).toBe('fresh')
+    expect(await res.text()).toBe('<svg>safe</svg>')
     expect(graphqlMock).not.toHaveBeenCalled()
   })
 
@@ -265,7 +281,8 @@ describe('召喚ギャラリー', () => {
       kv.store.set(`gallery:u:user${i}`, '1')
       kv.meta.set(`gallery:u:user${i}`, {
         at: 1000 + i,
-        grade: 'A',
+        theme: 'dark',
+        glow: 'holo',
         power: 5000 + i,
         element: 'bolt',
         epithet: 'X',
@@ -297,17 +314,24 @@ describe('召喚ギャラリー', () => {
     expect(res.headers.get('x-cache-state')).toBe('miss')
     await flush()
     expect(kv.store.has('gallery:u:octocat')).toBe(true)
-    const meta = kv.meta.get('gallery:u:octocat') as { at: number; power: number }
+    const meta = kv.meta.get('gallery:u:octocat') as {
+      at: number
+      theme: string
+      glow: string
+      power: number
+    }
     expect(meta.at).toBeGreaterThan(0)
+    expect(meta.theme).toBe('light')
+    expect(meta.glow).toBe('soft')
     expect(typeof meta.power).toBe('number')
   })
 
   it('fresh hit ではギャラリーへ書かない', async () => {
     const kv = fakeKv()
     kv.store.set(
-      'card:v2:cacheduser:light',
+      'card:v3:cacheduser:light:soft',
       JSON.stringify({
-        v: { svg: '<svg>cached</svg>', kind: 'ok', grade: 'A', power: 5000 },
+        v: { svg: '<svg>cached</svg>', kind: 'ok', power: 5000 },
         at: Date.now() - 60_000,
       }),
     )

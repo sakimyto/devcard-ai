@@ -5,7 +5,7 @@ export function renderLandingPage(): string {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PullCard AI — AI Builder Trading Card</title>
-  <meta name="description" content="Your GitHub, as a trading card. Rarity frame, archetype, POWER — generated from your public GitHub activity. One line of markdown." />
+  <meta name="description" content="Your GitHub, as a customizable trading card. Pick your theme and glow, then add it to your README with one line of markdown." />
   <meta property="og:title" content="PullCard AI — AI Builder Trading Card" />
   <meta property="og:description" content="Your GitHub, as a trading card. Proof you ship with AI." />
   <style>
@@ -23,6 +23,22 @@ export function renderLandingPage(): string {
     input#username-input:focus { outline: none; border-color: var(--accent) }
     button { background: var(--accent); border: 0; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 15px; cursor: pointer; font-weight: 600 }
     button.ghost { background: transparent; border: 1px solid var(--border); color: var(--text) }
+    .customizer { display: grid; grid-template-columns: auto 1fr; gap: 14px 24px; margin: 20px 0 }
+    .choice-set { border: 0; min-width: 0 }
+    .choice-set legend { color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: .08em; margin-bottom: 7px; text-transform: uppercase }
+    .choices { display: flex; flex-wrap: wrap; gap: 7px }
+    .choice { cursor: pointer; position: relative }
+    .choice input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap }
+    .choice-ui { align-items: center; background: var(--panel); border: 1px solid var(--border); border-radius: 999px; color: var(--muted); display: inline-flex; font-size: 13px; font-weight: 600; gap: 7px; min-height: 34px; padding: 6px 11px; transition: border-color .15s ease, color .15s ease, background .15s ease }
+    .choice input:checked + .choice-ui { background: #211832; border-color: var(--accent); color: var(--text) }
+    .choice input:focus-visible + .choice-ui { outline: 2px solid #fff; outline-offset: 2px }
+    .swatch { border: 1px solid #ffffff40; border-radius: 50%; display: inline-block; height: 10px; width: 10px }
+    .swatch-light { background: #f6f8fa }
+    .swatch-dark { background: #0d1117 }
+    .swatch-none { background: #6e7681 }
+    .swatch-soft { background: #a371f7; box-shadow: 0 0 5px #a371f7 }
+    .swatch-neon { background: #d9c7ff; box-shadow: 0 0 8px 2px #a371f7 }
+    .swatch-holo { background: linear-gradient(135deg, #ff6ec7, #ffc36e, #6ef3ff, #a06eff); box-shadow: 0 0 6px #a371f7 }
     .hint { color: var(--muted); font-size: 13px; margin-top: 10px; min-height: 1em }
     /* Result (post-summon): the wow first, then the embed steps */
     #result { margin-top: 48px; display: grid; grid-template-columns: minmax(0, 340px) 1fr; gap: 36px; align-items: start }
@@ -54,6 +70,7 @@ export function renderLandingPage(): string {
       .hero, #result { grid-template-columns: 1fr }
       h1 { font-size: 34px }
       .hero-card { max-width: 260px; margin: 4px auto 0 }
+      .customizer { grid-template-columns: 1fr }
     }
   </style>
 </head>
@@ -62,14 +79,32 @@ export function renderLandingPage(): string {
     <section id="hero" class="hero">
       <div class="hero-copy">
         <h1>Your GitHub,<br/>as a trading card.</h1>
-        <p class="sub">PullCard AI reads your public GitHub activity and mints an AI Builder trading card — rarity frame, archetype, POWER. Summon yours in seconds.</p>
+        <p class="sub">PullCard AI turns your public GitHub activity into an AI Builder trading card. Pick a look that feels like you, then summon it in seconds.</p>
+        <div class="customizer" aria-label="Card appearance">
+          <fieldset class="choice-set">
+            <legend>Theme</legend>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="card-theme" value="dark" checked /><span class="choice-ui"><i class="swatch swatch-dark"></i>Dark</span></label>
+              <label class="choice"><input type="radio" name="card-theme" value="light" /><span class="choice-ui"><i class="swatch swatch-light"></i>Light</span></label>
+            </div>
+          </fieldset>
+          <fieldset class="choice-set">
+            <legend>Glow</legend>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="card-glow" value="none" /><span class="choice-ui"><i class="swatch swatch-none"></i>Clean</span></label>
+              <label class="choice"><input type="radio" name="card-glow" value="soft" checked /><span class="choice-ui"><i class="swatch swatch-soft"></i>Soft</span></label>
+              <label class="choice"><input type="radio" name="card-glow" value="neon" /><span class="choice-ui"><i class="swatch swatch-neon"></i>Neon</span></label>
+              <label class="choice"><input type="radio" name="card-glow" value="holo" /><span class="choice-ui"><i class="swatch swatch-holo"></i>Holo</span></label>
+            </div>
+          </fieldset>
+        </div>
         <div class="row">
           <input id="username-input" placeholder="octocat" autocomplete="off" spellcheck="false" aria-label="GitHub username" />
           <button id="generate-button">Summon my card</button>
         </div>
         <p class="hint" id="input-hint"></p>
       </div>
-      <img class="hero-card" src="/?user=sakimyto&theme=dark" alt="Example AI Builder Trading Card" loading="lazy" />
+      <img class="hero-card" src="/?user=sakimyto&theme=dark&glow=holo" alt="Example AI Builder Trading Card with a holographic glow" loading="lazy" />
     </section>
 
     <section id="result" hidden>
@@ -102,6 +137,8 @@ export function renderLandingPage(): string {
   </div>
   <script>
     const RE = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/
+    const THEMES = ['light', 'dark']
+    const GLOWS = ['none', 'soft', 'neon', 'holo']
     // element id → colored glyph. Mirrors src/analyzers/element.ts (display-only).
     const ELEMENTS = {
       bolt: { glyph: '↯', color: '#f0b429' },
@@ -122,29 +159,56 @@ export function renderLandingPage(): string {
     const newRepoLink = document.getElementById('new-repo-link')
     const base = location.origin
 
-    function summon() {
+    function selected(name) {
+      return document.querySelector('input[name="' + name + '"]:checked').value
+    }
+
+    function setChoice(name, value, allowed) {
+      if (!allowed.includes(value)) return
+      const choice = document.querySelector('input[name="' + name + '"][value="' + value + '"]')
+      if (choice) choice.checked = true
+    }
+
+    function cardUrlFor(u) {
+      return base + '/?user=' + encodeURIComponent(u) + '&theme=' + selected('card-theme') + '&glow=' + selected('card-glow')
+    }
+
+    function shareUrlFor(u) {
+      return base + '/?theme=' + selected('card-theme') + '&glow=' + selected('card-glow') + '#' + encodeURIComponent(u)
+    }
+
+    function summon(shouldScroll = true) {
       const u = input.value.trim()
       if (!RE.test(u)) { hint.textContent = 'Enter a valid GitHub username.'; input.focus(); return }
       hint.textContent = ''
-      const cardUrl = base + '/?user=' + encodeURIComponent(u) + '&theme=dark'
-      // リンク先は /#username — LP に着地しつつ持ち主を引き継ぎ、着地側で自動召喚する
-      const md = '[![AI Builder Trading Card](' + cardUrl + ')](' + base + '/#' + encodeURIComponent(u) + ')'
+      const cardUrl = cardUrlFor(u)
+      const shareUrl = shareUrlFor(u)
+      const md = '[![AI Builder Trading Card](' + cardUrl + ')](' + shareUrl + ')'
       output.textContent = md
       resultCard.src = cardUrl
       repoHint.textContent = u + '/' + u
       newRepoLink.href = 'https://github.com/new?name=' + encodeURIComponent(u)
       shareX.href = 'https://twitter.com/intent/tweet?text=' +
-        encodeURIComponent('Summoned my AI Builder Trading Card 🃏 ' + base + '/#' + u + ' #pullcardai')
+        encodeURIComponent('Summoned my AI Builder Trading Card 🃏 ' + shareUrl + ' #pullcardai')
       result.hidden = false
-      result.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      if (shouldScroll) result.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
 
-    document.getElementById('generate-button').addEventListener('click', summon)
+    document.getElementById('generate-button').addEventListener('click', () => summon())
     input.addEventListener('keydown', (e) => { if (e.key === 'Enter') summon() })
+    for (const choice of document.querySelectorAll('input[name="card-theme"], input[name="card-glow"]')) {
+      choice.addEventListener('change', () => {
+        if (!result.hidden && RE.test(input.value.trim())) summon(false)
+      })
+    }
     copyBtn.addEventListener('click', async () => {
-      await navigator.clipboard.writeText(output.textContent)
-      copyBtn.textContent = 'Copied!'
-      setTimeout(() => { copyBtn.textContent = 'Copy markdown' }, 1500)
+      try {
+        await navigator.clipboard.writeText(output.textContent)
+        copyBtn.textContent = 'Copied!'
+      } catch (_e) {
+        copyBtn.textContent = 'Select and copy above'
+      }
+      setTimeout(() => { copyBtn.textContent = 'Copy markdown' }, 1800)
     })
 
     // Recently summoned gallery. User-controlled strings are rendered via textContent /
@@ -156,13 +220,15 @@ export function renderLandingPage(): string {
       const elem = ELEMENTS[entry.element] || null
       if (typeof entry.epithet === 'string' && entry.epithet) card.title = entry.epithet
 
-      // 実カード SVG をそのままサムネイルとして並べる（S ティアのホロも動く）。
+      // 実カード SVG をそのまま並べ、本人が選んだテーマと発光を再現する。
       // エッジ/KV キャッシュ済みの URL なので一覧表示のコストは軽い
       const img = document.createElement('img')
       img.className = 'g-thumb'
       img.loading = 'lazy'
       img.alt = '@' + entry.user + ' card'
-      img.src = '/?user=' + encodeURIComponent(entry.user) + '&theme=dark'
+      const entryTheme = THEMES.includes(entry.theme) ? entry.theme : 'dark'
+      const entryGlow = GLOWS.includes(entry.glow) ? entry.glow : 'soft'
+      img.src = '/?user=' + encodeURIComponent(entry.user) + '&theme=' + entryTheme + '&glow=' + entryGlow
       if (elem) img.style.borderColor = elem.color + '66' // same-element visual resonance
       card.appendChild(img)
 
@@ -189,6 +255,8 @@ export function renderLandingPage(): string {
 
       card.addEventListener('click', () => {
         input.value = entry.user
+        setChoice('card-theme', entryTheme, THEMES)
+        setChoice('card-glow', entryGlow, GLOWS)
         location.hash = encodeURIComponent(entry.user)
         summon()
         window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -214,8 +282,11 @@ export function renderLandingPage(): string {
     }
 
     // 事前入力: バッジ/シェアリンク経由の /#username を最優先、次に ?user=（保険）
+    const query = new URLSearchParams(location.search)
+    setChoice('card-theme', query.get('theme'), THEMES)
+    setChoice('card-glow', query.get('glow'), GLOWS)
     const fromHash = location.hash.length > 1 ? decodeURIComponent(location.hash.slice(1)) : ''
-    const fromQuery = new URLSearchParams(location.search).get('user')
+    const fromQuery = query.get('user')
     const prefill = RE.test(fromHash) ? fromHash : (fromQuery && RE.test(fromQuery) ? fromQuery : '')
     if (prefill) { input.value = prefill; summon() }
 

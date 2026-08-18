@@ -36,7 +36,8 @@ function fakeKv() {
 
 const meta = (at: number, extra: Partial<GalleryMeta> = {}): GalleryMeta => ({
   at,
-  grade: 'A',
+  theme: 'dark',
+  glow: 'neon',
   power: 5000,
   element: 'bolt',
   epithet: 'Rapid Prototyper',
@@ -48,7 +49,12 @@ describe('recordGallery', () => {
     const kv = fakeKv()
     await recordGallery(kv, 'octocat', meta(1000))
     expect(kv.store.get('gallery:u:octocat')).toBe('1')
-    expect(kv.meta.get('gallery:u:octocat')).toMatchObject({ at: 1000, grade: 'A', power: 5000 })
+    expect(kv.meta.get('gallery:u:octocat')).toMatchObject({
+      at: 1000,
+      theme: 'dark',
+      glow: 'neon',
+      power: 5000,
+    })
   })
 
   it('swallows put failure (best-effort, never throws)', async () => {
@@ -78,17 +84,33 @@ describe('listGallery', () => {
     expect(entries.some((e) => e.user === 'user0')).toBe(false)
   })
 
-  it('carries display fields (grade/power/element/epithet)', async () => {
+  it('carries customization and display fields', async () => {
     const kv = fakeKv()
     await recordGallery(kv, 'octocat', meta(1000, { element: 'blaze', epithet: 'Ship It' }))
     const [entry] = await listGallery(kv)
     expect(entry).toMatchObject({
       user: 'octocat',
-      grade: 'A',
+      theme: 'dark',
+      glow: 'neon',
       power: 5000,
       element: 'blaze',
       epithet: 'Ship It',
     })
+  })
+
+  it('drops retired grade and normalizes malformed customization metadata', async () => {
+    const kv = fakeKv()
+    kv.store.set('gallery:u:legacy', '1')
+    kv.meta.set('gallery:u:legacy', {
+      at: 1000,
+      grade: 'C',
+      glow: 'laser',
+      unexpected: 'private',
+    })
+    const [entry] = await listGallery(kv)
+    expect(entry).toEqual({ user: 'legacy', at: 1000, theme: 'dark', glow: 'soft' })
+    expect(entry).not.toHaveProperty('grade')
+    expect(entry).not.toHaveProperty('unexpected')
   })
 
   it('skips keys with missing/invalid metadata', async () => {

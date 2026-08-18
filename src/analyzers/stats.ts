@@ -1,5 +1,5 @@
 import type { GitHubCommit } from '~/github/types'
-import type { Grade, StatsAnalysis, UsageAnalysis } from './types'
+import type { StatsAnalysis, UsageAnalysis } from './types'
 
 const WINDOW_WEEKS = 12
 const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000
@@ -24,14 +24,6 @@ export interface StatsInput {
   langCount?: number // languages.languages.length
   activeRepoCount?: number // 窓内コミットが1件以上あるリポジトリ数
   now?: Date
-}
-
-export function gradeFromPoints(points: number): Grade {
-  if (points >= 80) return 'S'
-  if (points >= 60) return 'A'
-  if (points >= 40) return 'B'
-  if (points >= 20) return 'C'
-  return 'D'
 }
 
 function usageEntropyNorm(usage: UsageAnalysis): number {
@@ -80,10 +72,6 @@ export function analyzeStats(input: StatsInput): StatsAnalysis {
 
   const consistency = Math.round((100 * activeWeeks) / WINDOW_WEEKS)
 
-  // Grade は従来3軸のまま（V40/D30/C30・閾値80/60/40/20）。新3軸は points に一切寄与しない
-  // ので、既存ユーザーのティアは動かない。
-  const points = Math.round(0.4 * velocity + 0.3 * diversity + 0.3 * consistency)
-
   // --- v2.2 レーダー3軸 ---
   const totalInWindow = input.totalCommitsInWindow ?? 0
   const synergy = Math.round(100 * Math.min(1, aiCommitsInWindow / Math.max(1, totalInWindow)))
@@ -104,8 +92,6 @@ export function analyzeStats(input: StatsInput): StatsAnalysis {
     synergy,
     range,
     flow,
-    points,
-    grade: gradeFromPoints(points),
     power,
     aiCommitsInWindow,
     activeWeeks,

@@ -7,18 +7,25 @@ describe('recordRender', () => {
     recordRender({ writeDataPoint } as unknown as AnalyticsEngineDataset, {
       user: 'sakimyto',
       theme: 'dark',
+      glow: 'holo',
       kind: 'ok',
       cacheState: 'fresh',
     })
     expect(writeDataPoint).toHaveBeenCalledWith({
-      blobs: ['sakimyto', 'dark', 'ok', 'fresh'],
+      blobs: ['sakimyto', 'dark', 'ok', 'fresh', 'holo'],
       indexes: ['sakimyto'],
     })
   })
 
   it('no-ops when dataset undefined and swallows write errors', () => {
     expect(() =>
-      recordRender(undefined, { user: 'u', theme: 'l', kind: 'ok', cacheState: 'miss' }),
+      recordRender(undefined, {
+        user: 'u',
+        theme: 'l',
+        glow: 'soft',
+        kind: 'ok',
+        cacheState: 'miss',
+      }),
     ).not.toThrow()
     const throwing = {
       writeDataPoint: () => {
@@ -26,7 +33,13 @@ describe('recordRender', () => {
       },
     } as unknown as AnalyticsEngineDataset
     expect(() =>
-      recordRender(throwing, { user: 'u', theme: 'l', kind: 'ok', cacheState: 'miss' }),
+      recordRender(throwing, {
+        user: 'u',
+        theme: 'l',
+        glow: 'soft',
+        kind: 'ok',
+        cacheState: 'miss',
+      }),
     ).not.toThrow()
   })
 })

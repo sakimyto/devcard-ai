@@ -8,6 +8,7 @@ describe('renderLandingPage v3', () => {
     expect(html).toContain('AI Builder Trading Card')
     expect(html).toContain('PullCard AI')
     expect(html).toContain('Your GitHub,')
+    expect(html).not.toContain('rarity frame')
   })
 
   it('keeps username input, markdown output, copy and share ids', () => {
@@ -41,7 +42,7 @@ describe('renderLandingPage v3', () => {
   it('fetches /api/gallery and lines up the actual card SVGs as thumbnails', () => {
     expect(html).toContain("fetch('/api/gallery')")
     // ギャラリーは実カード（自ドメインの SVG）を並べる。ユーザー名は encodeURIComponent 経由
-    expect(html).toContain("'/?user=' + encodeURIComponent(entry.user) + '&theme=dark'")
+    expect(html).toContain("'&theme=' + entryTheme + '&glow=' + entryGlow")
     expect(html).toContain('g-thumb')
   })
 
@@ -59,11 +60,31 @@ describe('renderLandingPage v3', () => {
     expect(html).toContain('github.com/new')
   })
 
+  it('offers keyboard-accessible theme and glow choices before summoning', () => {
+    expect(html).toContain('<fieldset class="choice-set">')
+    expect(html).toContain('<legend>Theme</legend>')
+    expect(html).toContain('<legend>Glow</legend>')
+    expect(html).toContain('name="card-theme"')
+    expect(html).toContain('name="card-glow"')
+    for (const glow of ['none', 'soft', 'neon', 'holo']) {
+      expect(html).toContain(`name="card-glow" value="${glow}"`)
+    }
+    expect(html).toContain('input:focus-visible + .choice-ui')
+  })
+
+  it('preserves appearance in the card, markdown destination, and share URL', () => {
+    expect(html).toContain("'&theme=' + selected('card-theme') + '&glow=' + selected('card-glow')")
+    expect(html).toContain("'/?theme=' + selected('card-theme') + '&glow=' + selected('card-glow')")
+    expect(html).toContain("setChoice('card-theme', query.get('theme'), THEMES)")
+    expect(html).toContain("setChoice('card-glow', query.get('glow'), GLOWS)")
+  })
+
   it('reads prefill client-side with the GitHub login regex (no server interpolation)', () => {
-    expect(html).toContain("new URLSearchParams(location.search).get('user')")
+    expect(html).toContain('const query = new URLSearchParams(location.search)')
+    expect(html).toContain("const fromQuery = query.get('user')")
     // バッジのリンク先は /#username（LP ルーティングを通しつつ持ち主を引き継ぐ）
     expect(html).toContain('location.hash')
-    expect(html).toContain("'/#' + encodeURIComponent(u)")
+    expect(html).toContain("'#' + encodeURIComponent(u)")
     expect(html).toContain('^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$')
     // サーバー側でユーザー入力を埋め込んでいないことの防御的確認
     expect(html).not.toContain('${user')

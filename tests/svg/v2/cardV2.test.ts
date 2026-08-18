@@ -17,8 +17,6 @@ function makeData(over: Partial<CardDataV2> = {}): CardDataV2 {
       synergy: 65,
       range: 50,
       flow: 40,
-      points: 73,
-      grade: 'A',
       power: 6307,
       aiCommitsInWindow: 120,
       activeWeeks: 9,
@@ -104,11 +102,11 @@ describe('renderCardV2', () => {
     expect(svg).toContain('Trades keystrokes')
   })
 
-  it('all five grades render for both themes (golden snapshots)', () => {
-    for (const grade of ['S', 'A', 'B', 'C', 'D'] as const) {
+  it('all user-selectable glows render for both themes (golden snapshots)', () => {
+    for (const glow of ['none', 'soft', 'neon', 'holo'] as const) {
       for (const theme of ['light', 'dark']) {
-        const svg = renderCardV2(makeData({ stats: { ...makeData().stats, grade } }), { theme })
-        expect(svg).toMatchSnapshot(`card-${grade}-${theme}`)
+        const svg = renderCardV2(makeData(), { theme, glow })
+        expect(svg).toMatchSnapshot(`card-${glow}-${theme}`)
       }
     }
   })
@@ -160,13 +158,13 @@ describe('renderCardV2', () => {
     expect(svg).not.toContain('"><script')
   })
 
-  it('shrinks the nameplate for long usernames so it clears the tier gem', () => {
+  it('shrinks the nameplate for long usernames so it clears the POWER block', () => {
     // Short names keep the 42px hero size (font-size="42" is unique to the nameplate).
     expect(renderCardV2(makeData({ username: 'octocat' }), { theme: 'dark' })).toContain(
       'font-size="42"',
     )
     // A max-length 39-char GitHub login must render smaller so it never
-    // overlaps the top-right tier gem.
+    // overlaps the top-right POWER block.
     const long = renderCardV2(makeData({ username: 'a'.repeat(39) }), {
       theme: 'dark',
     })
@@ -190,8 +188,6 @@ describe('renderCardV2', () => {
           synergy: 0,
           range: 0,
           flow: 0,
-          points: 0,
-          grade: 'D',
           power: 0,
           aiCommitsInWindow: 0,
           activeWeeks: 0,
@@ -601,9 +597,9 @@ describe('renderCardV2 Pokémon-grammar polish (v2.8)', () => {
     const svg = renderCardV2(makeData({ stats: { ...makeData().stats, power: 6426 } }), {
       theme: 'dark',
     })
-    // POWER label + number both right-aligned at the plate inner edge (x=572).
-    expect(svg).toContain('<text x="572" y="84"')
-    expect(svg).toMatch(/<text x="572" y="128"[^>]*font-size="32"[^>]*>6,426<\/text>/)
+    // POWER label + number both right-aligned at the expanded plate edge (x=706).
+    expect(svg).toContain('<text x="706" y="84"')
+    expect(svg).toMatch(/<text x="706" y="128"[^>]*font-size="32"[^>]*>6,426<\/text>/)
     // The old STATS-header POWER (font-size 30 headline) is gone.
     expect(svg).not.toContain('font-size="30"')
   })
@@ -627,23 +623,11 @@ describe('renderCardV2 Pokémon-grammar polish (v2.8)', () => {
     expect(svg).not.toContain('#7F3A') // the # is dropped in the No. form
   })
 
-  it('renders the tier rarity mark (D● C◆ B★ A★★ S★★★, S holo)', () => {
-    const marks: Record<string, string> = { S: '★★★', A: '★★', B: '★', C: '◆', D: '●' }
-    for (const [grade, mark] of Object.entries(marks)) {
-      const svg = renderCardV2(makeData({ stats: { ...makeData().stats, grade: grade as 'S' } }), {
-        theme: 'dark',
-      })
-      expect(svg).toContain(`>${mark}</text>`)
-    }
-    // S rarity is filled with the holo rainbow; lower tiers use the flat tier color.
-    const s = renderCardV2(makeData({ stats: { ...makeData().stats, grade: 'S' } }), {
-      theme: 'dark',
-    })
-    expect(s).toContain('url(#rarityHolo)')
-    const d = renderCardV2(makeData({ stats: { ...makeData().stats, grade: 'D' } }), {
-      theme: 'dark',
-    })
-    expect(d).not.toContain('url(#rarityHolo)')
+  it('contains no rank gem or rarity mark and labels the chosen finish', () => {
+    const svg = renderCardV2(makeData(), { theme: 'dark', glow: 'soft' })
+    expect(svg).not.toContain('gemGrad')
+    expect(svg).not.toContain('rarityHolo')
+    expect(svg).toContain('SOFT GLOW')
   })
 
   it('pulls the trait proof headline number to the right (damage-number position)', () => {
@@ -673,13 +657,11 @@ describe('renderCardV2 Pokémon-grammar polish (v2.8)', () => {
     expect(svg).not.toMatch(/<text x="706"[^>]*text-anchor="end"[^>]*font-size="22"/)
   })
 
-  it('renders the art window double frame (tier-colored inner metal line)', () => {
-    const svg = renderCardV2(makeData({ stats: { ...makeData().stats, grade: 'A' } }), {
-      theme: 'dark',
-    })
-    // Inner frame inset 4px from the art rect (x=48, y=214) in the A-tier gem color.
+  it('renders the art window double frame using the chosen glow treatment', () => {
+    const svg = renderCardV2(makeData(), { theme: 'dark', glow: 'neon' })
+    // Inner frame inset 4px from the art rect (x=48, y=214) in the theme accent.
     expect(svg).toContain('<rect x="48" y="214"')
-    expect(svg).toContain('#b8860b') // A-tier gem color on the inner metal line
+    expect(svg).toContain('#a371f7')
   })
 })
 

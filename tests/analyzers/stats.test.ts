@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { analyzeStats, gradeFromPoints } from '~/analyzers/stats'
+import { analyzeStats } from '~/analyzers/stats'
 import type { UsageAnalysis } from '~/analyzers/types'
 import type { GitHubCommit } from '~/github/types'
 
@@ -41,7 +41,7 @@ const singleUsage: UsageAnalysis = {
 }
 
 describe('analyzeStats', () => {
-  it('zero commits → all-zero stats, grade D', () => {
+  it('zero commits → all-zero stats without a rank', () => {
     const s = analyzeStats({
       windowAiCommits: [],
       commitToolCount: 0,
@@ -57,15 +57,13 @@ describe('analyzeStats', () => {
       synergy: 0,
       range: 0,
       flow: 0,
-      points: 0,
-      grade: 'D',
       power: 0,
       aiCommitsInWindow: 0,
       activeWeeks: 0,
     })
   })
 
-  it('heavy consistent user with diverse tools/usage hits S', () => {
+  it('heavy consistent user with diverse tools/usage reaches full visible stats', () => {
     const s = analyzeStats({
       windowAiCommits: commitsPerWeek(25, 12),
       commitToolCount: 3,
@@ -77,12 +75,12 @@ describe('analyzeStats', () => {
     expect(s.velocity).toBe(100)
     expect(s.consistency).toBe(100)
     expect(s.diversity).toBe(100)
-    expect(s.points).toBe(100)
-    expect(s.grade).toBe('S')
     expect(s.activeWeeks).toBe(12)
+    expect(s).not.toHaveProperty('grade')
+    expect(s).not.toHaveProperty('points')
   })
 
-  it('monotone: more velocity never lowers points', () => {
+  it('monotone: more velocity never lowers POWER', () => {
     const base = {
       commitToolCount: 1,
       assistedToolCount: 0,
@@ -93,7 +91,7 @@ describe('analyzeStats', () => {
     const low = analyzeStats({ ...base, windowAiCommits: commitsPerWeek(1, 6) })
     const high = analyzeStats({ ...base, windowAiCommits: commitsPerWeek(10, 6) })
     expect(high.velocity).toBeGreaterThan(low.velocity)
-    expect(high.points).toBeGreaterThanOrEqual(low.points)
+    expect(high.power).toBeGreaterThanOrEqual(low.power)
   })
 
   it('consistency = activeWeeks / 12', () => {
@@ -195,20 +193,6 @@ describe('analyzeStats', () => {
     expect(s.activeWeeks).toBe(1)
   })
 
-  it('grade thresholds: 80/60/40/20 on points', () => {
-    // points はロジック出力で直接指定できないため、既知入力の境界で検証
-    const d = analyzeStats({
-      windowAiCommits: commitsPerWeek(1, 1),
-      commitToolCount: 0,
-      assistedToolCount: 0,
-      equippedOnlyCount: 0,
-      usage: singleUsage,
-      now: NOW,
-    })
-    expect(d.points).toBeLessThan(20)
-    expect(d.grade).toBe('D')
-  })
-
   it('SYNERGY = AI-involved / total commits in window (0 → 0, all-AI → 100)', () => {
     const base = {
       commitToolCount: 0,
@@ -291,7 +275,7 @@ describe('analyzeStats', () => {
     expect(s.power).toBe(10200)
   })
 
-  it('radar axes and POWER do not shift grade/points (tier invariance)', () => {
+  it('radar inputs affect POWER without changing the three source axes', () => {
     const withRadar = analyzeStats({
       windowAiCommits: commitsPerWeek(3, 8),
       commitToolCount: 2,
@@ -304,7 +288,7 @@ describe('analyzeStats', () => {
       activeRepoCount: 5,
       now: NOW,
     })
-    // Same core inputs but no radar inputs supplied → identical points/grade.
+    // Same core inputs but no radar inputs supplied → identical source axes.
     const withoutRadar = analyzeStats({
       windowAiCommits: commitsPerWeek(3, 8),
       commitToolCount: 2,
@@ -313,25 +297,9 @@ describe('analyzeStats', () => {
       usage: evenUsage,
       now: NOW,
     })
-    expect(withRadar.points).toBe(withoutRadar.points)
-    expect(withRadar.grade).toBe(withoutRadar.grade)
     expect(withRadar.velocity).toBe(withoutRadar.velocity)
     expect(withRadar.diversity).toBe(withoutRadar.diversity)
     expect(withRadar.consistency).toBe(withoutRadar.consistency)
-  })
-
-  it('gradeFromPoints pins A/B/C/D/S boundary edges (20/40/60/80)', () => {
-    // C/D edge at 20
-    expect(gradeFromPoints(19)).toBe('D')
-    expect(gradeFromPoints(20)).toBe('C')
-    // B/C edge at 40
-    expect(gradeFromPoints(39)).toBe('C')
-    expect(gradeFromPoints(40)).toBe('B')
-    // A/B edge at 60
-    expect(gradeFromPoints(59)).toBe('B')
-    expect(gradeFromPoints(60)).toBe('A')
-    // S/A edge at 80
-    expect(gradeFromPoints(79)).toBe('A')
-    expect(gradeFromPoints(80)).toBe('S')
+    expect(withRadar.power).toBeGreaterThan(withoutRadar.power)
   })
 })

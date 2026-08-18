@@ -1,3 +1,5 @@
+import { type CardTheme, type GlowStyle, normalizeGlow, normalizeTheme } from './card/customization'
+
 // 召喚ギャラリー: KV metadata による直近召喚者一覧。収集・所有・シーズン機構は OUT。
 // KV metadata（1024B 上限）に表示用の軽量値だけ載せ、値本体は '1' のプレースホルダ。
 const GALLERY_PREFIX = 'gallery:u:'
@@ -12,7 +14,8 @@ const GALLERY_MAX_PAGES = 20
 // KV metadata に載せる表示専用の値。element は element.id（グリフ・枠色は LP 側の静的マップ）。
 export interface GalleryMeta {
   at: number
-  grade?: string
+  theme?: CardTheme
+  glow?: GlowStyle
   power?: number
   element?: string
   epithet?: string
@@ -57,7 +60,19 @@ export async function listGallery(kv: KVNamespace): Promise<GalleryEntry[]> {
         const meta = key.metadata
         // metadata 欠落（TTL 切れ間際・書き込み途中）は表示から除外
         if (!meta || typeof meta.at !== 'number') continue
-        entries.push({ user: key.name.slice(GALLERY_PREFIX.length), ...meta })
+        // Whitelist fields instead of spreading metadata: old KV rows may still contain
+        // the retired `grade`, and arbitrary metadata must never leak through the API.
+        entries.push({
+          user: key.name.slice(GALLERY_PREFIX.length),
+          at: meta.at,
+          // Before customization existed the gallery always rendered dark cards.
+          // Preserve that look for old rows with no theme; malformed values still fall safe.
+          theme: meta.theme === undefined ? 'dark' : normalizeTheme(meta.theme),
+          glow: normalizeGlow(meta.glow),
+          ...(typeof meta.power === 'number' ? { power: meta.power } : {}),
+          ...(typeof meta.element === 'string' ? { element: meta.element } : {}),
+          ...(typeof meta.epithet === 'string' ? { epithet: meta.epithet } : {}),
+        })
       }
       if (res.list_complete) break
       cursor = res.cursor

@@ -1,6 +1,7 @@
 export interface RenderEvent {
   user: string
   theme: string
+  glow: string
   kind: string
   cacheState: string
 }
@@ -10,7 +11,8 @@ export function recordRender(dataset: AnalyticsEngineDataset | undefined, e: Ren
   if (!dataset) return
   try {
     dataset.writeDataPoint({
-      blobs: [e.user, e.theme, e.kind, e.cacheState],
+      // Preserve the first four blob positions for existing dashboards; append customization.
+      blobs: [e.user, e.theme, e.kind, e.cacheState, e.glow],
       indexes: [e.user],
     })
   } catch (error) {

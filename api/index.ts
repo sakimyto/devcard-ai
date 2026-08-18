@@ -1,6 +1,7 @@
 import { App } from '@octokit/app'
 import { recordRender } from '../src/analytics'
 import { getCachedOrProduce } from '../src/cache'
+import { normalizeGlow, normalizeTheme } from '../src/card/customization'
 import { listGallery, recordGallery } from '../src/gallery'
 import type { GitHubQueryResponse } from '../src/github/types'
 import { buildCardData, handleRequest } from '../src/handler'
@@ -36,7 +37,6 @@ function getApp(env: Env): App {
   return app
 }
 
-const VALID_THEMES = new Set(['light', 'dark'])
 // GitHub login spec: 1-39 chars, alphanumeric and single hyphens, not starting with hyphen.
 const GH_LOGIN_RE = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/
 
@@ -45,9 +45,9 @@ function parseParams(url: URL) {
   // 空はランディング用に有効扱い。非空で GitHub login 規約に合わないものだけ不正
   const userValid = rawUser === '' || GH_LOGIN_RE.test(rawUser)
   const user = userValid ? rawUser : ''
-  const rawTheme = url.searchParams.get('theme') ?? 'light'
-  const theme = VALID_THEMES.has(rawTheme) ? rawTheme : 'light'
-  return { user, theme, invalidUser: !userValid }
+  const theme = normalizeTheme(url.searchParams.get('theme'))
+  const glow = normalizeGlow(url.searchParams.get('glow'))
+  return { user, theme, glow, invalidUser: !userValid }
 }
 
 function badRequestResponse(message: string): Response {
@@ -69,7 +69,6 @@ interface ResolvedCard {
   kind: string
   cacheState: string
   // ギャラリー記録用（ok の miss 時のみ意味を持つ表示値）
-  grade?: string
   power?: number
   element?: string
   epithet?: string
@@ -78,11 +77,16 @@ interface ResolvedCard {
 // KV SWR 経由でカードを解決する。GitHub App 認証は produce 内（miss/expired 時のみ）に
 // 遅延させ、fresh hit を GitHub 側の認証・API 障害から完全に切り離す。
 // fresh も stale も無い完全失敗だけが placeholder に落ちる。
-async function resolveCard(user: string, theme: string, env: Env): Promise<ResolvedCard> {
+async function resolveCard(
+  user: string,
+  theme: string,
+  glow: string,
+  env: Env,
+): Promise<ResolvedCard> {
   try {
     const cached = await getCachedOrProduce({
       kv: env.DEVCARD_KV,
-      key: `card:v2:${user}:${theme}`,
+      key: `card:v3:${user}:${theme}:${glow}`,
       freshTtlSec: 3600,
       staleTtlSec: 86400,
       produce: async () => {
@@ -90,13 +94,12 @@ async function resolveCard(user: string, theme: string, env: Env): Promise<Resol
         const octokit = await githubApp.getInstallationOctokit(
           Number(env.GITHUB_APP_INSTALLATION_ID),
         )
-        const result = await handleRequest({ user, theme }, createGraphql(octokit))
+        const result = await handleRequest({ user, theme, glow }, createGraphql(octokit))
         // エラーカードはキャッシュせず throw して stale 供給に切り替える
         if (result.kind === 'error') throw new Error('upstream error')
         return {
           svg: result.svg,
           kind: result.kind,
-          grade: result.grade,
           power: result.power,
           element: result.element,
           epithet: result.epithet,
@@ -109,29 +112,33 @@ async function resolveCard(user: string, theme: string, env: Env): Promise<Resol
       svg: cached.value.svg,
       kind: cached.value.kind,
       cacheState: cached.cacheState,
-      grade: cached.value.grade,
       power: cached.value.power,
       element: cached.value.element,
       epithet: cached.value.epithet,
     }
   } catch {
-    return { svg: renderPlaceholderCard(user, theme), kind: 'placeholder', cacheState: 'none' }
+    return {
+      svg: renderPlaceholderCard(user, theme, glow),
+      kind: 'placeholder',
+      cacheState: 'none',
+    }
   }
 }
 
 // /og の共有画像 SVG を KV SWR 経由で解決する。resolveCard と対称で、GitHub App 認証と
 // GraphQL(×3) を produce 内（miss/expired 時のみ）に遅延させる。カード本体とは別キー
-// （og:v2:）で、fresh hit 中は GitHub を一切叩かない = 単一 IP からの /og 連打による
+// （og:v3:）で、fresh hit 中は GitHub を一切叩かない = 単一 IP からの /og 連打による
 // GitHub App クォータ枯渇を吸収する（not_found のゴミ username も 1 世代だけ消費）。
 async function resolveOgSvg(
   user: string,
   theme: string,
+  glow: string,
   env: Env,
 ): Promise<{ svg: string; cacheState: string }> {
   try {
     const cached = await getCachedOrProduce({
       kv: env.DEVCARD_KV,
-      key: `og:v2:${user}:${theme}`,
+      key: `og:v3:${user}:${theme}:${glow}`,
       freshTtlSec: 3600,
       staleTtlSec: 86400,
       produce: async () => {
@@ -139,13 +146,13 @@ async function resolveOgSvg(
         const octokit = await githubApp.getInstallationOctokit(
           Number(env.GITHUB_APP_INSTALLATION_ID),
         )
-        const r = await buildCardData({ user, theme }, createGraphql(octokit))
+        const r = await buildCardData({ user, theme, glow }, createGraphql(octokit))
         // 一過性エラー（rate limit・upstream 障害）はキャッシュせず throw して stale 供給へ。
         // 終端状態（not_found/no_ai/no_repos）は renderOgError を確定結果としてキャッシュする
         if (r.kind === 'error') throw new Error('upstream error')
         const svg =
           r.kind === 'ok' && r.data
-            ? renderOgShare(r.data, theme)
+            ? renderOgShare(r.data, theme, glow)
             : renderOgError(r.errorMessage ?? 'Temporarily unavailable', theme)
         return { svg, kind: r.kind }
       },
@@ -211,16 +218,16 @@ export default {
 
     // /og endpoint — returns a 1200x630 landscape PNG share image
     if (pathname === '/og') {
-      const { user, theme, invalidUser } = parseParams(url)
+      const { user, theme, glow, invalidUser } = parseParams(url)
       if (invalidUser) return badRequestResponse('Invalid user parameter')
       if (!user) return badRequestResponse('User parameter required')
       if (await rateLimited(req, env)) return rateLimitedResponse()
 
-      const { svg, cacheState } = await resolveOgSvg(user, theme, env)
+      const { svg, cacheState } = await resolveOgSvg(user, theme, glow, env)
 
       try {
         const png = await svgToPng(svg, 1200)
-        recordRender(env.CARD_ANALYTICS, { user, theme, kind: 'og', cacheState })
+        recordRender(env.CARD_ANALYTICS, { user, theme, glow, kind: 'og', cacheState })
         return new Response(png as unknown as BodyInit, {
           headers: {
             'Content-Type': 'image/png',
@@ -236,13 +243,13 @@ export default {
     // Bot User-Agent → return OGP HTML（存在しないユーザーは 200 を返さず 404）
     const userAgent = req.headers.get('user-agent') ?? ''
     if (isBotRequest(userAgent)) {
-      const { user, theme, invalidUser } = parseParams(url)
+      const { user, theme, glow, invalidUser } = parseParams(url)
       if (!invalidUser && user) {
         if (await rateLimited(req, env)) return rateLimitedResponse()
-        const card = await resolveCard(user, theme, env)
+        const card = await resolveCard(user, theme, glow, env)
         if (card.kind === 'not_found') return notFoundResponse()
         const baseUrl = `${url.protocol}//${url.host}`
-        const html = renderOgpHtml(user, baseUrl, theme)
+        const html = renderOgpHtml(user, baseUrl, theme, glow)
         return new Response(html, {
           headers: {
             'Content-Type': 'text/html; charset=utf-8',
@@ -253,7 +260,7 @@ export default {
     }
 
     // No user param → landing page
-    const { user, theme, invalidUser } = parseParams(url)
+    const { user, theme, glow, invalidUser } = parseParams(url)
     if (invalidUser) return badRequestResponse('Invalid user parameter')
     if (!user && pathname === '/') {
       return new Response(renderLandingPage(), {
@@ -268,8 +275,14 @@ export default {
 
     // Normal request — return SVG（KV stale-if-error キャッシュ経由）
     if (await rateLimited(req, env)) return rateLimitedResponse()
-    const card = await resolveCard(user, theme, env)
-    recordRender(env.CARD_ANALYTICS, { user, theme, kind: card.kind, cacheState: card.cacheState })
+    const card = await resolveCard(user, theme, glow, env)
+    recordRender(env.CARD_ANALYTICS, {
+      user,
+      theme,
+      glow,
+      kind: card.kind,
+      cacheState: card.cacheState,
+    })
 
     // 召喚ギャラリー記録: ok の miss（fresh 生成）時のみ。fresh hit では書かず KV 無料枠に収める。
     // fire-and-forget（waitUntil）でレスポンスをブロックしない。
@@ -277,7 +290,8 @@ export default {
       ctx.waitUntil(
         recordGallery(env.DEVCARD_KV, user, {
           at: Date.now(),
-          grade: card.grade,
+          theme,
+          glow,
           power: card.power,
           element: card.element,
           epithet: card.epithet,

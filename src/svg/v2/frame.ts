@@ -1,32 +1,7 @@
-import type { Grade } from '~/analyzers/types'
+import type { GlowStyle } from '~/card/customization'
 
-// Diagonal 5-stop metal gradients: light top-left → dark → light → highlight → dark.
-// The extra stops give the band a rolled-metal sheen instead of a flat wash.
-const METAL_STOPS: Record<'A' | 'B' | 'C' | 'D', [string, string, string, string, string]> = {
-  A: ['#6b4e0e', '#f5d76e', '#8a6a1a', '#ffe9a8', '#6b4e0e'],
-  B: ['#5c636b', '#eef2f6', '#8a939e', '#ffffff', '#6b7280'],
-  C: ['#5a3418', '#e0955e', '#7a4a1f', '#f2b183', '#5a3418'],
-  D: ['#3d434b', '#8b929b', '#4a5058', '#a6adb6', '#3d434b'],
-}
-
-// Darker rim drawn just outside the metal band for a printed-edge depth.
-const EDGE_DARK: Record<Grade, string> = {
-  S: '#3a1d6e',
-  A: '#4a3607',
-  B: '#3d434b',
-  C: '#3d2410',
-  D: '#22262c',
-}
-
-function metalGradientDef(grade: 'A' | 'B' | 'C' | 'D'): string {
-  const [s0, s1, s2, s3, s4] = METAL_STOPS[grade]
-  return `<linearGradient id="metal${grade}" x1="0" y1="0" x2="1" y2="1">
-<stop offset="0%" stop-color="${s0}" />
-<stop offset="28%" stop-color="${s1}" />
-<stop offset="52%" stop-color="${s2}" />
-<stop offset="76%" stop-color="${s3}" />
-<stop offset="100%" stop-color="${s4}" />
-</linearGradient>`
+export interface FrameOptions {
+  animated?: boolean
 }
 
 // Stacks the frame as four concentric strokes (outer dark rim → metal/holo band →
@@ -48,14 +23,55 @@ ${rect(16.5, 21, '#ffffff', 1, 'stroke-opacity="0.5"')}
 <line x1="46" y1="9" x2="${w - 46}" y2="9" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1" />`
 }
 
-export function renderFrame(grade: Grade, w: number, h: number): { defs: string; frame: string } {
-  if (grade === 'S') {
-    const defs = `<linearGradient id="holoGrad" x1="0" y1="0" x2="1" y2="1">
+export function renderFrame(
+  glow: GlowStyle,
+  w: number,
+  h: number,
+  accent: string,
+  options: FrameOptions = {},
+): { defs: string; frame: string } {
+  const animated = options.animated ?? true
+
+  if (glow === 'none') {
+    const frame = `<rect x="8" y="8" width="${w - 16}" height="${h - 16}" rx="29" fill="none" stroke="#000000" stroke-opacity="0.45" stroke-width="1.5" />
+<rect x="12" y="12" width="${w - 24}" height="${h - 24}" rx="25" fill="none" stroke="${accent}" stroke-opacity="0.72" stroke-width="2.5" />
+<rect x="15" y="15" width="${w - 30}" height="${h - 30}" rx="22" fill="none" stroke="#ffffff" stroke-opacity="0.24" stroke-width="1" />`
+    return { defs: '', frame }
+  }
+
+  if (glow === 'soft') {
+    const defs = `<filter id="frameSoftGlow" x="-20%" y="-20%" width="140%" height="140%">
+<feGaussianBlur stdDeviation="5" />
+</filter>`
+    const halo = `<rect x="12" y="12" width="${w - 24}" height="${h - 24}" rx="25" fill="none" stroke="${accent}" stroke-width="8" stroke-opacity="0.28" filter="url(#frameSoftGlow)" />`
+    return { defs, frame: `${halo}\n${beveledFrame(w, h, accent, '#000000', 7)}` }
+  }
+
+  if (glow === 'neon') {
+    const defs = `<linearGradient id="neonBand" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="${accent}" />
+<stop offset="50%" stop-color="#ffffff" />
+<stop offset="100%" stop-color="${accent}" />
+</linearGradient>
+<filter id="frameNeonGlow" x="-30%" y="-30%" width="160%" height="160%">
+<feGaussianBlur stdDeviation="9" />
+</filter>`
+    const pulse = animated
+      ? '<animate attributeName="stroke-opacity" values="0.38;0.78;0.38" dur="3.2s" repeatCount="indefinite" />'
+      : ''
+    const halo = `<rect x="12" y="12" width="${w - 24}" height="${h - 24}" rx="25" fill="none" stroke="${accent}" stroke-width="11" stroke-opacity="0.58" filter="url(#frameNeonGlow)">${pulse}</rect>`
+    return { defs, frame: `${halo}\n${beveledFrame(w, h, 'url(#neonBand)', '#000000', 7)}` }
+  }
+
+  const rotation = animated
+    ? '<animateTransform attributeName="gradientTransform" type="rotate" from="0 0.5 0.5" to="360 0.5 0.5" dur="8s" repeatCount="indefinite" />'
+    : ''
+  const defs = `<linearGradient id="holoGrad" x1="0" y1="0" x2="1" y2="1">
 <stop offset="0%" stop-color="#ff6ec7" />
 <stop offset="30%" stop-color="#ffc36e" />
 <stop offset="60%" stop-color="#6ef3ff" />
 <stop offset="100%" stop-color="#a06eff" />
-<animateTransform attributeName="gradientTransform" type="rotate" from="0 0.5 0.5" to="360 0.5 0.5" dur="8s" repeatCount="indefinite" />
+${rotation}
 </linearGradient>
 <linearGradient id="shineGrad" x1="0" y1="0" x2="1" y2="0">
 <stop offset="0%" stop-color="#ffffff" stop-opacity="0" />
@@ -68,38 +84,16 @@ export function renderFrame(grade: Grade, w: number, h: number): { defs: string;
 <feColorMatrix in="noise" type="saturate" values="7" result="sat" />
 <feComposite in="sat" in2="SourceAlpha" operator="in" />
 </filter>`
-    // Base bevel band (animated rainbow) + a turbulence foil speckle clipped to the band
-    // shape (real feTurbulence, seed-fixed) for the iridescent print-foil texture.
-    const foil = `<rect x="11" y="11" width="${w - 22}" height="${h - 22}" rx="26" fill="none" stroke="#ffffff" stroke-width="7" filter="url(#holoFoil)" opacity="0.4" />`
-    const frame = `${beveledFrame(w, h, 'url(#holoGrad)', EDGE_DARK.S, 7)}
-${foil}
-<g clip-path="url(#frameClip)">
+  const foil = `<rect x="11" y="11" width="${w - 22}" height="${h - 22}" rx="26" fill="none" stroke="#ffffff" stroke-width="7" filter="url(#holoFoil)" opacity="0.4" />`
+  const sweep = animated
+    ? `<g clip-path="url(#frameClip)">
 <rect x="-260" y="0" width="200" height="${h}" fill="url(#shineGrad)" transform="skewX(-18)">
 <animate attributeName="x" from="-260" to="${w + 260}" dur="5s" repeatCount="indefinite" />
 </rect>
 </g>`
-    return { defs, frame }
+    : ''
+  return {
+    defs,
+    frame: `${beveledFrame(w, h, 'url(#holoGrad)', '#3a1d6e', 7)}\n${foil}\n${sweep}`,
   }
-
-  const defs = metalGradientDef(grade)
-  const bandWidth = grade === 'D' ? 6 : 7
-  const frame = beveledFrame(w, h, `url(#metal${grade})`, EDGE_DARK[grade], bandWidth)
-  return { defs, frame }
-}
-
-export const TIER_GEM_COLORS: Record<Grade, string> = {
-  S: '#a06eff',
-  A: '#b8860b',
-  B: '#8a939e',
-  C: '#cd7f32',
-  D: '#6e7681',
-}
-
-// Jewel gradient stops per tier: light facet → base → deep shadow.
-export const TIER_GEM_GRADIENT: Record<Grade, [string, string, string]> = {
-  S: ['#c9a3ff', '#a06eff', '#7a4fd6'],
-  A: ['#f5d76e', '#b8860b', '#7a5a08'],
-  B: ['#d8dee6', '#8a939e', '#5c636b'],
-  C: ['#e8a06e', '#cd7f32', '#8a5420'],
-  D: ['#9aa0a8', '#6e7681', '#4a5058'],
 }

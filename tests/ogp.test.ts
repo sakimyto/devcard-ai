@@ -33,9 +33,9 @@ describe('isBotRequest', () => {
 
 describe('renderOgpHtml', () => {
   it('includes og:image with correct URL (HTML-escaped ampersand)', () => {
-    const html = renderOgpHtml('testuser', 'https://pullcard-ai.example.com', 'dark')
+    const html = renderOgpHtml('testuser', 'https://pullcard-ai.example.com', 'dark', 'holo')
     expect(html).toContain('og:image')
-    expect(html).toContain('/og?user=testuser&amp;theme=dark')
+    expect(html).toContain('/og?user=testuser&amp;theme=dark&amp;glow=holo')
   })
 
   it('includes twitter:card meta', () => {
@@ -93,8 +93,6 @@ const PROBE_DATA: CardDataV2 = {
     synergy: 65,
     range: 50,
     flow: 40,
-    points: 73,
-    grade: 'S',
     power: 6307,
     aiCommitsInWindow: 120,
     activeWeeks: 9,

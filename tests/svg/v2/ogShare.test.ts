@@ -11,8 +11,6 @@ const data: CardDataV2 = {
     synergy: 65,
     range: 50,
     flow: 40,
-    points: 73,
-    grade: 'S',
     power: 6307,
     aiCommitsInWindow: 120,
     activeWeeks: 9,
@@ -54,14 +52,16 @@ const data: CardDataV2 = {
 }
 
 describe('renderOgShare', () => {
-  it('renders 1200x630 with username, grade, stats, no SMIL animation', () => {
-    const svg = renderOgShare(data, 'dark')
+  it('renders 1200x630 with username, chosen glow, stats, no rank or SMIL animation', () => {
+    const svg = renderOgShare(data, 'dark', 'holo')
     expect(svg).toContain('width="1200"')
     expect(svg).toContain('height="630"')
     expect(svg).toContain('testuser')
     expect(svg).toContain('VELOCITY')
     // PNG-rasterized: SMIL animation is inert and must not be emitted
     expect(svg).not.toContain('animate')
+    expect(svg).not.toContain('rarity')
+    expect(svg).toContain('HOLO GLOW')
     expect(svg).toContain('POWER')
     expect(svg).toContain('6,307')
     expect(svg).toMatchSnapshot()

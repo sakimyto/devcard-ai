@@ -58,13 +58,13 @@ function escapeHtml(s: string): string {
 // GitHub logins are [A-Za-z0-9-], but we do not trust input here — the caller
 // hands us a raw query parameter, and XSS surfaced in tools like this has
 // historically bypassed later validation. Escape at the interpolation boundary.
-export function renderOgpHtml(user: string, baseUrl: string, theme: string): string {
+export function renderOgpHtml(user: string, baseUrl: string, theme: string, glow = 'soft'): string {
   const safeImage = escapeHtml(
-    `${baseUrl}/og?user=${encodeURIComponent(user)}&theme=${encodeURIComponent(theme)}`,
+    `${baseUrl}/og?user=${encodeURIComponent(user)}&theme=${encodeURIComponent(theme)}&glow=${encodeURIComponent(glow)}`,
   )
   // Relative meta-refresh avoids any dependency on the incoming Host header.
   const safeRedirect = escapeHtml(
-    `/?user=${encodeURIComponent(user)}&theme=${encodeURIComponent(theme)}`,
+    `/?user=${encodeURIComponent(user)}&theme=${encodeURIComponent(theme)}&glow=${encodeURIComponent(glow)}`,
   )
   const safeUser = escapeHtml(user)
   const title = `${safeUser}&#39;s AI Builder Passport`

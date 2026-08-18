@@ -1,5 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs'
-import type { CardDataV2, Grade } from '../src/analyzers/types'
+import type { CardDataV2 } from '../src/analyzers/types'
+import type { GlowStyle } from '../src/card/customization'
 import { renderCardV2 } from '../src/svg/v2/cardV2'
 
 const base: CardDataV2 = {
@@ -11,8 +12,6 @@ const base: CardDataV2 = {
     synergy: 71,
     range: 58,
     flow: 46,
-    points: 73,
-    grade: 'A',
     power: 6426,
     aiCommitsInWindow: 120,
     activeWeeks: 9,
@@ -84,54 +83,50 @@ const AVATAR_FIXTURE =
 const outDir = new URL('../.superpowers/sdd/visual-t6/', import.meta.url).pathname
 mkdirSync(outDir, { recursive: true })
 
-// Required proofs: all 5 tiers on dark, plus S/D on light.
-const proofs: Array<{ grade: Grade; theme: string; label: string }> = [
-  { grade: 'S', theme: 'dark', label: 'card-S-dark' },
-  { grade: 'A', theme: 'dark', label: 'card-A-dark' },
-  { grade: 'B', theme: 'dark', label: 'card-B-dark' },
-  { grade: 'C', theme: 'dark', label: 'card-C-dark' },
-  { grade: 'D', theme: 'dark', label: 'card-D-dark' },
-  { grade: 'S', theme: 'light', label: 'card-S-light' },
-  { grade: 'D', theme: 'light', label: 'card-D-light' },
+// Required proofs: every user-selectable glow on both themes.
+const proofs: Array<{ glow: GlowStyle; theme: string; label: string }> = [
+  { glow: 'none', theme: 'dark', label: 'card-clean-dark' },
+  { glow: 'soft', theme: 'dark', label: 'card-soft-dark' },
+  { glow: 'neon', theme: 'dark', label: 'card-neon-dark' },
+  { glow: 'holo', theme: 'dark', label: 'card-holo-dark' },
+  { glow: 'none', theme: 'light', label: 'card-clean-light' },
+  { glow: 'soft', theme: 'light', label: 'card-soft-light' },
+  { glow: 'neon', theme: 'light', label: 'card-neon-light' },
+  { glow: 'holo', theme: 'light', label: 'card-holo-light' },
 ]
-for (const { grade, theme, label } of proofs) {
-  const svg = renderCardV2(
-    { ...base, stats: { ...base.stats, grade } },
-    {
-      theme,
-    },
-  )
+for (const { glow, theme, label } of proofs) {
+  const svg = renderCardV2(base, { theme, glow })
   writeFileSync(`${outDir}${label}.svg`, svg)
 }
 
-// Boundary stress: 39-char username (max GH login) — checks nameplate vs tier gem.
+// Boundary stress: 39-char username (max GH login) — checks nameplate vs POWER.
 const longName = 'a'.repeat(39)
 writeFileSync(
-  `${outDir}card-S-dark-39char.svg`,
+  `${outDir}card-holo-dark-39char.svg`,
   renderCardV2(
-    { ...base, username: longName, stats: { ...base.stats, grade: 'S' } },
+    { ...base, username: longName },
     {
       theme: 'dark',
+      glow: 'holo',
     },
   ),
 )
 
 // Avatar medallion present — verifies clip/frame and art overlap.
 writeFileSync(
-  `${outDir}card-A-dark-avatar.svg`,
-  renderCardV2({ ...base, avatarDataUri: AVATAR_FIXTURE }, { theme: 'dark' }),
+  `${outDir}card-neon-dark-avatar.svg`,
+  renderCardV2({ ...base, avatarDataUri: AVATAR_FIXTURE }, { theme: 'dark', glow: 'neon' }),
 )
 
 // Over-9000 POWER: all axes maxed → gold headline number + full radar.
 writeFileSync(
-  `${outDir}card-S-dark-over9000.svg`,
+  `${outDir}card-holo-dark-over9000.svg`,
   renderCardV2(
     {
       ...base,
       avatarDataUri: AVATAR_FIXTURE,
       stats: {
         ...base.stats,
-        grade: 'S',
         velocity: 100,
         diversity: 100,
         consistency: 100,
@@ -141,7 +136,7 @@ writeFileSync(
         power: 10200,
       },
     },
-    { theme: 'dark' },
+    { theme: 'dark', glow: 'holo' },
   ),
 )
 

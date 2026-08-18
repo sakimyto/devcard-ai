@@ -1,22 +1,22 @@
 # PullCard AI
 
-Your AI coding style, as a trading card. Rarity frame, archetype, stats — generated from your public GitHub activity and embedded with one line of markdown.
+Your AI coding style, as a trading card. Pick your theme and glow, then embed the result with one line of markdown.
 
-[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=sakimyto&theme=dark)](https://pullcard.sakimyto.com/#sakimyto)
+[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=sakimyto&theme=dark&glow=holo)](https://pullcard.sakimyto.com/?theme=dark&glow=holo#sakimyto)
 
 ## Add to your README
 
 Copy this into your GitHub profile README and replace `YOUR_USERNAME`:
 
 ```markdown
-[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark)](https://pullcard.sakimyto.com/#YOUR_USERNAME)
+[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark&glow=soft)](https://pullcard.sakimyto.com/?theme=dark&glow=soft#YOUR_USERNAME)
 ```
 
 <details>
 <summary>Light theme</summary>
 
 ```markdown
-[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=YOUR_USERNAME&theme=light)](https://pullcard.sakimyto.com/#YOUR_USERNAME)
+[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=YOUR_USERNAME&theme=light&glow=soft)](https://pullcard.sakimyto.com/?theme=light&glow=soft#YOUR_USERNAME)
 ```
 
 </details>
@@ -27,7 +27,7 @@ Or visit the [card builder](https://pullcard.sakimyto.com/) — summon, copy, pa
 
 | Element | Description |
 |---------|-------------|
-| **Rarity frame** | Your tier decides the frame: S = animated holo, A = gold, B = silver, C = bronze, D = common |
+| **Custom finish** | Choose Clean, Soft, Neon, or animated Holo — appearance is personal, not a rank |
 | **Archetype** | Your collaboration class: AI Native, Pair Programmer, Delegator, or Selective User |
 | **Generative art** | A geometric artwork seeded by your username — unique to you, reproducible forever |
 | **Stats** | VELOCITY (commit cadence), DIVERSITY (tools × usage spread), CONSISTENCY (active weeks) — each 0-100 |
@@ -42,6 +42,7 @@ Or visit the [card builder](https://pullcard.sakimyto.com/) — summon, copy, pa
 |-----------|-------------|---------|
 | `user` | GitHub username (required) | - |
 | `theme` | `light` or `dark` | `light` |
+| `glow` | `none`, `soft`, `neon`, or `holo` | `soft` |
 
 ## Self-hosting
 

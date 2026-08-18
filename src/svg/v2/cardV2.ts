@@ -1,9 +1,10 @@
 import type { CardDataV2 } from '~/analyzers/types'
+import { glowLabel, normalizeGlow } from '~/card/customization'
 import { type Theme, getTheme } from '../themes'
 import { escapeXml, svgRect, svgText, wrapText } from '../utils'
 import { renderArt, renderSparkles } from './art'
 import { renderEmblem } from './emblem'
-import { TIER_GEM_COLORS, TIER_GEM_GRADIENT, renderFrame } from './frame'
+import { renderFrame } from './frame'
 import { renderElementGlyph, renderStatGlyph, renderToolIcon } from './icons'
 import { renderRadar } from './radar'
 
@@ -17,8 +18,8 @@ export const CARD_W = 750
 export const CARD_H = 1050
 const PAD = 44
 
-// POWER now sits at the HP position on the nameplate (top-right, left of the gem),
-// so the username shares its row with the POWER block instead of the gem. The name
+// POWER sits at the HP position on the nameplate (top-right), so the username shares
+// its row with the POWER block. The name
 // must clear the POWER block's left edge; nameFontSize takes the available width and
 // shrinks a long login to fit. Uses an approx bold-glyph advance of 0.58em; short
 // names stay at the 42px hero size. Min 17 keeps the 39-char worst case (max-length
@@ -82,40 +83,12 @@ ${svgText(LABEL_X, y, label, { fontSize: 16, fill: theme.textSecondary, fontWeig
 ${svgText(VAL_X, y, String(value), { fontSize: 20, fill: theme.text, fontWeight: 'bold', anchor: 'end' })}`
 }
 
-// Faceted tier gem: jewel-gradient body, a diagonal cut cross, a bright upper-left
-// specular facet, and inner/edge outlines so it reads as cut crystal, not a flat rhombus.
-function tierGem(grade: CardDataV2['stats']['grade'], x: number, y: number): string {
-  const size = 92
-  const half = size / 2
-  const diamond = `${half},0 ${size},${half} ${half},${size} 0,${half}`
-  // S/A gems get a subtle specular shimmer; lower tiers stay static.
-  const pulse =
-    grade === 'S' || grade === 'A'
-      ? '<animate attributeName="fill-opacity" values="0.42;0.72;0.42" dur="3.5s" repeatCount="indefinite" />'
-      : ''
-  return `<g transform="translate(${x} ${y})">
-<polygon points="${diamond}" fill="url(#gemGrad)" />
-<polygon points="${half},0 0,${half} ${half},${half}" fill="#ffffff" fill-opacity="0.42">${pulse}</polygon>
-<line x1="${half}" y1="0" x2="${half}" y2="${size}" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1" />
-<line x1="0" y1="${half}" x2="${size}" y2="${half}" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1" />
-<polygon points="${half},8 ${size - 8},${half} ${half},${size - 8} 8,${half}" fill="none" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
-<polygon points="${diamond}" fill="none" stroke="#000000" stroke-opacity="0.25" stroke-width="1.5" />
-${svgText(half, half + 12, grade, { fontSize: 34, fill: '#ffffff', fontWeight: 'bold', anchor: 'middle' })}
-</g>`
-}
-
-export function renderCardV2(data: CardDataV2, options: { theme: string }): string {
+export function renderCardV2(data: CardDataV2, options: { theme: string; glow?: string }): string {
   const theme = getTheme(options.theme)
-  const { defs, frame } = renderFrame(data.stats.grade, CARD_W, CARD_H)
+  const glow = normalizeGlow(options.glow)
+  const { defs, frame } = renderFrame(glow, CARD_W, CARD_H, theme.accent)
 
-  // Jewel gradient for the tier gem + subtle raised gradient for the nameplate.
-  const [g0, g1, g2] = TIER_GEM_GRADIENT[data.stats.grade]
-  const cardDefs = `<linearGradient id="gemGrad" x1="0" y1="0" x2="1" y2="1">
-<stop offset="0%" stop-color="${g0}" />
-<stop offset="50%" stop-color="${g1}" />
-<stop offset="100%" stop-color="${g2}" />
-</linearGradient>
-<linearGradient id="plateGrad" x1="0" y1="0" x2="0" y2="1">
+  const cardDefs = `<linearGradient id="plateGrad" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0%" stop-color="${theme.headerBg}" />
 <stop offset="100%" stop-color="${theme.bg}" />
 </linearGradient>
@@ -130,13 +103,7 @@ export function renderCardV2(data: CardDataV2, options: { theme: string }): stri
 <stop offset="0%" stop-color="#ffffff" stop-opacity="0.92" />
 <stop offset="26%" stop-color="${data.element.color}" />
 <stop offset="100%" stop-color="${data.element.color}" />
-</radialGradient>
-<linearGradient id="rarityHolo" x1="0" y1="0" x2="1" y2="0">
-<stop offset="0%" stop-color="#ff6ec7" />
-<stop offset="35%" stop-color="#ffc36e" />
-<stop offset="65%" stop-color="#6ef3ff" />
-<stop offset="100%" stop-color="#a06eff" />
-</linearGradient>`
+</radialGradient>`
   // Full-card film grain: monochrome fractal noise at very low opacity — felt, not seen.
   // Clipped to the rounded card so corners stay clean; sits above the art but below text.
   const grain = `<g clip-path="url(#cardClip)"><rect x="0" y="0" width="${CARD_W}" height="${CARD_H}" filter="url(#cardGrain)" opacity="0.038" /></g>`
@@ -144,11 +111,11 @@ export function renderCardV2(data: CardDataV2, options: { theme: string }): stri
   // --- name plate (embossed panel behind the identity block) ---
   // POWER lives here now, at the Pokémon HP position: label on the AI BUILDER line,
   // big number on the username baseline, both right-aligned at the plate's inner edge
-  // and left of the tier gem. Gold past 9000, with a soft glow halo on the number.
+  // Gold past 9000, with a soft glow halo on the number.
   const power = data.stats.power
   const powerColor = power >= 9000 ? '#f0b429' : theme.accent
   const powerStr = withCommas(power)
-  const POWER_RIGHT = 572 // plate inner right edge (28 + 560 - 16)
+  const POWER_RIGHT = CARD_W - PAD
   const POWER_NUM_SIZE = 32
   const powerNumW = Math.ceil(powerStr.length * POWER_NUM_SIZE * 0.6)
   // Name shares the row with POWER: available width runs from the name origin to the
@@ -158,9 +125,9 @@ export function renderCardV2(data: CardDataV2, options: { theme: string }): stri
     power >= 9000
       ? `<text x="${POWER_RIGHT}" y="128" font-size="${POWER_NUM_SIZE}" fill="${powerColor}" font-weight="bold" text-anchor="end" opacity="0.55" filter="url(#powerGlow)">${powerStr}</text>`
       : ''
-  const plate = `<rect x="28" y="64" width="560" height="82" rx="14" fill="url(#plateGrad)" />
-<rect x="28" y="64" width="560" height="82" rx="14" fill="none" stroke="${theme.border}" stroke-opacity="0.6" stroke-width="1" />
-<line x1="42" y1="65.5" x2="574" y2="65.5" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1" />`
+  const plate = `<rect x="28" y="64" width="694" height="82" rx="14" fill="url(#plateGrad)" />
+<rect x="28" y="64" width="694" height="82" rx="14" fill="none" stroke="${theme.border}" stroke-opacity="0.6" stroke-width="1" />
+<line x1="42" y1="65.5" x2="708" y2="65.5" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1" />`
   const namePlate = `${plate}
 ${svgText(PAD, 84, 'AI BUILDER', { fontSize: 16, fill: theme.textSecondary, fontWeight: '600' })}
 <text x="${POWER_RIGHT}" y="84" font-size="12" fill="${theme.textSecondary}" font-weight="600" text-anchor="end" letter-spacing="2" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">POWER</text>
@@ -212,8 +179,9 @@ ${svgText(enCx + enR + 8, rowTextY, elLabel, { fontSize: 15, fill: theme.text, f
   const artY = 210
   const artH = 220 // shrunk 20px vs v2.6 to free vertical budget for the CONTRIBUTIONS graph
   const artW = CARD_W - PAD * 2
-  const sparkles =
-    data.stats.grade === 'S' ? renderSparkles(data.seed, artW, artH, theme.accent) : ''
+  const sparkles = glow === 'holo' ? renderSparkles(data.seed, artW, artH, theme.accent) : ''
+  const artFrameStroke =
+    glow === 'holo' ? 'url(#holoGrad)' : glow === 'none' ? theme.border : theme.accent
   const art = `<clipPath id="artClip"><rect x="${PAD}" y="${artY}" width="${artW}" height="${artH}" rx="18" /></clipPath>
 <g clip-path="url(#artClip)"><g transform="translate(${PAD} ${artY})">${renderArt({
     seed: data.seed,
@@ -224,7 +192,7 @@ ${svgText(enCx + enR + 8, rowTextY, elLabel, { fontSize: 15, fill: theme.text, f
   })}
 ${sparkles}</g></g>
 <rect x="${PAD}" y="${artY}" width="${artW}" height="${artH}" rx="18" fill="none" stroke="${theme.border}" />
-<rect x="${PAD + 4}" y="${artY + 4}" width="${artW - 8}" height="${artH - 8}" rx="14" fill="none" stroke="${TIER_GEM_COLORS[data.stats.grade]}" stroke-opacity="0.85" stroke-width="1.5" />
+<rect x="${PAD + 4}" y="${artY + 4}" width="${artW - 8}" height="${artH - 8}" rx="14" fill="none" stroke="${artFrameStroke}" stroke-opacity="0.85" stroke-width="1.5" />
 <rect x="${PAD + 5.5}" y="${artY + 5.5}" width="${artW - 11}" height="${artH - 11}" rx="13" fill="none" stroke="#000000" stroke-opacity="0.25" stroke-width="1" />
 <line x1="${PAD + 14}" y1="${artY + 5}" x2="${CARD_W - PAD - 14}" y2="${artY + 5}" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1" />`
 
@@ -377,7 +345,7 @@ ${hasLangs ? `${bar}\n${legend}` : svgText(PAD, BAR_Y + 18, '—', { fontSize: 1
 
   // --- record strip (EXP / commit·pr·review counts / streak) ---
   // Occupies the band y 820-858 between TYPES and the CONTRIBUTIONS graph. Display-only:
-  // never feeds Grade or POWER. All values arrive as numbers, so no injection surface.
+  // never feeds POWER. All values arrive as numbers, so no injection surface.
   const rec = data.record
   // ラベル「RECORD」は撤去（EXP/counts/streak で自明。TYPES 行との窮屈さ解消を優先）
   const recRowY = 852
@@ -405,7 +373,7 @@ ${streakText ? svgText(CARD_W - PAD, recRowY, streakText, { fontSize: 13, fill: 
 
   // --- contributions graph (52-week, 1y) — display-only activity log ---
   // Sits between the RECORD strip and TRAITS. Independent of the 12-week metric window
-  // (labeled `· 1y` on the card); never feeds Grade or POWER. 52 upward bars grow from a
+  // (labeled `· 1y` on the card); never feeds POWER. 52 upward bars grow from a
   // baseline; heights use a sqrt scale so a single busy week doesn't crush the rest, and the
   // current (rightmost) week is drawn at full opacity with a 1px outline to read as "now".
   const CONTRIB_BASE_Y = 928 // baseline the bars grow up from
@@ -473,25 +441,20 @@ ${num}`
   // Card-number line (left): `No.7F3A · S1 ’26 · public 12wk` — serial without the #,
   // a fixed Season 1 tag, and the two-digit issue year. When private repos are included the
   // window token becomes `all repos · 12wk` (honest label — the card is no longer public-only).
-  // Rarity mark (right, left of the PullCard AI credit): D=● C=◆ B=★ A=★★ S=★★★, S = holo.
+  // The chosen finish is named in the footer so the treatment is not communicated by color alone.
   const footerY = CARD_H - 40
   const serialNo = data.serial.replace(/^#/, '')
   const yy = String(data.issuedYear).slice(-2)
   const scopeLabel = data.includesPrivate ? 'all repos · 12wk' : 'public 12wk'
-  const RARITY_MARK: Record<CardDataV2['stats']['grade'], string> = {
-    S: '★★★',
-    A: '★★',
-    B: '★',
-    C: '◆',
-    D: '●',
-  }
-  const mark = RARITY_MARK[data.stats.grade]
-  const rarityFill =
-    data.stats.grade === 'S' ? 'url(#rarityHolo)' : TIER_GEM_COLORS[data.stats.grade]
-  const rarityRight = CARD_W - PAD - 88 // clears the right-aligned "PullCard AI" credit
-  const rarity = `<text x="${rarityRight}" y="${footerY}" font-size="16" fill="${rarityFill}" text-anchor="end" letter-spacing="1.5">${mark}</text>`
+  const finishRight = CARD_W - PAD - 104
+  const finish = svgText(finishRight, footerY, glowLabel(glow), {
+    fontSize: 13,
+    fill: theme.accent,
+    fontWeight: '600',
+    anchor: 'end',
+  })
   const footer = `${svgText(PAD, footerY, `No.${serialNo} · S1 ’${yy} · ${scopeLabel}`, { fontSize: 15, fill: theme.textSecondary })}
-${rarity}
+${finish}
 ${svgText(CARD_W - PAD, footerY, 'PullCard AI', { fontSize: 15, fill: theme.textSecondary, anchor: 'end' })}`
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${CARD_W}" height="${CARD_H}" viewBox="0 0 ${CARD_W} ${CARD_H}" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
@@ -512,16 +475,22 @@ ${langs}
 ${record}
 ${contrib}
 ${flavor}
-${tierGem(data.stats.grade, CARD_W - PAD - 92, 56)}
 ${footer}
 </svg>`
 }
 
-export function renderPlaceholderCard(username: string, themeName: string): string {
+export function renderPlaceholderCard(
+  username: string,
+  themeName: string,
+  glowName = 'soft',
+): string {
   const theme = getTheme(themeName)
+  const glow = normalizeGlow(glowName)
+  const { defs, frame } = renderFrame(glow, CARD_W, CARD_H, theme.accent)
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${CARD_W}" height="${CARD_H}" viewBox="0 0 ${CARD_W} ${CARD_H}" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+<defs>${defs}</defs>
 ${svgRect(0, 0, CARD_W, CARD_H, { fill: theme.bg, rx: 36 })}
-<rect x="10" y="10" width="${CARD_W - 20}" height="${CARD_H - 20}" rx="28" fill="none" stroke="${theme.border}" stroke-width="6" stroke-dasharray="10 8" />
+${frame}
 ${svgText(CARD_W / 2, CARD_H / 2 - 20, 'Summoning…', { fontSize: 34, fill: theme.text, fontWeight: 'bold', anchor: 'middle' })}
 ${svgText(CARD_W / 2, CARD_H / 2 + 24, `${username}'s card is being drawn`, { fontSize: 18, fill: theme.textSecondary, anchor: 'middle' })}
 ${svgText(CARD_W / 2, CARD_H - 48, 'PullCard AI', { fontSize: 15, fill: theme.textSecondary, anchor: 'middle' })}

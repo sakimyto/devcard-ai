@@ -9,7 +9,6 @@ export interface CoauthorAnalysis {
 }
 
 // === Stats (v2) ===
-export type Grade = 'S' | 'A' | 'B' | 'C' | 'D'
 export interface StatsAnalysis {
   velocity: number // 0-100
   diversity: number // 0-100
@@ -17,8 +16,6 @@ export interface StatsAnalysis {
   synergy: number // 0-100, AI-involved commit rate
   range: number // 0-100, language + active-repo breadth
   flow: number // 0-100, human↔AI alternation over the window
-  points: number // 0-100, V40/D30/C30 (unchanged — drives Grade)
-  grade: Grade
   power: number // 0-10200, (v+d+c+syn+range+flow)*17 — the over-9000 headline number
   aiCommitsInWindow: number
   activeWeeks: number // 0-12
@@ -108,9 +105,9 @@ export interface CardDataV2 {
   languages: LanguageAnalysisV2
   pattern: PatternAnalysis
   // Contribution record (EXP/streak/PR·review counts). Display-only — never feeds
-  // Grade or POWER (tier-invariance rule).
+  // POWER.
   record: RecordAnalysis
-  // v2.6 TCG-density signals. Display-only — like `record`, never feed Grade or POWER.
+  // v2.6 TCG-density signals. Display-only — like `record`, never feed POWER.
   // element: dominant radar axis → chip on the archetype row. epithet: builder-type name
   // (internal 4-axis code is discarded). traits: up to 2 activated traits; [] → flavor shows.
   element: ElementResult
@@ -126,6 +123,6 @@ export interface CardDataV2 {
   avatarDataUri: string | null
   // True when private repos flowed into the analysis (App installed on "All repositories").
   // Display-only: switches the footer window label to `all repos · 12wk` and the archetype
-  // `✓ verified` to `✓ verified+`. Repo names are never shown. Never feeds Grade or POWER.
+  // `✓ verified` to `✓ verified+`. Repo names are never shown. Never feeds POWER.
   includesPrivate: boolean
 }

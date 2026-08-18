@@ -32,8 +32,6 @@ function stats(over: Partial<StatsAnalysis> = {}): StatsAnalysis {
     synergy: 0,
     range: 0,
     flow: 0,
-    points: 0,
-    grade: 'D',
     power: 0,
     aiCommitsInWindow: 0,
     activeWeeks: 0,
