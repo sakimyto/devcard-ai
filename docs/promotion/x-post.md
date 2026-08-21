@@ -15,7 +15,7 @@ PullCard AI — 公開コミットから「AI Builder トレーディングカ�
 
 レアリティ（ランク付け）はやめました。数値は測るもの、見た目は選ぶもの。
 
-AIツール33種を3層の証跡で検出。レビュアー型の使い方も拾うので、トレーラーを残さない Codex が私のカードでは「Codex x27」と刻まれてます。GitHub App を入れるとプライベートリポも集計（件数のみ・コードは見ない）→ verified+ 表示。
+AIツール33種を3層の証跡で検出。コミットのトレーラーだけでなくレビュアー的な使い方も本文から拾うので、トレーラーを残さない Codex が私のカードには「Codex x26」と刻まれています。GitHub App を入れるとプライベートリポも集計（件数のみ・コードは見ない）→ verified+ 表示。
 
 README に1行:
 `[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=YOUR_USERNAME&theme=tokyo-night&glow=soft)](https://pullcard.sakimyto.com/?theme=tokyo-night&glow=soft#YOUR_USERNAME)`

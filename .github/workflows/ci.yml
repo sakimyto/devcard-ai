@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   verify:
-    name: test + typecheck + lint
+    name: test + typecheck + lint + config
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -37,6 +37,17 @@ jobs:
       - name: Test
         run: bun run test
 
+      # continue-on-error を外した。緑を素通りする lint は、無いのと同じで
+      # 「CI は通っている」という誤った安心だけを生む
       - name: Lint
         run: bun run lint
-        continue-on-error: true
+
+      # wrangler.toml の破損（バインディング名の typo、unsafe セクションの書き間違い）は
+      # テストでも型検査でも捕まらず、デプロイ時に初めて落ちる。ここで先に落とす
+      - name: Validate worker config
+        run: bunx wrangler deploy --dry-run
+
+      # 本番に出荷される依存だけを対象にする。dev 依存（vitest→vite 連鎖）の勧告は
+      # Worker には載らないので、ここで赤くしても直す先が無い
+      - name: Audit production dependencies
+        run: bun audit --prod
