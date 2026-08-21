@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { GLOW_STYLES } from '~/card/customization'
 import { renderFrame } from '~/svg/v2/frame'
 
 describe('renderFrame', () => {
@@ -31,5 +32,22 @@ describe('renderFrame', () => {
     expect(defs).toContain('holoGrad')
     expect(defs).not.toContain('animate')
     expect(frame).not.toContain('animate')
+  })
+
+  // /og の PNG 化はリクエスト毎に走る。ぼかしフィルタと foil（feTurbulence）は resvg で
+  // 最も高価なプリミティブで、アニメーションが落ちる経路に出しても見返りが無い
+  it('animated:false では重いフィルタを一切出さない', () => {
+    for (const glow of GLOW_STYLES) {
+      const { defs, frame } = renderFrame(glow, 750, 1050, '#a371f7', { animated: false })
+      const out = `${defs}\n${frame}`
+      expect(out, `${glow}: ぼかし`).not.toContain('feGaussianBlur')
+      expect(out, `${glow}: foil`).not.toContain('feTurbulence')
+      expect(out, `${glow}: holoFoil 参照`).not.toContain('holoFoil')
+      expect(out, `${glow}: SMIL`).not.toContain('<animate')
+      // 参照だけ残って解決できない url(#...) が出ていないこと
+      for (const ref of out.matchAll(/url\(#([\w-]+)\)/g)) {
+        expect(defs, `${glow}: ${ref[1]} の定義が無い`).toContain(`id="${ref[1]}"`)
+      }
+    }
   })
 })

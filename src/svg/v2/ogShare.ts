@@ -1,7 +1,7 @@
 import type { CardDataV2 } from '~/analyzers/types'
-import { glowLabel, normalizeGlow } from '~/card/customization'
+import { type CardTheme, type GlowStyle, glowLabel } from '~/card/customization'
 import { type Theme, getTheme } from '../themes'
-import { svgRect, svgText } from '../utils'
+import { svgRect, svgText, withCommas } from '../utils'
 import { renderFrame } from './frame'
 
 const W = 1200
@@ -20,9 +20,8 @@ ${svgText(barX + barW + 20, y + 17, String(value), { fontSize: 24, fill: theme.t
 
 // 1200x630 landscape share image: a summary (name / stat bars / POWER), NOT
 // the 750x1050 vertical card scaled down. PNG-rasterized downstream, so no SMIL.
-export function renderOgShare(data: CardDataV2, themeName: string, glowName = 'soft'): string {
+export function renderOgShare(data: CardDataV2, themeName: CardTheme, glow: GlowStyle): string {
   const theme = getTheme(themeName)
-  const glow = normalizeGlow(glowName)
   const { defs, frame } = renderFrame(glow, W, H, theme.accent, { animated: false })
 
   // Circular avatar to the left of the name. When absent, the name keeps its original
@@ -41,7 +40,7 @@ export function renderOgShare(data: CardDataV2, themeName: string, glowName = 's
   // POWER — the share image's headline number. Gold past 9000.
   const power = data.stats.power
   const powerColor = power >= 9000 ? '#f0b429' : theme.accent
-  const powerStr = power.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  const powerStr = withCommas(power)
 
   const powerX = W - PAD - 90
 
@@ -67,7 +66,7 @@ ${svgText(W - PAD, H - 70, 'PullCard AI', { fontSize: 22, fill: theme.textSecond
 // Error/empty states on /og must stay 1200x630: svgToPng scales by width only, so a
 // vertical error card would rasterize to the wrong aspect ratio while the OGP meta
 // advertises 1200x630, cropping/rejecting the preview. Render errors on-canvas.
-export function renderOgError(message: string, themeName: string): string {
+export function renderOgError(message: string, themeName: CardTheme): string {
   const theme = getTheme(themeName)
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="Inter">
 ${svgRect(0, 0, W, H, { fill: theme.bg })}

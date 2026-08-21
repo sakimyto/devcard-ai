@@ -14,10 +14,10 @@ published: false
 
 というわけで作った PullCard AI は「AI Builder トレーディングカード」です。
 
-[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=sakimyto&theme=dark)](https://pullcard.sakimyto.com/#sakimyto)
+[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=sakimyto&theme=dark&glow=holo)](https://pullcard.sakimyto.com/?theme=dark&glow=holo#sakimyto)
 
 ```markdown
-[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=YOUR_USERNAME&theme=dark)](https://pullcard.sakimyto.com/#YOUR_USERNAME)
+[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=YOUR_USERNAME&theme=dracula&glow=soft)](https://pullcard.sakimyto.com/?theme=dracula&glow=soft#YOUR_USERNAME)
 ```
 
 README にこの 1 行を貼るだけ。https://pullcard.sakimyto.com で 60 秒で作れます。
@@ -26,14 +26,20 @@ README にこの 1 行を貼るだけ。https://pullcard.sakimyto.com で 60 秒
 
 トレカを名乗るからには、トレカの文法を全部入れました。
 
-### レアリティ枠
+### 枠 — レアリティをやめて「選べる仕上げ」にした
 
-総合ティア（S/A/B/C/D）がそのままフレームになります。
+最初はトレカらしく総合ティア（S/A/B/C/D）をそのままフレームにしていました。S だけが虹色のホロ枠で、あとは金・銀・銅。スクリーンショットの見栄えは最高でしたが、運用してみて気づきました。**自分のプロフィールに貼るカードが「あなたは下位です」と静かに宣言してくる**のは、貼りたくならない。
 
-- **S = Holo**: 虹色グラデーション枠 + シャインスイープが**アニメーションする**。GitHub README の `<img>`（camo プロキシ経由）でも動くよう、SMIL のみで実装
-- **A = Gold / B = Silver / C = Bronze / D = Common**
+そこでランクを捨てて、見た目はユーザーが選ぶものにしました。
 
-「README の中で動くホロカード」が最大の見せ場です。script も foreignObject も使えない（camo プロキシ下の `<img>`）制約なので、アニメーションは `<animateTransform>` と `<animate>` だけ（SMIL）で回し、foil のザラついた質感は SVG フィルタ（feTurbulence）で作っています。
+- **テーマ13種** — Dracula / Nord / Gruvbox / Tokyo Night / Catppuccin / One Dark / Monokai / Solarized（明暗）/ Synthwave / Matrix / light / dark。実際に人が使っているエディタ配色から取っています
+- **仕上げ4種** — Clean / Soft / Neon / Holo。Holo は虹色グラデーション枠 + シャインスイープが**アニメーションする**
+
+数値（POWER・レーダー・特性）は測って出すもの、見た目は選ぶもの、という分離です。
+
+「README の中で動くホロカード」が最大の見せ場なのは変わりません。script も foreignObject も使えない（camo プロキシ下の `<img>`）制約なので、アニメーションは `<animateTransform>` と `<animate>` だけ（SMIL）で回し、foil のザラついた質感は SVG フィルタ（feTurbulence）で作っています。
+
+なお feTurbulence は resvg でも最も重いプリミティブなので、SMIL が落ちる PNG ラスタ経路（OGP 共有画像）では foil ごと出力しません。動かないなら質感だけ残しても割に合わない、という判断です。
 
 ### 二つ名（アーキタイプ）
 

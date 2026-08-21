@@ -12,7 +12,7 @@
 **Claude がやる（go と言われたら）:**
 1. Chrome で以下を開く（title + URL が記入済みで submit フォームが出る。要ログイン）:
    ```
-   https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fpullcard.sakimyto.com&t=Show%20HN%3A%20PullCard%20%E2%80%93%20Pull%20your%20AI%20coding%20style%20as%20a%20holographic%20trading%20card
+   https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fpullcard.sakimyto.com&t=Show%20HN%3A%20PullCard%20%E2%80%93%20Your%20AI%20coding%20style%20as%20a%20trading%20card%2C%20in%20your%20editor%27s%20theme
    ```
 2. Title/URL の記入内容を目視確認し、ユーザーに「submit を押してください」と促す。
 3. submit 後、スレ URL を読み取り、**最初のコメント**欄に `community-posts.md` の Show HN 本文（9–32行目）を貼り付ける。ユーザーが comment を押す。
@@ -32,9 +32,9 @@
 **Claude がやる（各板ごとに）:**
 1. Chrome で submit ページを開く（title 記入済み・IMAGE タブ選択済み）:
    - r/GithubProfileReadme:
-     `https://www.reddit.com/r/GithubProfileReadme/submit?type=IMAGE&title=Pok%C3%A9mon-style%20AI%20builder%20card%20for%20your%20README%20%E2%80%94%20S%20tier%20gets%20an%20animated%20holo%20frame`
+     `https://www.reddit.com/r/GithubProfileReadme/submit?type=IMAGE&title=Pok%C3%A9mon-style%20AI%20builder%20card%20for%20your%20README%20%E2%80%94%20now%20in%2013%20editor%20themes%20%28Dracula%2C%20Nord%2C%20Tokyo%20Night...%29`
    - r/ClaudeAI:
-     `https://www.reddit.com/r/ClaudeAI/submit?type=IMAGE&title=I%20turned%20my%20Claude%20usage%20into%20a%20Pok%C3%A9mon-style%20trading%20card%20%28holo%20frame%20for%20S%20tier%29`
+     `https://www.reddit.com/r/ClaudeAI/submit?type=IMAGE&title=I%20turned%20my%20Claude%20usage%20into%20a%20Pok%C3%A9mon-style%20trading%20card%20%28pick%20your%20editor%27s%20theme%29`
    - r/cursor:
      `https://www.reddit.com/r/cursor/submit?type=IMAGE&title=PullCard%20AI%20%E2%80%94%20a%20trading%20card%20of%20your%20AI%20coding%20style%20%28Cursor%20detected%203%20ways%29`
 2. 画像 `docs/promotion/launch-assets/card-sakimyto.png` の絶対パスをユーザーに提示し、ドラッグ&ドロップ or ファイル選択で添付してもらう（画像は URL プリフィル不可）。
@@ -46,7 +46,9 @@
 - ⚠️ 画像添付は手動（Reddit は画像を URL で渡せない）→ Claude が絶対パスを提示、ユーザーが添付
 - ⚠️ 本文は貼り付け（画像投稿はマークダウン本文を後入力）
 
-画像絶対パス: `/Users/sakimyto/_pjsc/devcard-ai/docs/promotion/launch-assets/card-sakimyto.png`
+画像絶対パス:
+- 縦カード: `/Users/sakimyto/_pjsc/devcard-ai/docs/promotion/launch-assets/card-sakimyto.png`
+- テーマ比較: `/Users/sakimyto/_pjsc/devcard-ai/docs/promotion/launch-assets/theme-grid.png`
 
 ---
 

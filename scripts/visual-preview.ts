@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs'
 import type { CardDataV2 } from '../src/analyzers/types'
-import type { GlowStyle } from '../src/card/customization'
+import { CARD_THEMES, GLOW_STYLES } from '../src/card/customization'
 import { renderCardV2 } from '../src/svg/v2/cardV2'
 
 const base: CardDataV2 = {
@@ -83,17 +83,11 @@ const AVATAR_FIXTURE =
 const outDir = new URL('../.superpowers/sdd/visual-t6/', import.meta.url).pathname
 mkdirSync(outDir, { recursive: true })
 
-// Required proofs: every user-selectable glow on both themes.
-const proofs: Array<{ glow: GlowStyle; theme: string; label: string }> = [
-  { glow: 'none', theme: 'dark', label: 'card-clean-dark' },
-  { glow: 'soft', theme: 'dark', label: 'card-soft-dark' },
-  { glow: 'neon', theme: 'dark', label: 'card-neon-dark' },
-  { glow: 'holo', theme: 'dark', label: 'card-holo-dark' },
-  { glow: 'none', theme: 'light', label: 'card-clean-light' },
-  { glow: 'soft', theme: 'light', label: 'card-soft-light' },
-  { glow: 'neon', theme: 'light', label: 'card-neon-light' },
-  { glow: 'holo', theme: 'light', label: 'card-holo-light' },
-]
+// Required proofs: every user-selectable glow on every theme. 一覧を手書きすると、
+// 選択肢を足したときに証跡だけ古いまま緑になる。
+const proofs = CARD_THEMES.flatMap((theme) =>
+  GLOW_STYLES.map((glow) => ({ glow, theme, label: `card-${glow}-${theme}` })),
+)
 for (const { glow, theme, label } of proofs) {
   const svg = renderCardV2(base, { theme, glow })
   writeFileSync(`${outDir}${label}.svg`, svg)

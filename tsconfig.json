@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "target": "ES2022",
+    // DOM を混ぜない。既定の lib は DOM を含み、そちらの CacheStorage / Response が
+    // Workers 版を隠して「Cache API に default が無い」等の実体とずれた型になる
+    "lib": ["ES2022"],
     "module": "ES2022",
     "moduleResolution": "bundler",
     "strict": true,

@@ -112,3 +112,8 @@ export function wrapText(text: string, maxChars: number, maxLines: number): stri
   }
   return lines
 }
+
+// Thousands separator without Intl (deterministic across runtimes): 6340 → "6,340".
+export function withCommas(n: number): string {
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}

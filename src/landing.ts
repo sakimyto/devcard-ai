@@ -1,3 +1,55 @@
+import {
+  CARD_THEMES,
+  DEFAULT_GLOW,
+  DEFAULT_THEME,
+  GLOW_SPEC,
+  GLOW_STYLES,
+} from './card/customization'
+import { themes } from './svg/themes'
+
+// 属性値・スクリプト文脈へ差し込む値のエスケープ。入れる値は今はすべて配色表由来の
+// ハードコードだが、「ハードコードだから安全」を無検査の前提として残さない。
+function escapeAttr(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
+// インライン <script> の中に JSON を置くときは、値に </script> が現れた時点で
+// スクリプトが閉じる。< をエスケープしておけば JSON としての意味は変わらない
+function inlineJson(value: unknown): string {
+  return JSON.stringify(value).replace(/</g, '\\u003c')
+}
+
+// ラジオ1件。選択肢の一覧は配色表と glow 表から生成するので、
+// テーマや glow を足したときに LP 側の触り忘れが起きない。
+function choiceRadio(
+  name: string,
+  value: string,
+  label: string,
+  swatchStyle: string,
+  checked: boolean,
+): string {
+  return `<label class="choice"><input type="radio" name="${escapeAttr(name)}" value="${escapeAttr(value)}"${checked ? ' checked' : ''} /><span class="choice-ui"><i class="swatch" style="${escapeAttr(swatchStyle)}"></i>${escapeAttr(label)}</span></label>`
+}
+
+const THEME_CHOICES = CARD_THEMES.map((t) =>
+  choiceRadio(
+    'card-theme',
+    t,
+    themes[t].label,
+    // 地色とアクセントを半分ずつ見せる。1粒でその配色の性格が分かる
+    `background: linear-gradient(135deg, ${themes[t].bg} 0 50%, ${themes[t].accent} 50% 100%)`,
+    t === DEFAULT_THEME,
+  ),
+).join('\n              ')
+
+const GLOW_CHOICES = GLOW_STYLES.map((g) =>
+  choiceRadio('card-glow', g, GLOW_SPEC[g].title, GLOW_SPEC[g].swatch, g === DEFAULT_GLOW),
+).join('\n              ')
+
 export function renderLandingPage(): string {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -14,16 +66,18 @@ export function renderLandingPage(): string {
     body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6 }
     .wrap { max-width: 960px; margin: 0 auto; padding: 40px 24px 64px }
     h1 { font-size: 42px; line-height: 1.1; letter-spacing: -0.02em }
-    .sub { color: var(--muted); font-size: 17px; margin: 14px 0 24px; max-width: 46ch }
+    .sub { color: var(--muted); font-size: 17px; margin: 14px 0 24px; max-width: min(46ch, 100%) }
     /* Hero: input + button live inside the first view, card demo alongside */
-    .hero { display: grid; grid-template-columns: 1fr minmax(0, 320px); gap: 40px; align-items: center }
+    .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 320px); gap: 40px; align-items: center }
+    .hero-copy { min-width: 0 }
     .hero-card { display: block; width: 100%; max-width: 320px; border-radius: 14px }
     .row { display: flex; gap: 8px; flex-wrap: wrap }
     input#username-input { flex: 1; min-width: 200px; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 16px }
     input#username-input:focus { outline: none; border-color: var(--accent) }
     button { background: var(--accent); border: 0; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 15px; cursor: pointer; font-weight: 600 }
     button.ghost { background: transparent; border: 1px solid var(--border); color: var(--text) }
-    .customizer { display: grid; grid-template-columns: auto 1fr; gap: 14px 24px; margin: 20px 0 }
+    /* テーマは十数種あり横並びだと隣のカラムを押し出すので、選択肢は縦に積む */
+    .customizer { display: grid; gap: 14px; margin: 20px 0; min-width: 0 }
     .choice-set { border: 0; min-width: 0 }
     .choice-set legend { color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: .08em; margin-bottom: 7px; text-transform: uppercase }
     .choices { display: flex; flex-wrap: wrap; gap: 7px }
@@ -33,12 +87,6 @@ export function renderLandingPage(): string {
     .choice input:checked + .choice-ui { background: #211832; border-color: var(--accent); color: var(--text) }
     .choice input:focus-visible + .choice-ui { outline: 2px solid #fff; outline-offset: 2px }
     .swatch { border: 1px solid #ffffff40; border-radius: 50%; display: inline-block; height: 10px; width: 10px }
-    .swatch-light { background: #f6f8fa }
-    .swatch-dark { background: #0d1117 }
-    .swatch-none { background: #6e7681 }
-    .swatch-soft { background: #a371f7; box-shadow: 0 0 5px #a371f7 }
-    .swatch-neon { background: #d9c7ff; box-shadow: 0 0 8px 2px #a371f7 }
-    .swatch-holo { background: linear-gradient(135deg, #ff6ec7, #ffc36e, #6ef3ff, #a06eff); box-shadow: 0 0 6px #a371f7 }
     .hint { color: var(--muted); font-size: 13px; margin-top: 10px; min-height: 1em }
     /* Result (post-summon): the wow first, then the embed steps */
     #result { margin-top: 48px; display: grid; grid-template-columns: minmax(0, 340px) 1fr; gap: 36px; align-items: start }
@@ -54,7 +102,8 @@ export function renderLandingPage(): string {
     pre#markdown-output { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin: 10px 0; overflow-x: auto; font-size: 13px; white-space: pre-wrap; word-break: break-all }
     /* Gallery: recently summoned, newest first — 実カードをそのまま並べる */
     #gallery { margin-top: 72px }
-    .gallery-title { font-size: 20px; letter-spacing: -0.01em; margin-bottom: 18px }
+    .gallery-title { font-size: 20px; letter-spacing: -0.01em; margin-bottom: 6px }
+    .gallery-note { color: var(--muted); font-size: 13px; margin-bottom: 18px; max-width: min(60ch, 100%) }
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 22px }
     .g-card { display: block; background: none; border: none; padding: 0; cursor: pointer; color: var(--text); font: inherit; text-align: left; transition: transform .15s ease }
     .g-card:hover { transform: translateY(-4px) }
@@ -70,7 +119,6 @@ export function renderLandingPage(): string {
       .hero, #result { grid-template-columns: 1fr }
       h1 { font-size: 34px }
       .hero-card { max-width: 260px; margin: 4px auto 0 }
-      .customizer { grid-template-columns: 1fr }
     }
   </style>
 </head>
@@ -84,17 +132,13 @@ export function renderLandingPage(): string {
           <fieldset class="choice-set">
             <legend>Theme</legend>
             <div class="choices">
-              <label class="choice"><input type="radio" name="card-theme" value="dark" checked /><span class="choice-ui"><i class="swatch swatch-dark"></i>Dark</span></label>
-              <label class="choice"><input type="radio" name="card-theme" value="light" /><span class="choice-ui"><i class="swatch swatch-light"></i>Light</span></label>
+              ${THEME_CHOICES}
             </div>
           </fieldset>
           <fieldset class="choice-set">
             <legend>Glow</legend>
             <div class="choices">
-              <label class="choice"><input type="radio" name="card-glow" value="none" /><span class="choice-ui"><i class="swatch swatch-none"></i>Clean</span></label>
-              <label class="choice"><input type="radio" name="card-glow" value="soft" checked /><span class="choice-ui"><i class="swatch swatch-soft"></i>Soft</span></label>
-              <label class="choice"><input type="radio" name="card-glow" value="neon" /><span class="choice-ui"><i class="swatch swatch-neon"></i>Neon</span></label>
-              <label class="choice"><input type="radio" name="card-glow" value="holo" /><span class="choice-ui"><i class="swatch swatch-holo"></i>Holo</span></label>
+              ${GLOW_CHOICES}
             </div>
           </fieldset>
         </div>
@@ -128,6 +172,7 @@ export function renderLandingPage(): string {
 
     <section id="gallery" hidden>
       <h2 class="gallery-title">Recently summoned</h2>
+      <p class="gallery-note">Opt-in only — you appear here after installing the <a href="https://github.com/apps/devcard-ai" target="_blank" rel="noopener">GitHub App</a> on your own account. Uninstall it and your card drops off on its own.</p>
       <div id="gallery-grid" class="gallery-grid"></div>
     </section>
 
@@ -137,8 +182,9 @@ export function renderLandingPage(): string {
   </div>
   <script>
     const RE = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/
-    const THEMES = ['light', 'dark']
-    const GLOWS = ['none', 'soft', 'neon', 'holo']
+    const THEMES = ${inlineJson(CARD_THEMES)}
+    const GLOWS = ${inlineJson(GLOW_STYLES)}
+    const DEFAULTS = ${inlineJson({ theme: DEFAULT_THEME, glow: DEFAULT_GLOW })}
     // element id → colored glyph. Mirrors src/analyzers/element.ts (display-only).
     const ELEMENTS = {
       bolt: { glyph: '↯', color: '#f0b429' },
@@ -177,6 +223,13 @@ export function renderLandingPage(): string {
       return base + '/?theme=' + selected('card-theme') + '&glow=' + selected('card-glow') + '#' + encodeURIComponent(u)
     }
 
+    // 「同じ URL なら再代入しない」は、見た目を切り替えたときの無駄なリクエストを抑えるため。
+    // ただし前回の読み込みが失敗していた場合は、同じ URL こそ再試行したい URL なので、
+    // 成功したことが分かっている src だけを重複判定の対象にする
+    let loadedSrc = null
+    resultCard.addEventListener('load', () => { loadedSrc = resultCard.src })
+    resultCard.addEventListener('error', () => { loadedSrc = null })
+
     function summon(shouldScroll = true) {
       const u = input.value.trim()
       if (!RE.test(u)) { hint.textContent = 'Enter a valid GitHub username.'; input.focus(); return }
@@ -185,7 +238,7 @@ export function renderLandingPage(): string {
       const shareUrl = shareUrlFor(u)
       const md = '[![AI Builder Trading Card](' + cardUrl + ')](' + shareUrl + ')'
       output.textContent = md
-      resultCard.src = cardUrl
+      if (loadedSrc !== cardUrl) resultCard.src = cardUrl
       repoHint.textContent = u + '/' + u
       newRepoLink.href = 'https://github.com/new?name=' + encodeURIComponent(u)
       shareX.href = 'https://twitter.com/intent/tweet?text=' +
@@ -196,9 +249,14 @@ export function renderLandingPage(): string {
 
     document.getElementById('generate-button').addEventListener('click', () => summon())
     input.addEventListener('keydown', (e) => { if (e.key === 'Enter') summon() })
+    // 見た目を次々に試す操作でカード生成が1クリック1本飛ぶのを抑える。
+    // 落ち着いた時点の1本だけを撃つ
+    let previewTimer = null
     for (const choice of document.querySelectorAll('input[name="card-theme"], input[name="card-glow"]')) {
       choice.addEventListener('change', () => {
-        if (!result.hidden && RE.test(input.value.trim())) summon(false)
+        if (result.hidden || !RE.test(input.value.trim())) return
+        clearTimeout(previewTimer)
+        previewTimer = setTimeout(() => summon(false), 250)
       })
     }
     copyBtn.addEventListener('click', async () => {
@@ -226,8 +284,8 @@ export function renderLandingPage(): string {
       img.className = 'g-thumb'
       img.loading = 'lazy'
       img.alt = '@' + entry.user + ' card'
-      const entryTheme = THEMES.includes(entry.theme) ? entry.theme : 'dark'
-      const entryGlow = GLOWS.includes(entry.glow) ? entry.glow : 'soft'
+      const entryTheme = THEMES.includes(entry.theme) ? entry.theme : DEFAULTS.theme
+      const entryGlow = GLOWS.includes(entry.glow) ? entry.glow : DEFAULTS.glow
       img.src = '/?user=' + encodeURIComponent(entry.user) + '&theme=' + entryTheme + '&glow=' + entryGlow
       if (elem) img.style.borderColor = elem.color + '66' // same-element visual resonance
       card.appendChild(img)

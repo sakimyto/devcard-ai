@@ -1,38 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { type GalleryMeta, listGallery, recordGallery } from '~/gallery'
-
-// KV の list/metadata/put を最小実装したフェイク。value は '1' プレースホルダ、
-// 表示値は metadata 側に載る（本番 KV の挙動に合わせる）。
-function fakeKv() {
-  const store = new Map<string, string>()
-  const meta = new Map<string, unknown>()
-  return {
-    store,
-    meta,
-    async get(key: string): Promise<string | null> {
-      return store.get(key) ?? null
-    },
-    async put(key: string, value: string, opts?: { metadata?: unknown }): Promise<void> {
-      store.set(key, value)
-      if (opts?.metadata !== undefined) meta.set(key, opts.metadata)
-    },
-    // 本番 KV に合わせてキー名昇順・cursor ページングを再現する（at 順ではない）。
-    async list(opts?: { prefix?: string; limit?: number; cursor?: string }) {
-      const prefix = opts?.prefix ?? ''
-      const limit = opts?.limit ?? 1000
-      const all = [...store.keys()].filter((k) => k.startsWith(prefix)).sort()
-      const start = opts?.cursor ? Number(opts.cursor) : 0
-      const page = all.slice(start, start + limit)
-      const next = start + limit
-      const complete = next >= all.length
-      return {
-        keys: page.map((name) => ({ name, metadata: meta.get(name) })),
-        list_complete: complete,
-        cursor: complete ? undefined : String(next),
-      }
-    },
-  } as unknown as KVNamespace & { store: Map<string, string>; meta: Map<string, unknown> }
-}
+import { fakeKv } from './fixtures/fakeKv'
 
 const meta = (at: number, extra: Partial<GalleryMeta> = {}): GalleryMeta => ({
   at,
@@ -145,5 +113,17 @@ describe('listGallery', () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
     expect(await listGallery(kv)).toEqual([])
     spy.mockRestore()
+  })
+
+  // theme 未記録の行はカスタマイズ導入前の召喚 = dark 時代のカード。壊れた値も同じ扱いに
+  // 落とす（「未記録なら dark、壊れていたら light」という分岐は読む側に説明がつかない）
+  it('theme が無い行も壊れた行も、レガシー既定の dark に落ちる', async () => {
+    const kv = fakeKv()
+    await kv.put('gallery:u:legacy', '1', { metadata: { at: 3 } })
+    await kv.put('gallery:u:broken', '1', { metadata: { at: 2, theme: 'purple', glow: 42 } })
+    const entries = await listGallery(kv)
+    expect(entries.find((e) => e.user === 'legacy')?.theme).toBe('dark')
+    expect(entries.find((e) => e.user === 'broken')?.theme).toBe('dark')
+    expect(entries.find((e) => e.user === 'broken')?.glow).toBe('soft')
   })
 })

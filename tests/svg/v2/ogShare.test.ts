@@ -70,17 +70,17 @@ describe('renderOgShare', () => {
   it('renders the avatar only from a data: URI, never a remote http(s) href', () => {
     const png1px =
       'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M8AAAMBAQDJ/pLvAAAAAElFTkSuQmCC'
-    const withAvatar = renderOgShare({ ...data, avatarDataUri: png1px }, 'dark')
+    const withAvatar = renderOgShare({ ...data, avatarDataUri: png1px }, 'dark', 'soft')
     expect(withAvatar).toContain('<image')
     expect(withAvatar).toContain(png1px)
     expect(withAvatar).not.toMatch(/<image[^>]+href="http/)
     // null avatar → no <image>, and the name stays at its original x=72 position.
-    expect(renderOgShare(data, 'dark')).not.toContain('<image')
-    expect(renderOgShare(data, 'dark')).toContain('x="72" y="180"')
+    expect(renderOgShare(data, 'dark', 'soft')).not.toContain('<image')
+    expect(renderOgShare(data, 'dark', 'soft')).toContain('x="72" y="180"')
   })
 
   it('POWER turns gold past 9000 on the share image', () => {
-    const over = renderOgShare({ ...data, stats: { ...data.stats, power: 9200 } }, 'dark')
+    const over = renderOgShare({ ...data, stats: { ...data.stats, power: 9200 } }, 'dark', 'soft')
     expect(over).toContain('9,200')
     expect(over).toContain('#f0b429')
   })

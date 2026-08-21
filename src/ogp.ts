@@ -2,6 +2,7 @@ import { Resvg, initWasm } from '@resvg/resvg-wasm'
 import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm'
 import interBold from '../fonts/inter-bold-subset.ttf'
 import interRegular from '../fonts/inter-regular-subset.ttf'
+import type { CardTheme, GlowStyle } from './card/customization'
 
 let initialized = false
 
@@ -58,7 +59,12 @@ function escapeHtml(s: string): string {
 // GitHub logins are [A-Za-z0-9-], but we do not trust input here — the caller
 // hands us a raw query parameter, and XSS surfaced in tools like this has
 // historically bypassed later validation. Escape at the interpolation boundary.
-export function renderOgpHtml(user: string, baseUrl: string, theme: string, glow = 'soft'): string {
+export function renderOgpHtml(
+  user: string,
+  baseUrl: string,
+  theme: CardTheme,
+  glow: GlowStyle,
+): string {
   const safeImage = escapeHtml(
     `${baseUrl}/og?user=${encodeURIComponent(user)}&theme=${encodeURIComponent(theme)}&glow=${encodeURIComponent(glow)}`,
   )

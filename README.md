@@ -13,11 +13,17 @@ Copy this into your GitHub profile README and replace `YOUR_USERNAME`:
 ```
 
 <details>
-<summary>Light theme</summary>
+<summary>Editor themes — Dracula, Nord, Gruvbox, Tokyo Night, Catppuccin, One Dark, Monokai, Solarized, Synthwave, Matrix</summary>
+
+Swap `theme=` for any of these. The palettes come from the editor themes themselves, so
+the card matches the setup you actually work in.
 
 ```markdown
-[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=YOUR_USERNAME&theme=light&glow=soft)](https://pullcard.sakimyto.com/?theme=light&glow=soft#YOUR_USERNAME)
+[![AI Builder Trading Card](https://pullcard.sakimyto.com/?user=YOUR_USERNAME&theme=dracula&glow=soft)](https://pullcard.sakimyto.com/?theme=dracula&glow=soft#YOUR_USERNAME)
 ```
+
+`light` · `dark` · `dracula` · `nord` · `gruvbox` · `tokyo-night` · `catppuccin` ·
+`one-dark` · `monokai` · `solarized-dark` · `solarized-light` · `synthwave` · `matrix`
 
 </details>
 
@@ -27,12 +33,19 @@ Or visit the [card builder](https://pullcard.sakimyto.com/) — summon, copy, pa
 
 | Element | Description |
 |---------|-------------|
-| **Custom finish** | Choose Clean, Soft, Neon, or animated Holo — appearance is personal, not a rank |
+| **Custom finish** | 13 editor themes × 4 glows (Clean, Soft, Neon, animated Holo) — appearance is personal, not a rank |
 | **Archetype** | Your collaboration class: AI Native, Pair Programmer, Delegator, or Selective User |
 | **Generative art** | A geometric artwork seeded by your username — unique to you, reproducible forever |
 | **Stats** | VELOCITY (commit cadence), DIVERSITY (tools × usage spread), CONSISTENCY (active weeks) — each 0-100 |
 | **Loadout** | AI tools detected from commit evidence (`Co-Authored-By`, generator markers, bots), plus `equipped` badges from config files like `CLAUDE.md` / `.cursorrules` |
 | **Serial** | Card number derived from your username hash |
+
+### The gallery is opt-in
+
+Anyone can summon anyone's card — the data is public GitHub activity. The **Recently summoned**
+gallery on the homepage is different: you only appear there after installing the GitHub App on
+your own account, which is something only you can do. Uninstall it and your entry drops off by
+itself; no removal request needed.
 
 > All stats come from **public repositories, last 12 weeks** (`public · 12wk` on the card). Every metric shares the same window, so the card never contradicts itself.
 
@@ -41,7 +54,7 @@ Or visit the [card builder](https://pullcard.sakimyto.com/) — summon, copy, pa
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `user` | GitHub username (required) | - |
-| `theme` | `light` or `dark` | `light` |
+| `theme` | `light`, `dark`, `dracula`, `nord`, `gruvbox`, `tokyo-night`, `catppuccin`, `one-dark`, `monokai`, `solarized-dark`, `solarized-light`, `synthwave`, `matrix` | `light` |
 | `glow` | `none`, `soft`, `neon`, or `holo` | `soft` |
 
 ## Self-hosting

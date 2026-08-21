@@ -1,7 +1,7 @@
 import type { CardDataV2 } from '~/analyzers/types'
-import { glowLabel, normalizeGlow } from '~/card/customization'
+import { type CardTheme, GLOW_SPEC, type GlowStyle, glowLabel } from '~/card/customization'
 import { type Theme, getTheme } from '../themes'
-import { escapeXml, svgRect, svgText, wrapText } from '../utils'
+import { escapeXml, svgRect, svgText, withCommas, wrapText } from '../utils'
 import { renderArt, renderSparkles } from './art'
 import { renderEmblem } from './emblem'
 import { renderFrame } from './frame'
@@ -34,11 +34,6 @@ function nameFontSize(len: number, maxWidth: number): number {
 // ⚔/🔥 — chosen after side-by-side qlmanage inspection.
 const RECORD_GLYPH = '›'
 const STREAK_GLYPH = '▲'
-
-// Thousands separator without Intl (deterministic across runtimes): 6340 → "6,340".
-function withCommas(n: number): string {
-  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-}
 
 // Pulls the headline number out of a trait proof so it can render big and right-aligned
 // like an attack's damage number. Takes the FIRST number and its immediately-following
@@ -83,10 +78,13 @@ ${svgText(LABEL_X, y, label, { fontSize: 16, fill: theme.textSecondary, fontWeig
 ${svgText(VAL_X, y, String(value), { fontSize: 20, fill: theme.text, fontWeight: 'bold', anchor: 'end' })}`
 }
 
-export function renderCardV2(data: CardDataV2, options: { theme: string; glow?: string }): string {
+export function renderCardV2(
+  data: CardDataV2,
+  options: { theme: CardTheme; glow: GlowStyle },
+): string {
   const theme = getTheme(options.theme)
-  const glow = normalizeGlow(options.glow)
-  const { defs, frame } = renderFrame(glow, CARD_W, CARD_H, theme.accent)
+  const glow = options.glow
+  const { defs, frame, accentPaint } = renderFrame(glow, CARD_W, CARD_H, theme.accent)
 
   const cardDefs = `<linearGradient id="plateGrad" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0%" stop-color="${theme.headerBg}" />
@@ -179,9 +177,11 @@ ${svgText(enCx + enR + 8, rowTextY, elLabel, { fontSize: 15, fill: theme.text, f
   const artY = 210
   const artH = 220 // shrunk 20px vs v2.6 to free vertical budget for the CONTRIBUTIONS graph
   const artW = CARD_W - PAD * 2
-  const sparkles = glow === 'holo' ? renderSparkles(data.seed, artW, artH, theme.accent) : ''
-  const artFrameStroke =
-    glow === 'holo' ? 'url(#holoGrad)' : glow === 'none' ? theme.border : theme.accent
+  const sparkles = GLOW_SPEC[glow].sparkles
+    ? renderSparkles(data.seed, artW, artH, theme.accent)
+    : ''
+  // frame が確立した塗りをそのまま使う（holo の defs id をここで名指ししない）
+  const artFrameStroke = accentPaint ?? theme.border
   const art = `<clipPath id="artClip"><rect x="${PAD}" y="${artY}" width="${artW}" height="${artH}" rx="18" /></clipPath>
 <g clip-path="url(#artClip)"><g transform="translate(${PAD} ${artY})">${renderArt({
     seed: data.seed,
@@ -481,12 +481,12 @@ ${footer}
 
 export function renderPlaceholderCard(
   username: string,
-  themeName: string,
-  glowName = 'soft',
+  themeName: CardTheme,
+  glow: GlowStyle,
 ): string {
   const theme = getTheme(themeName)
-  const glow = normalizeGlow(glowName)
-  const { defs, frame } = renderFrame(glow, CARD_W, CARD_H, theme.accent)
+  // no-store で毎回生成される劣化時経路。アニメーションと foil のコストは載せない
+  const { defs, frame } = renderFrame(glow, CARD_W, CARD_H, theme.accent, { animated: false })
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${CARD_W}" height="${CARD_H}" viewBox="0 0 ${CARD_W} ${CARD_H}" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
 <defs>${defs}</defs>
 ${svgRect(0, 0, CARD_W, CARD_H, { fill: theme.bg, rx: 36 })}

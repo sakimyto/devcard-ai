@@ -13,18 +13,12 @@ import { analyzeTraits } from './analyzers/traits'
 import type { CardDataV2 } from './analyzers/types'
 import { analyzeUsage } from './analyzers/usage'
 import { WINDOW_DAYS, filterToWindow } from './analyzers/window'
-import { normalizeGlow } from './card/customization'
+import type { CardTheme, GlowStyle } from './card/customization'
 import { artSeed, cardSerial } from './card/serial'
 import { fetchUserData } from './github/client'
 import type { GitHubCommit, GitHubQueryResponse } from './github/types'
 import { renderErrorCard } from './svg/card'
 import { renderCardV2 } from './svg/v2/cardV2'
-
-export interface RequestParams {
-  user: string
-  theme: string
-  glow?: string
-}
 
 export type HandlerKind = 'ok' | 'not_found' | 'no_repos' | 'no_ai' | 'error'
 
@@ -54,13 +48,29 @@ function sanitizeImageMime(raw: string): string {
   return /^image\/[a-z0-9.+-]+$/.test(base) ? base : 'image/png'
 }
 
+// アバターの取得元は GitHub のアバター CDN だけ。URL は GraphQL の応答由来（= 事実上
+// 信頼できる）だが、ここは worker が唯一「外から与えられた URL を fetch する」場所なので、
+// ホストを固定してリダイレクト追従も切る。SSRF の踏み台にしないための構造的な閉じ方。
+const AVATAR_HOST_ALLOWLIST = ['https://avatars.githubusercontent.com/', 'https://github.com/']
+// 128px のアバターは数十 KB。上限は「取り込んだ画像がそのままキャッシュ1件の大きさになる」
+// ことへの歯止めで、GitHub 側が size パラメータを守ることに依存しないためにある
+const AVATAR_MAX_BYTES = 256 * 1024
+
 const defaultAvatarFetcher: AvatarFetcher = async (url) => {
   if (!url) return null
+  if (!AVATAR_HOST_ALLOWLIST.some((prefix) => url.startsWith(prefix))) return null
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(AVATAR_TIMEOUT_MS) })
+    const res = await fetch(url, {
+      signal: AbortSignal.timeout(AVATAR_TIMEOUT_MS),
+      redirect: 'manual',
+    })
     if (!res.ok) return null
+    const declared = Number(res.headers.get('content-length') ?? '0')
+    if (declared > AVATAR_MAX_BYTES) return null
     const mime = sanitizeImageMime(res.headers.get('content-type') ?? 'image/png')
     const bytes = new Uint8Array(await res.arrayBuffer())
+    // Content-Length は無い/嘘の可能性があるので実バイト数でも切る
+    if (bytes.length > AVATAR_MAX_BYTES) return null
     // Chunked to avoid a stack overflow from spreading a large array into fromCharCode.
     let binary = ''
     for (let i = 0; i < bytes.length; i += AVATAR_CHUNK) {
@@ -72,23 +82,31 @@ const defaultAvatarFetcher: AvatarFetcher = async (url) => {
   }
 }
 
+// CardDataV2 の形（フィールドの追加・改名・意味変更）を変えたら必ず上げる。上げ忘れると
+// 旧世代の解析結果が新しい描画コードに流れ込み、NaN / undefined が色や数値として SVG に
+// 焼き込まれたまま fresh として配信される。tests/handler.test.ts のガードが形の変化を検知する。
+export const CARD_DATA_REV = 1
+
 export interface BuildResult {
   kind: HandlerKind
   data?: CardDataV2
   errorMessage?: string
+  // その人自身が GitHub App を自分のアカウントに入れているか（api/index.ts が解決して載せる）。
+  // 「本人がオプトインした」ことを示せる唯一の信号で、召喚ギャラリー掲載の可否がこれに乗る。
+  optedIn?: boolean
 }
 
 // Analysis core shared by the SVG card (/) and the PNG share image (/og). Returns
 // the analyzed data or a typed failure; rendering is left to each caller so the two
 // surfaces can draw the same result differently (vertical card vs landscape share).
+// theme / glow を受け取らないのは意図的 — この層の結果は見た目の選択に一切依存せず、
+// だからこそ外観の組み合わせ数と無関係に user 単位でキャッシュできる（api/index.ts）。
 export async function buildCardData(
-  params: RequestParams,
+  user: string,
   graphql: GraphqlFn,
   now: Date = new Date(),
   avatarFetcher: AvatarFetcher = defaultAvatarFetcher,
 ): Promise<BuildResult> {
-  const { user } = params
-
   try {
     // 12週窓の下限を GraphQL 側にも伝え、窓外コミットの取得自体を止める（per-repo 100件上限を窓内に使う）
     const since = new Date(now.getTime() - WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString()
@@ -222,14 +240,13 @@ export async function buildCardData(
   }
 }
 
-export async function handleRequest(
-  params: RequestParams,
-  graphql: GraphqlFn,
-  now: Date = new Date(),
-): Promise<HandlerResult> {
-  const { theme } = params
-  const glow = normalizeGlow(params.glow)
-  const r = await buildCardData(params, graphql, now)
+// 解析結果 → カード SVG。純関数なので、キャッシュ済みの解析結果に対して
+// リクエスト毎の theme / glow で描き直せる（api/index.ts の描画層）。
+export function renderCardResult(
+  r: BuildResult,
+  appearance: { theme: CardTheme; glow: GlowStyle },
+): HandlerResult {
+  const { theme, glow } = appearance
   if (r.kind === 'ok' && r.data) {
     return {
       svg: renderCardV2(r.data, { theme, glow }),

@@ -33,7 +33,7 @@ export function renderToolIcon(
   size: number,
   color: string,
 ): string {
-  const path = BRAND_PATHS[toolId]
+  const path = Object.hasOwn(BRAND_PATHS, toolId) ? BRAND_PATHS[toolId] : undefined
   if (path) {
     const scale = size / 24
     return `<g transform="translate(${r(x)} ${r(y)}) scale(${r(scale)})"><path d="${path}" fill="${color}" /></g>`

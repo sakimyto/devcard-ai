@@ -1,9 +1,10 @@
+import type { CardTheme } from '~/card/customization'
 import { getTheme } from './themes'
 import { svgRect, svgText } from './utils'
 
 const CARD_WIDTH = 400
 
-export function renderErrorCard(message: string, themeName: string): string {
+export function renderErrorCard(message: string, themeName: CardTheme): string {
   const theme = getTheme(themeName)
   const height = 80
 

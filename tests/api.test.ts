@@ -1,44 +1,45 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import worker from '../api/index'
+import { CARD_THEMES, GLOW_STYLES } from '../src/card/customization'
 import { USER_PRIVATE_REPOS_QUERY } from '../src/github/queries'
 import type { GitHubQueryResponse } from '../src/github/types'
+import { themes } from '../src/svg/themes'
+import { makeCardData } from './fixtures/cardData'
+import { fakeKv, installFakeEdgeCache } from './fixtures/fakeKv'
+
+// KV に入っている「解析済みデータ」1 世代ぶん。見た目の選択を含まないので、
+// theme / glow のどの組み合わせでもこの 1 エントリから描画できる。
+function cachedData(username = 'cacheduser'): string {
+  return JSON.stringify({
+    v: { kind: 'ok', data: makeCardData({ username }) },
+    at: Date.now() - 60_000,
+  })
+}
 
 // GitHub App / Octokit は外部境界なのでここだけモックする。graphql の応答は
 // 各テストが fixture を差し込み、handler〜レンダラは本物を通す
 const { graphqlMock } = vi.hoisted(() => ({ graphqlMock: vi.fn() }))
 
+// App 認証のスタブ。`GET /users/{username}/installation` は「その人自身が App を
+// 入れているか」の解決に使われ、成否がそのままギャラリー掲載の可否になる。
+// 既定は未インストール（404 相当）で、optedIn にしたいテストだけ installedUsers に足す。
+const installedUsers = new Set<string>()
+
 vi.mock('@octokit/app', () => ({
   App: class {
+    octokit = {
+      request: async (_route: string, params: { username: string }) => {
+        if (!installedUsers.has(params.username.toLowerCase())) {
+          throw new Error('Not Found')
+        }
+        return { data: { id: 999 } }
+      },
+    }
     async getInstallationOctokit() {
       return { graphql: graphqlMock }
     }
   },
 }))
-
-function fakeKv() {
-  const store = new Map<string, string>()
-  const meta = new Map<string, unknown>()
-  return {
-    store,
-    meta,
-    async get(key: string): Promise<string | null> {
-      return store.get(key) ?? null
-    },
-    async put(key: string, value: string, opts?: { metadata?: unknown }): Promise<void> {
-      store.set(key, value)
-      if (opts?.metadata !== undefined) meta.set(key, opts.metadata)
-    },
-    async list(opts?: { prefix?: string; limit?: number }) {
-      const prefix = opts?.prefix ?? ''
-      const limit = opts?.limit ?? 1000
-      const keys = [...store.keys()]
-        .filter((k) => k.startsWith(prefix))
-        .slice(0, limit)
-        .map((name) => ({ name, metadata: meta.get(name) }))
-      return { keys, list_complete: true, cursor: undefined }
-    },
-  } as unknown as KVNamespace & { store: Map<string, string>; meta: Map<string, unknown> }
-}
 
 // ExecutionContext スタブ。waitUntil で渡された promise を集め、flush() で待てる。
 function fakeCtx() {
@@ -52,15 +53,16 @@ function fakeCtx() {
   return { ctx, flush: () => Promise.all(waited) }
 }
 
+const recent = (daysAgo: number) => new Date(Date.now() - daysAgo * 86400000).toISOString()
+const aiCommit = (daysAgo: number, oid: string) => ({
+  oid,
+  message: 'feat: x\n\nCo-Authored-By: Claude <noreply@anthropic.com>',
+  committedDate: recent(daysAgo),
+  author: { user: { login: 'someone' } },
+})
+
 // 実時刻基準（api の handleRequest は now を注入しないため）の ok 応答 fixture。
 function okResponse(login = 'octocat'): GitHubQueryResponse {
-  const recent = (daysAgo: number) => new Date(Date.now() - daysAgo * 86400000).toISOString()
-  const aiCommit = (daysAgo: number, oid: string) => ({
-    oid,
-    message: 'feat: x\n\nCo-Authored-By: Claude <noreply@anthropic.com>',
-    committedDate: recent(daysAgo),
-    author: { user: { login: 'someone' } },
-  })
   return {
     user: {
       login,
@@ -103,6 +105,41 @@ const NO_REPOS_RESPONSE = {
 // The client fires 3 parallel queries (public/private repos + contributions). Route the
 // okResponse to the PUBLIC call and return an empty repo set for PRIVATE so the fixture
 // stays public-only (no duplicated repos, includesPrivate=false).
+// 本人が自分のアカウントに GitHub App を入れている状態。private リポの節点が返るので
+// includesPrivate=true になり、ギャラリー掲載の条件を満たす
+function mockOkOptedIn(login = 'octocat') {
+  installedUsers.add(login.toLowerCase())
+  const ok = okResponse(login)
+  graphqlMock.mockImplementation((query: string) => {
+    if (query === USER_PRIVATE_REPOS_QUERY) {
+      return Promise.resolve({
+        user: {
+          login,
+          repositories: {
+            nodes: [
+              {
+                name: 'secret',
+                pushedAt: recent(1),
+                defaultBranchRef: {
+                  target: { history: { nodes: [aiCommit(2, 'p')], totalCount: 1 } },
+                },
+                claudeMd: null,
+                agentsMd: null,
+                cursorrules: null,
+                cursorrulesDir: null,
+                githubCopilot: null,
+                claudeDir: null,
+                primaryLanguage: { name: 'Go', color: '#00ADD8' },
+              },
+            ],
+          },
+        },
+      })
+    }
+    return Promise.resolve(ok)
+  })
+}
+
 function mockOkPublicOnly(login = 'octocat') {
   const ok = okResponse(login)
   graphqlMock.mockImplementation((query: string) => {
@@ -117,7 +154,11 @@ function req(path: string, headers: Record<string, string> = {}) {
   return new Request(`https://pullcard.example${path}`, { headers })
 }
 
+const edge = installFakeEdgeCache()
+
 beforeEach(() => {
+  edge.reset()
+  installedUsers.clear()
   graphqlMock.mockReset()
 })
 
@@ -177,41 +218,78 @@ describe('worker fetch routing', () => {
     expect(res.headers.get('x-cache-state')).toBe('miss')
   })
 
-  it('GitHub failure with no stale → 200 placeholder, no-store', async () => {
+  // placeholder は障害の産物なので長くは持たせない。ただし no-store にすると復旧待ちの
+  // クライアント（README camo・ブラウザ）が即座に叩き直し、枯渇した上流をさらに押す
+  it('GitHub failure with no stale → 200 placeholder, 短命キャッシュ', async () => {
     graphqlMock.mockRejectedValue(new Error('github down'))
     const res = await worker.fetch(req('/?user=someuser'), makeEnv(), fakeCtx().ctx)
     expect(res.status).toBe(200)
     expect(res.headers.get('content-type')).toContain('image/svg+xml')
-    expect(res.headers.get('cache-control')).toBe('no-store')
+    expect(res.headers.get('cache-control')).toBe('public, max-age=60')
     expect(await res.text()).toContain('someuser')
   })
 
   it('fresh KV hit → served without touching GitHub', async () => {
     const kv = fakeKv()
-    kv.store.set(
-      'card:v3:cacheduser:light:soft',
-      JSON.stringify({ v: { svg: '<svg>cached</svg>', kind: 'ok' }, at: Date.now() - 60_000 }),
-    )
+    kv.store.set('data:v1:cacheduser', cachedData())
     const res = await worker.fetch(req('/?user=cacheduser'), makeEnv(kv), fakeCtx().ctx)
     expect(res.status).toBe(200)
     expect(res.headers.get('x-cache-state')).toBe('fresh')
-    expect(await res.text()).toBe('<svg>cached</svg>')
+    expect(await res.text()).toContain('cacheduser')
     expect(graphqlMock).not.toHaveBeenCalled()
   })
 
-  it('invalid appearance values fall back to the safe default cache key', async () => {
+  // キャッシュキーが user だけである（= 見た目の選択が上流コストを増幅しない）ことの証明。
+  // theme/glow をキーに含めると、この一覧のどれか一つを引くたびに GraphQL が走る。
+  it('1つのキャッシュエントリが全ての見た目の組み合わせを GitHub 無しで賄う', async () => {
     const kv = fakeKv()
-    kv.store.set(
-      'card:v3:cacheduser:light:soft',
-      JSON.stringify({ v: { svg: '<svg>safe</svg>', kind: 'ok' }, at: Date.now() - 60_000 }),
-    )
+    kv.store.set('data:v1:cacheduser', cachedData())
+    const seen = new Set<string>()
+    for (const theme of CARD_THEMES) {
+      for (const glow of GLOW_STYLES) {
+        const res = await worker.fetch(
+          req(`/?user=cacheduser&theme=${theme}&glow=${glow}`),
+          makeEnv(kv),
+          fakeCtx().ctx,
+        )
+        expect(res.headers.get('x-cache-state')).toBe('fresh')
+        seen.add(await res.text())
+      }
+    }
+    expect(graphqlMock).not.toHaveBeenCalled()
+    // 同じデータから、組み合わせの数だけ異なる SVG が描き分けられている
+    expect(seen.size).toBe(CARD_THEMES.length * GLOW_STYLES.length)
+    expect(kv.store.size).toBe(1)
+  })
+
+  // 共有画像（/og）もカードと同じ解析結果を使う。別キーを持つと同じユーザーに対して
+  // GraphQL が二重に走る。
+  it('/og はカードと同じキャッシュエントリを共有する', async () => {
+    const kv = fakeKv()
+    kv.store.set('data:v1:cacheduser', cachedData())
+    const res = await worker.fetch(req('/og?user=cacheduser'), makeEnv(kv), fakeCtx().ctx)
+    expect(res.status).toBe(200)
+    expect(res.headers.get('content-type')).toBe('image/png')
+    expect(graphqlMock).not.toHaveBeenCalled()
+    expect(kv.store.size).toBe(1)
+  })
+
+  it('不正な theme / glow は安全な既定の見た目に落ちる', async () => {
+    const kv = fakeKv()
+    kv.store.set('data:v1:cacheduser', cachedData())
     const res = await worker.fetch(
       req('/?user=cacheduser&theme=%3Cscript%3E&glow=holo%22%20onload%3Dalert(1)'),
       makeEnv(kv),
       fakeCtx().ctx,
     )
     expect(res.headers.get('x-cache-state')).toBe('fresh')
-    expect(await res.text()).toBe('<svg>safe</svg>')
+    const svg = await res.text()
+    // 属性値として注入されない
+    expect(svg).not.toContain('onload=alert(1)')
+    expect(svg).not.toContain('<script>')
+    // かつ、既定（light / soft）で実際に描かれている（「落ちた先」まで見る）
+    expect(svg).toContain(themes.light.bg)
+    expect(svg).toContain('SOFT GLOW')
     expect(graphqlMock).not.toHaveBeenCalled()
   })
 
@@ -305,8 +383,8 @@ describe('召喚ギャラリー', () => {
     expect(await res.json()).toEqual([])
   })
 
-  it('ok の miss レンダリングでギャラリーへ記録される', async () => {
-    mockOkPublicOnly('octocat')
+  it('本人がオプトインした召喚（GitHub App 導入済み）はギャラリーへ記録される', async () => {
+    mockOkOptedIn('octocat')
     const kv = fakeKv()
     const { ctx, flush } = fakeCtx()
     const res = await worker.fetch(req('/?user=octocat'), makeEnv(kv), ctx)
@@ -328,13 +406,7 @@ describe('召喚ギャラリー', () => {
 
   it('fresh hit ではギャラリーへ書かない', async () => {
     const kv = fakeKv()
-    kv.store.set(
-      'card:v3:cacheduser:light:soft',
-      JSON.stringify({
-        v: { svg: '<svg>cached</svg>', kind: 'ok', power: 5000 },
-        at: Date.now() - 60_000,
-      }),
-    )
+    kv.store.set('data:v1:cacheduser', cachedData())
     const { ctx, flush } = fakeCtx()
     const res = await worker.fetch(req('/?user=cacheduser'), makeEnv(kv), ctx)
     expect(res.headers.get('x-cache-state')).toBe('fresh')
@@ -359,5 +431,155 @@ describe('召喚ギャラリー', () => {
     expect(res.headers.get('content-type')).toContain('image/svg+xml')
     await expect(flush()).resolves.toBeDefined()
     spy.mockRestore()
+  })
+
+  // 誰でも他人を召喚できる以上、「描画されたから載せる」では本人の同意なくログイン名と
+  // 数値が公開ページに90日並ぶ。GitHub App を自分のアカウントに入れた人だけを載せる
+  it('本人確認できない召喚（公開リポのみ）はギャラリーへ載せない', async () => {
+    mockOkPublicOnly('octocat')
+    const kv = fakeKv()
+    const { ctx, flush } = fakeCtx()
+    const res = await worker.fetch(req('/?user=octocat'), makeEnv(kv), ctx)
+    expect(res.status).toBe(200)
+    await flush()
+    expect(kv.store.has('gallery:u:octocat')).toBe(false)
+  })
+
+  // App を外した人は削除依頼を出さなくてもギャラリーから降りられる
+  it('オプトアウト（App を外した）ユーザーは次のキャッシュミスでギャラリーから消える', async () => {
+    mockOkPublicOnly('octocat')
+    const kv = fakeKv()
+    await kv.put('gallery:u:octocat', '1', { metadata: { at: Date.now() - 1000 } })
+    const { ctx, flush } = fakeCtx()
+    await worker.fetch(req('/?user=octocat'), makeEnv(kv), ctx)
+    await flush()
+    expect(kv.store.has('gallery:u:octocat')).toBe(false)
+  })
+
+  // /og とカードが同じキャッシュを共有するため、cacheState を条件にすると
+  // 「共有画像が先に温めた人は永久に記録されない」定常状態が生まれる
+  it('/og が先にキャッシュを温めても、その後のカード描画でギャラリーに載る', async () => {
+    mockOkOptedIn('octocat')
+    const kv = fakeKv()
+    const first = fakeCtx()
+    await worker.fetch(req('/og?user=octocat'), makeEnv(kv), first.ctx)
+    await first.flush()
+    expect(kv.store.has('gallery:u:octocat')).toBe(false)
+
+    const second = fakeCtx()
+    const res = await worker.fetch(req('/?user=octocat'), makeEnv(kv), second.ctx)
+    expect(res.headers.get('x-cache-state')).toBe('fresh')
+    await second.flush()
+    expect(kv.store.has('gallery:u:octocat')).toBe(true)
+  })
+
+  // 大文字小文字の違いは同一人物。区別すると1人がギャラリーを何行も占有できる
+  it('大文字小文字が違っても同じ1人として記録される', async () => {
+    mockOkOptedIn('octocat')
+    const kv = fakeKv()
+    for (const variant of ['octocat', 'Octocat', 'OCTOCAT']) {
+      const { ctx, flush } = fakeCtx()
+      await worker.fetch(req(`/?user=${variant}`), makeEnv(kv), ctx)
+      await flush()
+    }
+    expect([...kv.store.keys()].filter((k) => k.startsWith('gallery:u:'))).toEqual([
+      'gallery:u:octocat',
+    ])
+  })
+})
+
+describe('上流クォータの保護', () => {
+  // GitHub App の GraphQL 枠は全ユーザー共有。IP 単位の制限では守れないので、
+  // キャッシュミスの総数そのものに上限を置く
+  it('時間あたりのキャッシュミス上限に達したら GitHub を叩かず placeholder に落ちる', async () => {
+    mockOkPublicOnly('octocat')
+    const kv = fakeKv()
+    const hour = Math.floor(Date.now() / 3_600_000)
+    await kv.put(`budget:miss:${hour}`, '1500')
+    const res = await worker.fetch(req('/?user=newcomer'), makeEnv(kv), fakeCtx().ctx)
+    expect(res.status).toBe(200)
+    expect(await res.text()).toContain('Summoning')
+    expect(graphqlMock).not.toHaveBeenCalled()
+  })
+
+  // 障害中に produce が失敗すると何もキャッシュされない。ブレーカが無いと後続の
+  // 全リクエストが同じ壁に GraphQL を3本ずつ投げ続ける
+  it('上流障害でブレーカが落ち、続く召喚は GitHub を叩かない', async () => {
+    graphqlMock.mockRejectedValue(new Error('github down'))
+    const kv = fakeKv()
+    await worker.fetch(req('/?user=alice'), makeEnv(kv), fakeCtx().ctx)
+    const callsAfterFirst = graphqlMock.mock.calls.length
+    expect(callsAfterFirst).toBeGreaterThan(0)
+
+    const res = await worker.fetch(req('/?user=bob'), makeEnv(kv), fakeCtx().ctx)
+    expect(res.status).toBe(200)
+    expect(await res.text()).toContain('Summoning')
+    expect(graphqlMock.mock.calls.length).toBe(callsAfterFirst)
+  })
+
+  it('壊れた世代を掴んだら配らずに作り直す', async () => {
+    mockOkOptedIn('octocat')
+    const kv = fakeKv()
+    // stats を落とした旧世代（フィールドを増やしたのに rev を上げ忘れた状況の再現）
+    const broken = makeCardData() as unknown as Record<string, unknown>
+    broken.stats = undefined
+    await kv.put(
+      'data:v1:octocat',
+      JSON.stringify({ v: { kind: 'ok', data: broken }, at: Date.now() - 1000 }),
+    )
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const res = await worker.fetch(req('/?user=octocat'), makeEnv(kv), fakeCtx().ctx)
+    const svg = await res.text()
+    spy.mockRestore()
+    expect(svg).not.toContain('NaN')
+    expect(svg).not.toContain('undefined')
+    expect(graphqlMock).toHaveBeenCalled()
+  })
+})
+
+describe('エッジキャッシュ', () => {
+  it('2回目の同一カード要求は KV も GitHub も踏まない', async () => {
+    mockOkPublicOnly('octocat')
+    const kv = fakeKv()
+    const env = makeEnv(kv)
+    const first = fakeCtx()
+    await worker.fetch(req('/?user=octocat'), env, first.ctx)
+    await first.flush()
+    const callsAfterFirst = graphqlMock.mock.calls.length
+
+    const reads: string[] = []
+    const origGet = kv.get.bind(kv)
+    kv.get = (async (key: string) => {
+      reads.push(key)
+      return origGet(key)
+    }) as typeof kv.get
+    const res = await worker.fetch(req('/?user=octocat'), env, fakeCtx().ctx)
+    expect(res.status).toBe(200)
+    expect(reads).toEqual([])
+    expect(graphqlMock.mock.calls.length).toBe(callsAfterFirst)
+  })
+})
+
+describe('本人のインストール解決', () => {
+  // 固定の installation token では他人の private は永久に見えない。「App を入れると
+  // private 込み・verified+」という約束は、ユーザーごとに installation を解決して初めて成立する
+  it('App を入れている本人の召喚は、その人の installation で解決される', async () => {
+    mockOkOptedIn('octocat')
+    const kv = fakeKv()
+    const { ctx, flush } = fakeCtx()
+    const res = await worker.fetch(req('/?user=octocat'), makeEnv(kv), ctx)
+    expect(res.status).toBe(200)
+    await flush()
+    expect(kv.store.has('gallery:u:octocat')).toBe(true)
+  })
+
+  // 未インストールでも 404 で落ちず、公開分だけのカードとして成立すること
+  it('未インストールのユーザーも公開分だけで描画される', async () => {
+    mockOkPublicOnly('stranger')
+    const kv = fakeKv()
+    const res = await worker.fetch(req('/?user=stranger'), makeEnv(kv), fakeCtx().ctx)
+    expect(res.status).toBe(200)
+    expect(res.headers.get('content-type')).toContain('image/svg+xml')
+    expect(await res.text()).toContain('stranger')
   })
 })

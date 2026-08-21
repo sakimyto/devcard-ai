@@ -1,98 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import type { CardDataV2 } from '~/analyzers/types'
+import { CARD_THEMES } from '~/card/customization'
+import { themes } from '~/svg/themes'
 import { renderCardV2, renderPlaceholderCard } from '~/svg/v2/cardV2'
-
-// A deterministic 52-week "bumpy" activity sample (oldest → newest) with one dominant
-// spike at the tail — exercises the sqrt scale and the current-week highlight.
-const BUMPY_52 = Array.from({ length: 52 }, (_, i) => (i % 5 === 0 ? 0 : 2 + (i % 7)))
-BUMPY_52[51] = 40 // current week spike
-
-function makeData(over: Partial<CardDataV2> = {}): CardDataV2 {
-  return {
-    username: 'testuser',
-    stats: {
-      velocity: 82,
-      diversity: 60,
-      consistency: 74,
-      synergy: 65,
-      range: 50,
-      flow: 40,
-      power: 6307,
-      aiCommitsInWindow: 120,
-      activeWeeks: 9,
-    },
-    toolAttribution: {
-      tools: [
-        {
-          toolId: 'claude',
-          toolName: 'Claude',
-          commitCount: 84,
-          percentage: 70,
-        },
-        {
-          toolId: 'cursor',
-          toolName: 'Cursor',
-          commitCount: 36,
-          percentage: 30,
-        },
-      ],
-      assisted: [],
-      totalAiCommits: 120,
-      verified: true,
-    },
-    equipped: {
-      equipped: [{ toolId: 'codex', toolName: 'Codex', repoCount: 2 }],
-    },
-    usage: {
-      categories: [
-        { category: 'feature', count: 60, percentage: 50 },
-        { category: 'refactor', count: 30, percentage: 25 },
-        { category: 'bugfix', count: 18, percentage: 15 },
-        { category: 'test', count: 12, percentage: 10 },
-      ],
-      totalCommits: 120,
-    },
-    languages: {
-      languages: [
-        { name: 'TypeScript', color: '#3178c6', percentage: 62 },
-        { name: 'Python', color: '#3572A5', percentage: 21 },
-        { name: 'Shell', color: '#89e051', percentage: 9 },
-      ],
-      othersPercentage: 8,
-    },
-    pattern: { pattern: 'Pair Programmer', aiRate: 0.5, alternationScore: 0.6 },
-    record: {
-      exp: 1240,
-      commits: 210,
-      prs: 18,
-      reviews: 34,
-      issues: 9,
-      inclPrivate: false,
-      currentStreak: 7,
-      longestStreak: 15,
-      yearTotal: 3480,
-      weeklyContributions: BUMPY_52,
-    },
-    element: { id: 'lumen', label: 'Lumen', color: '#a371f7' },
-    epithet: 'The Symbiont',
-    traits: [],
-    flavor: 'Trades keystrokes with Claude, line for line.',
-    serial: '#7F3A',
-    seed: 12345,
-    issuedYear: 2026,
-    avatarDataUri: null,
-    includesPrivate: false,
-    ...over,
-  }
-}
-
-// 1×1 transparent PNG — a fixed, safe data URI for avatar rendering assertions.
-const PNG_1PX =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M8AAAMBAQDJ/pLvAAAAAElFTkSuQmCC'
+import { PNG_1PX, makeCardData } from '../../fixtures/cardData'
 
 describe('renderCardV2', () => {
   it('renders 750x1050 with username, serial, window label, flavor', () => {
-    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    const svg = renderCardV2(makeCardData(), { theme: 'dark', glow: 'soft' })
     expect(svg).toContain('width="750"')
     expect(svg).toContain('height="1050"')
     expect(svg).toContain('testuser')
@@ -102,10 +17,39 @@ describe('renderCardV2', () => {
     expect(svg).toContain('Trades keystrokes')
   })
 
+  // 13テーマ全部の golden を持つと差分が読めない大きさになるので、スナップショットは
+  // light/dark に限定し、残りは「その配色で実際に塗られているか」を検査する。
+  it('every theme paints the card with its own palette and leaves no unresolved value', () => {
+    for (const theme of CARD_THEMES) {
+      const svg = renderCardV2(makeCardData(), { theme, glow: 'soft' })
+      const palette = themes[theme]
+      expect(svg).toContain(palette.bg)
+      expect(svg).toContain(palette.accent)
+      expect(svg).toContain(palette.text)
+      // 未定義値が色として埋まると SVG は壊れずに「黒い板」になり、目視でしか気づけない
+      expect(svg).not.toContain('undefined')
+      expect(svg).not.toContain('NaN')
+      expect(svg).not.toMatch(/(fill|stroke)="(""|"\s*")/)
+    }
+  })
+
+  it('every theme is a complete palette (no field silently missing)', () => {
+    for (const theme of CARD_THEMES) {
+      const palette = themes[theme]
+      for (const [field, value] of Object.entries(palette)) {
+        if (field === 'toolColors' || field === 'usageColors') continue
+        expect(typeof value, `${theme}.${field}`).toBe('string')
+        expect(value, `${theme}.${field}`).not.toBe('')
+      }
+      expect(Object.keys(palette.toolColors).length).toBeGreaterThan(30)
+      expect(Object.values(palette.usageColors).every((c) => /^#[0-9a-f]{6}$/i.test(c))).toBe(true)
+    }
+  })
+
   it('all user-selectable glows render for both themes (golden snapshots)', () => {
     for (const glow of ['none', 'soft', 'neon', 'holo'] as const) {
-      for (const theme of ['light', 'dark']) {
-        const svg = renderCardV2(makeData(), { theme, glow })
+      for (const theme of ['light', 'dark'] as const) {
+        const svg = renderCardV2(makeCardData(), { theme, glow })
         expect(svg).toMatchSnapshot(`card-${glow}-${theme}`)
       }
     }
@@ -113,7 +57,7 @@ describe('renderCardV2', () => {
 
   it('renders assisted chips with icons and the quantified "xN" label (golden)', () => {
     const svg = renderCardV2(
-      makeData({
+      makeCardData({
         toolAttribution: {
           tools: [{ toolId: 'claude', toolName: 'Claude', commitCount: 90, percentage: 90 }],
           assisted: [{ toolId: 'codex', toolName: 'Codex', count: 17 }],
@@ -122,7 +66,7 @@ describe('renderCardV2', () => {
         },
         equipped: { equipped: [] },
       }),
-      { theme: 'dark' },
+      { theme: 'dark', glow: 'soft' },
     )
     expect(svg).toContain('Codex x17')
     // the old "· assisted" wording is fully replaced by the count
@@ -134,7 +78,7 @@ describe('renderCardV2', () => {
 
   it('quantifies a single assisted commit as x1 (count boundary)', () => {
     const svg = renderCardV2(
-      makeData({
+      makeCardData({
         toolAttribution: {
           tools: [],
           assisted: [{ toolId: 'codex', toolName: 'Codex', count: 1 }],
@@ -143,30 +87,34 @@ describe('renderCardV2', () => {
         },
         equipped: { equipped: [] },
       }),
-      { theme: 'dark' },
+      { theme: 'dark', glow: 'soft' },
     )
     expect(svg).toContain('Codex x1')
   })
 
   it('escapes XML in username (39-char boundary + injection attempt)', () => {
     const long = 'a'.repeat(39)
-    expect(renderCardV2(makeData({ username: long }), { theme: 'dark' })).toContain(long)
+    expect(
+      renderCardV2(makeCardData({ username: long }), { theme: 'dark', glow: 'soft' }),
+    ).toContain(long)
     // GH_LOGIN_RE 通過後の値しか来ないが、描画層は防御的に escape する
-    const svg = renderCardV2(makeData({ username: 'x"><script' as string }), {
+    const svg = renderCardV2(makeCardData({ username: 'x"><script' as string }), {
       theme: 'dark',
+      glow: 'soft',
     })
     expect(svg).not.toContain('"><script')
   })
 
   it('shrinks the nameplate for long usernames so it clears the POWER block', () => {
     // Short names keep the 42px hero size (font-size="42" is unique to the nameplate).
-    expect(renderCardV2(makeData({ username: 'octocat' }), { theme: 'dark' })).toContain(
-      'font-size="42"',
-    )
+    expect(
+      renderCardV2(makeCardData({ username: 'octocat' }), { theme: 'dark', glow: 'soft' }),
+    ).toContain('font-size="42"')
     // A max-length 39-char GitHub login must render smaller so it never
     // overlaps the top-right POWER block.
-    const long = renderCardV2(makeData({ username: 'a'.repeat(39) }), {
+    const long = renderCardV2(makeCardData({ username: 'a'.repeat(39) }), {
       theme: 'dark',
+      glow: 'soft',
     })
     expect(long).not.toContain('font-size="42"')
     const m = long.match(new RegExp(`font-size="(\\d+)"[^>]*>${'a'.repeat(39)}<`))
@@ -176,7 +124,7 @@ describe('renderCardV2', () => {
 
   it('renders without tools and without commits (zero states)', () => {
     const svg = renderCardV2(
-      makeData({
+      makeCardData({
         toolAttribution: { tools: [], assisted: [], totalAiCommits: 0, verified: false },
         equipped: { equipped: [] },
         usage: { categories: [], totalCommits: 0 },
@@ -193,7 +141,7 @@ describe('renderCardV2', () => {
           activeWeeks: 0,
         },
       }),
-      { theme: 'light' },
+      { theme: 'light', glow: 'soft' },
     )
     expect(svg).toContain('width="750"')
     expect(svg).not.toContain('NaN')
@@ -201,34 +149,42 @@ describe('renderCardV2', () => {
   })
 
   it('renders the avatar medallion only from a data: URI, never a remote http(s) href', () => {
-    const withAvatar = renderCardV2(makeData({ avatarDataUri: PNG_1PX }), { theme: 'dark' })
+    const withAvatar = renderCardV2(makeCardData({ avatarDataUri: PNG_1PX }), {
+      theme: 'dark',
+      glow: 'soft',
+    })
     expect(withAvatar).toContain('<image')
     expect(withAvatar).toContain(PNG_1PX)
     // No <image> may ever carry an http(s) href (blocked in GitHub's camo/img context).
     expect(withAvatar).not.toMatch(/<image[^>]+href="http/)
 
     // null avatar → no medallion image at all, card still renders.
-    const noAvatar = renderCardV2(makeData({ avatarDataUri: null }), { theme: 'dark' })
+    const noAvatar = renderCardV2(makeCardData({ avatarDataUri: null }), {
+      theme: 'dark',
+      glow: 'soft',
+    })
     expect(noAvatar).not.toContain('<image')
     expect(noAvatar).toContain('width="750"')
   })
 
   it('renders the 6-axis radar labels', () => {
-    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    const svg = renderCardV2(makeCardData(), { theme: 'dark', glow: 'soft' })
     for (const axis of ['VELOCITY', 'DIVERSITY', 'SYNERGY', 'CONSISTENCY', 'RANGE', 'FLOW']) {
       expect(svg).toContain(axis)
     }
   })
 
   it('POWER turns gold at 9000 (8999 stays accent)', () => {
-    const under = renderCardV2(makeData({ stats: { ...makeData().stats, power: 8999 } }), {
+    const under = renderCardV2(makeCardData({ stats: { ...makeCardData().stats, power: 8999 } }), {
       theme: 'dark',
+      glow: 'soft',
     })
     expect(under).toContain('8,999')
     expect(under).not.toContain('#f0b429')
 
-    const over = renderCardV2(makeData({ stats: { ...makeData().stats, power: 9000 } }), {
+    const over = renderCardV2(makeCardData({ stats: { ...makeCardData().stats, power: 9000 } }), {
       theme: 'dark',
+      glow: 'soft',
     })
     expect(over).toContain('9,000')
     expect(over).toContain('#f0b429')
@@ -236,7 +192,7 @@ describe('renderCardV2', () => {
 
   it("drops loadout chips that would overflow the card's right edge", () => {
     const svg = renderCardV2(
-      makeData({
+      makeCardData({
         toolAttribution: {
           tools: [
             {
@@ -263,7 +219,7 @@ describe('renderCardV2', () => {
           ],
         },
       }),
-      { theme: 'dark' },
+      { theme: 'dark', glow: 'soft' },
     )
     // Codex fits; the trailing Copilot chip would cross x=706 so it is dropped.
     expect(svg).toContain('Codex · equipped')
@@ -277,7 +233,10 @@ describe('renderCardV2', () => {
 
 describe('renderCardV2 private inclusion labels (v3.0)', () => {
   it('defaults to public labels (public 12wk / ✓ verified) when includesPrivate is false', () => {
-    const svg = renderCardV2(makeData({ includesPrivate: false }), { theme: 'dark' })
+    const svg = renderCardV2(makeCardData({ includesPrivate: false }), {
+      theme: 'dark',
+      glow: 'soft',
+    })
     expect(svg).toContain('public 12wk')
     expect(svg).not.toContain('all repos')
     expect(svg).toContain('✓ verified')
@@ -285,7 +244,10 @@ describe('renderCardV2 private inclusion labels (v3.0)', () => {
   })
 
   it('switches to all repos · 12wk and ✓ verified+ when includesPrivate is true', () => {
-    const svg = renderCardV2(makeData({ includesPrivate: true }), { theme: 'dark' })
+    const svg = renderCardV2(makeCardData({ includesPrivate: true }), {
+      theme: 'dark',
+      glow: 'soft',
+    })
     expect(svg).toContain('all repos · 12wk')
     expect(svg).not.toContain('public 12wk')
     expect(svg).toContain('✓ verified+')
@@ -293,8 +255,14 @@ describe('renderCardV2 private inclusion labels (v3.0)', () => {
 
   it('never leaks a repository name onto the card (only aggregate labels change)', () => {
     // includesPrivate is purely a display toggle — no repo identifiers are rendered.
-    const priv = renderCardV2(makeData({ includesPrivate: true }), { theme: 'dark' })
-    const pub = renderCardV2(makeData({ includesPrivate: false }), { theme: 'dark' })
+    const priv = renderCardV2(makeCardData({ includesPrivate: true }), {
+      theme: 'dark',
+      glow: 'soft',
+    })
+    const pub = renderCardV2(makeCardData({ includesPrivate: false }), {
+      theme: 'dark',
+      glow: 'soft',
+    })
     // The two SVGs differ only in the scope/verified labels, not by adding repo names.
     expect(priv).toContain('all repos · 12wk')
     expect(pub).toContain('public 12wk')
@@ -302,11 +270,11 @@ describe('renderCardV2 private inclusion labels (v3.0)', () => {
 
   it('shows no verified label at all (regardless of scope) when unverified', () => {
     const svg = renderCardV2(
-      makeData({
+      makeCardData({
         includesPrivate: true,
         toolAttribution: { tools: [], assisted: [], totalAiCommits: 0, verified: false },
       }),
-      { theme: 'dark' },
+      { theme: 'dark', glow: 'soft' },
     )
     expect(svg).not.toContain('verified')
   })
@@ -320,14 +288,14 @@ describe('renderCardV2 TYPES language bar (v3.0)', () => {
   const segCount = (svg: string): number => [...svg.matchAll(SEG_RE)].length
 
   it('renders one segment per language plus an others tail', () => {
-    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    const svg = renderCardV2(makeCardData(), { theme: 'dark', glow: 'soft' })
     // 3 languages + others(8%) → 4 segments.
     expect(segCount(svg)).toBe(4)
   })
 
   it('omits the others segment when othersPercentage is 0', () => {
     const svg = renderCardV2(
-      makeData({
+      makeCardData({
         languages: {
           languages: [
             { name: 'TypeScript', color: '#3178c6', percentage: 70 },
@@ -336,20 +304,20 @@ describe('renderCardV2 TYPES language bar (v3.0)', () => {
           othersPercentage: 0,
         },
       }),
-      { theme: 'dark' },
+      { theme: 'dark', glow: 'soft' },
     )
     expect(segCount(svg)).toBe(2)
   })
 
   it('renders the legend with language names and integer percentages', () => {
-    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    const svg = renderCardV2(makeCardData(), { theme: 'dark', glow: 'soft' })
     expect(svg).toContain('> TypeScript </tspan>')
     expect(svg).toContain('>62%</tspan>')
     expect(svg).toContain('> Shell </tspan>')
   })
 
   it('segment widths are proportional to percentage (TS ≈ 3× Python)', () => {
-    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    const svg = renderCardV2(makeCardData(), { theme: 'dark', glow: 'soft' })
     const widths = [...svg.matchAll(SEG_RE)].map((m) => {
       const w = m[0].match(/width="([0-9.]+)"/)
       return Number(w?.[1])
@@ -360,21 +328,22 @@ describe('renderCardV2 TYPES language bar (v3.0)', () => {
 
   it('a single dominant language still renders exactly one full-width-ish segment + others', () => {
     const svg = renderCardV2(
-      makeData({
+      makeCardData({
         languages: {
           languages: [{ name: 'TypeScript', color: '#3178c6', percentage: 96 }],
           othersPercentage: 4,
         },
       }),
-      { theme: 'dark' },
+      { theme: 'dark', glow: 'soft' },
     )
     expect(segCount(svg)).toBe(2)
     expect(svg).toContain('> TypeScript </tspan>')
   })
 
   it('renders a — placeholder and no bar when there are no languages', () => {
-    const svg = renderCardV2(makeData({ languages: { languages: [], othersPercentage: 0 } }), {
+    const svg = renderCardV2(makeCardData({ languages: { languages: [], othersPercentage: 0 } }), {
       theme: 'dark',
+      glow: 'soft',
     })
     expect(segCount(svg)).toBe(0)
     expect(svg).not.toContain('langBarClip')
@@ -383,13 +352,13 @@ describe('renderCardV2 TYPES language bar (v3.0)', () => {
 
   it('escapes XML defensively in a language legend name', () => {
     const svg = renderCardV2(
-      makeData({
+      makeCardData({
         languages: {
           languages: [{ name: 'C<script>', color: '#555555', percentage: 100 }],
           othersPercentage: 0,
         },
       }),
-      { theme: 'dark' },
+      { theme: 'dark', glow: 'soft' },
     )
     expect(svg).not.toContain('C<script>')
     expect(svg).toContain('C&lt;script&gt;')
@@ -398,7 +367,7 @@ describe('renderCardV2 TYPES language bar (v3.0)', () => {
 
 describe('renderCardV2 RECORD strip', () => {
   it('renders the RECORD strip: EXP (comma-grouped), commit/pr/review counts, streak', () => {
-    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    const svg = renderCardV2(makeCardData(), { theme: 'dark', glow: 'soft' })
     expect(svg).toContain('>EXP<')
     expect(svg).toContain('EXP')
     expect(svg).toContain('1,240')
@@ -411,18 +380,22 @@ describe('renderCardV2 RECORD strip', () => {
   })
 
   it('shows "incl. private" only when inclPrivate is true', () => {
-    const priv = renderCardV2(makeData({ record: { ...makeData().record, inclPrivate: true } }), {
-      theme: 'dark',
-    })
+    const priv = renderCardV2(
+      makeCardData({ record: { ...makeCardData().record, inclPrivate: true } }),
+      {
+        theme: 'dark',
+        glow: 'soft',
+      },
+    )
     expect(priv).toContain('incl. private')
-    const pub = renderCardV2(makeData(), { theme: 'dark' })
+    const pub = renderCardV2(makeCardData(), { theme: 'dark', glow: 'soft' })
     expect(pub).not.toContain('incl. private')
   })
 
   it('falls back to "best {n}d" when current streak is 0 but a longest exists', () => {
     const svg = renderCardV2(
-      makeData({ record: { ...makeData().record, currentStreak: 0, longestStreak: 12 } }),
-      { theme: 'dark' },
+      makeCardData({ record: { ...makeCardData().record, currentStreak: 0, longestStreak: 12 } }),
+      { theme: 'dark', glow: 'soft' },
     )
     expect(svg).toContain('best 12d')
     expect(svg).not.toContain('d streak')
@@ -430,8 +403,8 @@ describe('renderCardV2 RECORD strip', () => {
 
   it('hides the streak entirely when both current and longest are 0', () => {
     const svg = renderCardV2(
-      makeData({ record: { ...makeData().record, currentStreak: 0, longestStreak: 0 } }),
-      { theme: 'dark' },
+      makeCardData({ record: { ...makeCardData().record, currentStreak: 0, longestStreak: 0 } }),
+      { theme: 'dark', glow: 'soft' },
     )
     expect(svg).not.toContain('streak')
     expect(svg).not.toContain('best ')
@@ -439,7 +412,7 @@ describe('renderCardV2 RECORD strip', () => {
 
   it('renders a zero record without NaN/undefined (degraded strip)', () => {
     const svg = renderCardV2(
-      makeData({
+      makeCardData({
         record: {
           exp: 0,
           commits: 0,
@@ -453,7 +426,7 @@ describe('renderCardV2 RECORD strip', () => {
           weeklyContributions: new Array(52).fill(0),
         },
       }),
-      { theme: 'light' },
+      { theme: 'light', glow: 'soft' },
     )
     expect(svg).toContain('>EXP<')
     expect(svg).not.toContain('NaN')
@@ -468,20 +441,24 @@ describe('renderCardV2 CONTRIBUTIONS graph (v2.7)', () => {
   const barHeights = (svg: string): number[] => [...svg.matchAll(BAR_RE)].map((m) => Number(m[1]))
 
   it('renders the section label + comma-grouped yearly total', () => {
-    const svg = renderCardV2(makeData({ record: { ...makeData().record, yearTotal: 3480 } }), {
-      theme: 'dark',
-    })
+    const svg = renderCardV2(
+      makeCardData({ record: { ...makeCardData().record, yearTotal: 3480 } }),
+      {
+        theme: 'dark',
+        glow: 'soft',
+      },
+    )
     expect(svg).toContain('CONTRIBUTIONS · 1y')
     expect(svg).toContain('3,480 total')
   })
 
   it('renders exactly 52 bars', () => {
-    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    const svg = renderCardV2(makeCardData(), { theme: 'dark', glow: 'soft' })
     expect(barHeights(svg)).toHaveLength(52)
   })
 
   it('uses toFixed(2) coordinates for golden stability', () => {
-    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    const svg = renderCardV2(makeCardData(), { theme: 'dark', glow: 'soft' })
     // Every bar rect x/width is rendered with exactly two decimals.
     for (const m of svg.matchAll(
       /<rect x="([0-9.]+)" y="([0-9.]+)" width="([0-9.]+)" height="([0-9.]+)" rx="1" fill="[^"]*" fill-opacity/g,
@@ -494,10 +471,14 @@ describe('renderCardV2 CONTRIBUTIONS graph (v2.7)', () => {
 
   it('an all-zero year renders a flat row of minimum-height bars (no NaN)', () => {
     const svg = renderCardV2(
-      makeData({
-        record: { ...makeData().record, yearTotal: 0, weeklyContributions: new Array(52).fill(0) },
+      makeCardData({
+        record: {
+          ...makeCardData().record,
+          yearTotal: 0,
+          weeklyContributions: new Array(52).fill(0),
+        },
       }),
-      { theme: 'light' },
+      { theme: 'light', glow: 'soft' },
     )
     const heights = barHeights(svg)
     expect(heights).toHaveLength(52)
@@ -510,8 +491,8 @@ describe('renderCardV2 CONTRIBUTIONS graph (v2.7)', () => {
     const weekly = new Array(52).fill(1)
     weekly[25] = 100 // one dominant week mid-series (not the current-week slot)
     const svg = renderCardV2(
-      makeData({ record: { ...makeData().record, weeklyContributions: weekly } }),
-      { theme: 'dark' },
+      makeCardData({ record: { ...makeCardData().record, weeklyContributions: weekly } }),
+      { theme: 'dark', glow: 'soft' },
     )
     const heights = barHeights(svg)
     // sqrt(1)/sqrt(100)=0.1 → h≈6.8; a linear scale would give ≈4.28 (crushed to the floor).
@@ -521,7 +502,7 @@ describe('renderCardV2 CONTRIBUTIONS graph (v2.7)', () => {
   })
 
   it('marks the current (rightmost) week with a full-opacity bar + 1px outline ring', () => {
-    const svg = renderCardV2(makeData(), { theme: 'dark' })
+    const svg = renderCardV2(makeCardData(), { theme: 'dark', glow: 'soft' })
     // Exactly one bar at full opacity (the current week).
     const full = [...svg.matchAll(/fill-opacity="1(?:\.00)?"/g)]
     expect(full.length).toBe(1)
@@ -536,14 +517,17 @@ describe('renderCardV2 CONTRIBUTIONS graph (v2.7)', () => {
 
   it('no longer draws the removed flavor divider rule', () => {
     // The old <line> divider above the flavor block is gone now that the graph separates content.
-    const svg = renderCardV2(makeData({ traits: [] }), { theme: 'dark' })
+    const svg = renderCardV2(makeCardData({ traits: [] }), { theme: 'dark', glow: 'soft' })
     expect(svg).not.toMatch(/<line x1="104"/) // PAD+60 divider start
   })
 })
 
 describe('renderCardV2 ELEMENT + EPITHET + TRAITS (v2.6)', () => {
   it('shows the epithet on the archetype row (not the raw pattern label)', () => {
-    const svg = renderCardV2(makeData({ epithet: 'The Overseer' }), { theme: 'dark' })
+    const svg = renderCardV2(makeCardData({ epithet: 'The Overseer' }), {
+      theme: 'dark',
+      glow: 'soft',
+    })
     expect(svg).toContain('The Overseer')
     // The archetype row no longer prints the PatternType class label.
     expect(svg).not.toContain('>Pair Programmer<')
@@ -551,8 +535,8 @@ describe('renderCardV2 ELEMENT + EPITHET + TRAITS (v2.6)', () => {
 
   it('renders the element energy mark with a radial-gradient token, label, and element color', () => {
     const svg = renderCardV2(
-      makeData({ element: { id: 'blaze', label: 'Blaze', color: '#f4652f' } }),
-      { theme: 'dark' },
+      makeCardData({ element: { id: 'blaze', label: 'Blaze', color: '#f4652f' } }),
+      { theme: 'dark', glow: 'soft' },
     )
     expect(svg).toContain('Blaze')
     expect(svg).toContain('#f4652f') // element color drives the energy radial gradient
@@ -561,13 +545,13 @@ describe('renderCardV2 ELEMENT + EPITHET + TRAITS (v2.6)', () => {
 
   it('renders up to two TRAITS lines (◆ name — proof) in place of flavor', () => {
     const svg = renderCardV2(
-      makeData({
+      makeCardData({
         traits: [
           { id: 'centurion', name: 'Centurion', proof: '137 AI-assisted commits in 12 weeks' },
           { id: 'ghostwriter', name: 'Ghostwriter', proof: '84% of commits ship with AI' },
         ],
       }),
-      { theme: 'dark' },
+      { theme: 'dark', glow: 'soft' },
     )
     expect(svg).toContain('◆ Centurion')
     expect(svg).toContain('137 AI-assisted commits in 12 weeks')
@@ -577,14 +561,15 @@ describe('renderCardV2 ELEMENT + EPITHET + TRAITS (v2.6)', () => {
   })
 
   it('falls back to the flavor line when no trait fired', () => {
-    const svg = renderCardV2(makeData({ traits: [] }), { theme: 'dark' })
+    const svg = renderCardV2(makeCardData({ traits: [] }), { theme: 'dark', glow: 'soft' })
     expect(svg).toContain('Trades keystrokes')
     expect(svg).not.toContain('◆')
   })
 
   it('escapes XML defensively in trait name/proof', () => {
-    const svg = renderCardV2(makeData({ traits: [{ id: 'x', name: 'a<b', proof: 'c&d">' }] }), {
+    const svg = renderCardV2(makeCardData({ traits: [{ id: 'x', name: 'a<b', proof: 'c&d">' }] }), {
       theme: 'dark',
+      glow: 'soft',
     })
     expect(svg).not.toContain('a<b')
     expect(svg).not.toContain('c&d">')
@@ -594,8 +579,9 @@ describe('renderCardV2 ELEMENT + EPITHET + TRAITS (v2.6)', () => {
 
 describe('renderCardV2 Pokémon-grammar polish (v2.8)', () => {
   it('renders POWER at the HP position (nameplate label + number), not in the STATS header', () => {
-    const svg = renderCardV2(makeData({ stats: { ...makeData().stats, power: 6426 } }), {
+    const svg = renderCardV2(makeCardData({ stats: { ...makeCardData().stats, power: 6426 } }), {
       theme: 'dark',
+      glow: 'soft',
     })
     // POWER label + number both right-aligned at the expanded plate edge (x=706).
     expect(svg).toContain('<text x="706" y="84"')
@@ -605,26 +591,31 @@ describe('renderCardV2 Pokémon-grammar polish (v2.8)', () => {
   })
 
   it('keeps the gold POWER + glow halo past 9000 at the HP position', () => {
-    const over = renderCardV2(makeData({ stats: { ...makeData().stats, power: 9420 } }), {
+    const over = renderCardV2(makeCardData({ stats: { ...makeCardData().stats, power: 9420 } }), {
       theme: 'dark',
+      glow: 'soft',
     })
     expect(over).toContain('9,420')
     expect(over).toContain('#f0b429') // gold
     expect(over).toContain('filter="url(#powerGlow)"') // glow halo only when gold
-    const under = renderCardV2(makeData({ stats: { ...makeData().stats, power: 8999 } }), {
+    const under = renderCardV2(makeCardData({ stats: { ...makeCardData().stats, power: 8999 } }), {
       theme: 'dark',
+      glow: 'soft',
     })
     expect(under).not.toContain('filter="url(#powerGlow)"')
   })
 
   it('renders the card-number footer as No.<serial> · S1 ’YY · public 12wk', () => {
-    const svg = renderCardV2(makeData({ serial: '#7F3A', issuedYear: 2026 }), { theme: 'dark' })
+    const svg = renderCardV2(makeCardData({ serial: '#7F3A', issuedYear: 2026 }), {
+      theme: 'dark',
+      glow: 'soft',
+    })
     expect(svg).toContain('No.7F3A · S1 ’26 · public 12wk')
     expect(svg).not.toContain('#7F3A') // the # is dropped in the No. form
   })
 
   it('contains no rank gem or rarity mark and labels the chosen finish', () => {
-    const svg = renderCardV2(makeData(), { theme: 'dark', glow: 'soft' })
+    const svg = renderCardV2(makeCardData(), { theme: 'dark', glow: 'soft' })
     expect(svg).not.toContain('gemGrad')
     expect(svg).not.toContain('rarityHolo')
     expect(svg).toContain('SOFT GLOW')
@@ -632,13 +623,13 @@ describe('renderCardV2 Pokémon-grammar polish (v2.8)', () => {
 
   it('pulls the trait proof headline number to the right (damage-number position)', () => {
     const svg = renderCardV2(
-      makeData({
+      makeCardData({
         traits: [
           { id: 'unbroken', name: 'Unbroken', proof: '23-day commit streak, still alive' },
           { id: 'centurion', name: 'Centurion', proof: '120 AI-assisted commits in 12 weeks' },
         ],
       }),
-      { theme: 'dark' },
+      { theme: 'dark', glow: 'soft' },
     )
     // N-day → "23d", first-number-wins → "120" (not "12w" from the trailing "12 weeks").
     expect(svg).toMatch(/<text x="706"[^>]*text-anchor="end"[^>]*>23d<\/text>/)
@@ -647,10 +638,10 @@ describe('renderCardV2 Pokémon-grammar polish (v2.8)', () => {
 
   it('omits the right damage number for a numberless trait proof', () => {
     const svg = renderCardV2(
-      makeData({
+      makeCardData({
         traits: [{ id: 'ironhand', name: 'Iron hand', proof: 'Ships mostly bare-handed' }],
       }),
-      { theme: 'dark' },
+      { theme: 'dark', glow: 'soft' },
     )
     expect(svg).toContain('◆ Iron hand')
     // No right-aligned damage number is emitted for this line.
@@ -658,7 +649,7 @@ describe('renderCardV2 Pokémon-grammar polish (v2.8)', () => {
   })
 
   it('renders the art window double frame using the chosen glow treatment', () => {
-    const svg = renderCardV2(makeData(), { theme: 'dark', glow: 'neon' })
+    const svg = renderCardV2(makeCardData(), { theme: 'dark', glow: 'neon' })
     // Inner frame inset 4px from the art rect (x=48, y=214) in the theme accent.
     expect(svg).toContain('<rect x="48" y="214"')
     expect(svg).toContain('#a371f7')
@@ -667,7 +658,7 @@ describe('renderCardV2 Pokémon-grammar polish (v2.8)', () => {
 
 describe('renderPlaceholderCard', () => {
   it('renders summoning card with username', () => {
-    const svg = renderPlaceholderCard('testuser', 'dark')
+    const svg = renderPlaceholderCard('testuser', 'dark', 'soft')
     expect(svg).toContain('Summoning')
     expect(svg).toContain('testuser')
     expect(svg).toContain('width="750"')

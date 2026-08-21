@@ -20,8 +20,15 @@ jobs:
       - id: check
         # Skip deploy gracefully if Cloudflare credentials are not yet set up
         # so the workflow does not fail-red on every main push during bootstrap.
+        #
+        # シークレットは env 経由で渡す。`${{ secrets.X }}` を run: の中に直接展開すると、
+        # 値そのものがランナー上のシェルスクリプトへ書き込まれ、シェルのメタ文字を含む値なら
+        # コマンドとして解釈されうる（存在チェックのために値を晒す必要はない）。
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          if [ -n "${{ secrets.CLOUDFLARE_API_TOKEN }}" ] && [ -n "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ]; then
+          if [ -n "$CF_API_TOKEN" ] && [ -n "$CF_ACCOUNT_ID" ]; then
             echo "has_secrets=true" >> "$GITHUB_OUTPUT"
           else
             echo "has_secrets=false" >> "$GITHUB_OUTPUT"
@@ -35,12 +42,12 @@ jobs:
     timeout-minutes: 10
     environment: production
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           persist-credentials: false
 
       - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: latest
 
@@ -54,7 +61,7 @@ jobs:
         run: bun run test
 
       - name: Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
+import { CARD_THEMES, DEFAULT_GLOW, DEFAULT_THEME, GLOW_STYLES } from '~/card/customization'
 import { renderLandingPage } from '~/landing'
+import { themes } from '~/svg/themes'
 
 describe('renderLandingPage v3', () => {
   const html = renderLandingPage()
@@ -88,5 +90,28 @@ describe('renderLandingPage v3', () => {
     expect(html).toContain('^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$')
     // サーバー側でユーザー入力を埋め込んでいないことの防御的確認
     expect(html).not.toContain('${user')
+  })
+
+  it('LP は選択肢を配色表から生成する（テーマを足したのに選べない、が起きない）', () => {
+    const html = renderLandingPage()
+    for (const theme of CARD_THEMES) {
+      expect(html).toContain(`name="card-theme" value="${theme}"`)
+      expect(html).toContain(themes[theme].label)
+    }
+    for (const glow of GLOW_STYLES) {
+      expect(html).toContain(`name="card-glow" value="${glow}"`)
+    }
+    // クライアント側の許可リストもサーバの一覧と一致していること
+    expect(html).toContain(JSON.stringify(CARD_THEMES))
+    expect(html).toContain(JSON.stringify(GLOW_STYLES))
+  })
+
+  it('初期選択は URL パラメータ省略時の既定と一致する', () => {
+    const html = renderLandingPage()
+    expect(html).toContain(`name="card-theme" value="${DEFAULT_THEME}" checked`)
+    expect(html).toContain(`name="card-glow" value="${DEFAULT_GLOW}" checked`)
+    // checked は各グループ1つだけ
+    expect(html.match(/name="card-theme"[^>]*checked/g)).toHaveLength(1)
+    expect(html.match(/name="card-glow"[^>]*checked/g)).toHaveLength(1)
   })
 })

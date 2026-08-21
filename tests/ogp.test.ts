@@ -1,9 +1,11 @@
 import { PNG } from 'pngjs'
 import { describe, expect, it } from 'vitest'
 import type { CardDataV2 } from '~/analyzers/types'
+import { GLOW_STYLES, type GlowStyle } from '~/card/customization'
 import { isBotRequest, renderOgpHtml, svgToPng } from '~/ogp'
 import { themes } from '~/svg/themes'
 import { renderOgShare } from '~/svg/v2/ogShare'
+import { makeCardData } from './fixtures/cardData'
 
 describe('isBotRequest', () => {
   it('detects Twitterbot', () => {
@@ -39,19 +41,19 @@ describe('renderOgpHtml', () => {
   })
 
   it('includes twitter:card meta', () => {
-    const html = renderOgpHtml('testuser', 'https://example.com', 'light')
+    const html = renderOgpHtml('testuser', 'https://example.com', 'light', 'soft')
     expect(html).toContain('twitter:card')
     expect(html).toContain('summary_large_image')
   })
 
   it('includes user name in title', () => {
-    const html = renderOgpHtml('sakimyto', 'https://example.com', 'light')
+    const html = renderOgpHtml('sakimyto', 'https://example.com', 'light', 'soft')
     expect(html).toContain('sakimyto&#39;s AI Builder Passport')
   })
 
   it('escapes HTML-special characters in user to prevent XSS', () => {
     const malicious = '"><script>alert(1)</script>'
-    const html = renderOgpHtml(malicious, 'https://example.com', 'light')
+    const html = renderOgpHtml(malicious, 'https://example.com', 'light', 'soft')
     expect(html).not.toContain('<script>alert(1)</script>')
     expect(html).not.toMatch(/content="[^"]*"[^>]*><script/)
     expect(html).toContain('&lt;script&gt;')
@@ -59,18 +61,18 @@ describe('renderOgpHtml', () => {
   })
 
   it('escapes angle brackets in user', () => {
-    const html = renderOgpHtml('<img onerror=alert(1)>', 'https://example.com', 'light')
+    const html = renderOgpHtml('<img onerror=alert(1)>', 'https://example.com', 'light', 'soft')
     expect(html).not.toContain('<img onerror=alert(1)>')
     expect(html).toContain('&lt;img onerror=alert(1)&gt;')
   })
 
   it('uses a relative URL for meta refresh (independent of host header)', () => {
-    const html = renderOgpHtml('testuser', 'https://evil.example.com', 'dark')
+    const html = renderOgpHtml('testuser', 'https://evil.example.com', 'dark', 'soft')
     expect(html).toMatch(/http-equiv="refresh"[^>]+content="0;url=\/\?user=testuser/)
   })
 
   it('declares 1200x630 landscape OGP image dimensions', () => {
-    const html = renderOgpHtml('testuser', 'https://example.com', 'dark')
+    const html = renderOgpHtml('testuser', 'https://example.com', 'dark', 'soft')
     expect(html).toContain('og:image:width" content="1200"')
     expect(html).toContain('og:image:height" content="630"')
   })
@@ -144,7 +146,7 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } {
 describe('svgToPng font rendering regression (pixel inspection)', () => {
   it('renders username ink via the production svgText → Inter fallback path', async () => {
     const bg = themes.dark.bg // renderOgShare paints the canvas with this theme constant
-    const svg = renderOgShare(PROBE_DATA, 'dark')
+    const svg = renderOgShare(PROBE_DATA, 'dark', 'soft')
     const bytes = await svgToPng(svg, 1200)
     const png = PNG.sync.read(Buffer.from(bytes))
     const bgRgb = hexToRgb(bg)
@@ -173,4 +175,36 @@ describe('svgToPng font rendering regression (pixel inspection)', () => {
     expect(total).toBeGreaterThan(0)
     expect(ink / total).toBeGreaterThan(MIN_INK_RATIO)
   })
+
+  // /og はリクエスト毎に必ずラスタライズする（KV が持つのは SVG であって PNG ではない）。
+  // Workers の cpu_ms=100 に対して、どの glow を選んでも予算内に収まることを固定する。
+  // ぼかしフィルタを共有画像に出していた版は soft で 240ms 超（= 上限超過）だった。
+  it('どの glow でも共有画像のラスタライズが CPU 予算に収まる', async () => {
+    const rasterize = async (glow: GlowStyle) => {
+      const svg = renderOgShare(makeCardData(), 'dark', glow)
+      let best = Number.POSITIVE_INFINITY
+      for (let i = 0; i < 3; i++) {
+        const started = performance.now()
+        await svgToPng(svg, 1200)
+        best = Math.min(best, performance.now() - started)
+      }
+      return { svg, best }
+    }
+
+    // 絶対時間は並列実行の負荷で揺れるので、装飾のない none を毎回測って基準にする。
+    // 見たいのは「glow が描画コストを何倍にするか」であって、この機械の速度ではない
+    const baseline = (await rasterize('none')).best
+    for (const glow of GLOW_STYLES) {
+      const { svg, best } = await rasterize(glow)
+      expect(svg, `${glow} はラスタ経路にぼかしフィルタを出してはいけない`).not.toContain(
+        'feGaussianBlur',
+      )
+      // ぼかしフィルタを共有画像に出していた版は none の 10 倍以上（soft 240ms / neon 310ms）で、
+      // Workers の cpu_ms=100 を単独で超えていた
+      expect(
+        best,
+        `glow=${glow} のラスタライズが基準の3倍を超えた: ${best.toFixed(1)}ms vs ${baseline.toFixed(1)}ms`,
+      ).toBeLessThan(baseline * 3)
+    }
+  }, 60000)
 })

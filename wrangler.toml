@@ -20,14 +20,26 @@ cpu_ms = 100
 [observability]
 enabled = true
 
-# Per-IP rate limit on the expensive GitHub-hitting paths. 60 requests per IP
-# per minute is generous for a README image (edge cache absorbs duplicates)
-# and well below the GitHub App's 5000/hr quota.
+# Per-IP rate limit on the expensive paths. これは「1つの IP が暴れないこと」しか保証しない。
+# GitHub App の GraphQL クォータ（5,000 pt/h・キャッシュミス1回の実測 3pt）は全リクエストで
+# 共有する資源なので、IP を替えれば素通りする per-IP 制限では守れない。上流の保護は
+# api/index.ts の UPSTREAM_MISS_BUDGET_PER_HOUR（グローバルなキャッシュミス上限）が担う。
 [[unsafe.bindings]]
 name = "API_RATELIMIT"
 type = "ratelimit"
 namespace_id = "1001"
 simple = { limit = 60, period = 60 }
+
+# 上流保護のグローバル制限（IP ではなく固定キーで数える）。GitHub App の GraphQL 枠は
+# 5,000 pt/h で、キャッシュミス1回の実測コストは 3pt（クエリ3本 × cost 1、2026-08-21 実測）。
+# 天井は毎時 1,600 回程度なので、REST の installation 解決ぶんを残して毎分25回に均す。
+# 超過分は stale か placeholder に落ちる。KV カウンタ（api/index.ts）は読み書きが
+# アトミックでないため、締めるのはこちらが主。
+[[unsafe.bindings]]
+name = "UPSTREAM_RATELIMIT"
+type = "ratelimit"
+namespace_id = "1002"
+simple = { limit = 25, period = 60 }
 
 # Bundle subset fonts as binary (ArrayBuffer) for resvg's fontBuffers. Without
 # this, resvg-wasm has no fonts and every OGP PNG renders with all text missing.
@@ -36,7 +48,7 @@ type = "Data"
 globs = ["**/*.ttf"]
 fallthrough = true
 
-# SWR card cache: fresh 1h / stale 24h (stale-if-error). GitHub API 枯渇時は
+# SWR card cache: fresh 6h / stale 24h (stale-if-error). GitHub API 枯渇時は
 # stale を供給し、それも無ければ placeholder カードにフォールバックする。
 [[kv_namespaces]]
 binding = "DEVCARD_KV"
