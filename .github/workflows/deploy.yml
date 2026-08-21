@@ -12,15 +12,14 @@ permissions:
   contents: read
 
 jobs:
+  # 2026-08-21: 以前はシークレット未設定なら deploy を **スキップして success** にしていた。
+  # ブートストラップ中に赤くしないための配慮だったが、公開後は「Deploy ✅ なのに本番は
+  # 古いまま」という最悪の偽グリーンになる（実際に 8/18 のコードが 8/21 まで残った）。
+  # 未設定は設定漏れであって正常系ではないので、赤で落として気づけるようにする。
   check-secrets:
     runs-on: ubuntu-latest
-    outputs:
-      has_secrets: ${{ steps.check.outputs.has_secrets }}
     steps:
       - id: check
-        # Skip deploy gracefully if Cloudflare credentials are not yet set up
-        # so the workflow does not fail-red on every main push during bootstrap.
-        #
         # シークレットは env 経由で渡す。`${{ secrets.X }}` を run: の中に直接展開すると、
         # 値そのものがランナー上のシェルスクリプトへ書き込まれ、シェルのメタ文字を含む値なら
         # コマンドとして解釈されうる（存在チェックのために値を晒す必要はない）。
@@ -28,16 +27,13 @@ jobs:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          if [ -n "$CF_API_TOKEN" ] && [ -n "$CF_ACCOUNT_ID" ]; then
-            echo "has_secrets=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_secrets=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::CLOUDFLARE_API_TOKEN and/or CLOUDFLARE_ACCOUNT_ID not set; skipping deploy."
+          if [ -z "$CF_API_TOKEN" ] || [ -z "$CF_ACCOUNT_ID" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID が未設定のためデプロイできません。リポジトリの Secrets に設定してください（未設定のまま success にすると、本番が古いままなのに緑に見えます）。"
+            exit 1
           fi
 
   deploy:
     needs: check-secrets
-    if: needs.check-secrets.outputs.has_secrets == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: production
