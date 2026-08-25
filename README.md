@@ -71,6 +71,17 @@ cp .env.example .env  # Set GITHUB_APP_ID, GITHUB_APP_PRIVATE_KEY, GITHUB_APP_IN
 bunx wrangler deploy
 ```
 
+## Deploying
+
+Deploys are manual and intentionally so -- CI runs the tests but never ships.
+Automating it would mean minting a long-lived Cloudflare API token and storing
+it in repo secrets, which is a poor trade for a single-Worker project. `wrangler`
+uses your own OAuth session instead.
+
+```bash
+bun run test && bunx wrangler deploy
+```
+
 ## Development
 
 ```bash
