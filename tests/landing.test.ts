@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { CARD_THEMES, DEFAULT_GLOW, DEFAULT_THEME, GLOW_STYLES } from '~/card/customization'
-import { renderLandingPage } from '~/landing'
+import { PREVIEW_USER, renderLandingPage } from '~/landing'
 import { themes } from '~/svg/themes'
 
 describe('renderLandingPage v3', () => {
@@ -43,8 +43,8 @@ describe('renderLandingPage v3', () => {
 
   it('fetches /api/gallery and lines up the actual card SVGs as thumbnails', () => {
     expect(html).toContain("fetch('/api/gallery')")
-    // ギャラリーは実カード（自ドメインの SVG）を並べる。ユーザー名は encodeURIComponent 経由
-    expect(html).toContain("'&theme=' + entryTheme + '&glow=' + entryGlow")
+    // ギャラリーは実カード（自ドメインの SVG）を並べる。本人が選んだ見た目で描く
+    expect(html).toContain('cardPath(entry.user, entryTheme, entryGlow)')
     expect(html).toContain('g-thumb')
   })
 
@@ -75,10 +75,11 @@ describe('renderLandingPage v3', () => {
   })
 
   it('preserves appearance in the card, markdown destination, and share URL', () => {
-    expect(html).toContain("'&theme=' + selected('card-theme') + '&glow=' + selected('card-glow')")
+    expect(html).toContain(
+      "function cardPath(u, theme = selected('card-theme'), glow = selected('card-glow'))",
+    )
     expect(html).toContain("'/?theme=' + selected('card-theme') + '&glow=' + selected('card-glow')")
-    expect(html).toContain("setChoice('card-theme', query.get('theme'), THEMES)")
-    expect(html).toContain("setChoice('card-glow', query.get('glow'), GLOWS)")
+    expect(html).toContain("applyAppearance(query.get('theme'), query.get('glow'))")
   })
 
   it('reads prefill client-side with the GitHub login regex (no server interpolation)', () => {
@@ -104,6 +105,55 @@ describe('renderLandingPage v3', () => {
     // クライアント側の許可リストもサーバの一覧と一致していること
     expect(html).toContain(JSON.stringify(CARD_THEMES))
     expect(html).toContain(JSON.stringify(GLOW_STYLES))
+  })
+
+  it('ヒーローのカードは初期表示からチェック済みの選択と一致している', () => {
+    const html = renderLandingPage()
+    // src と data-shown が既定の組み合わせで揃っていること。ここがずれると
+    // 「選ばれている色」と「見えているカード」が食い違い、しかも既にチェック済みの
+    // 選択肢は click しても change が飛ばないので直しようがない
+    const expected = `/?user=${PREVIEW_USER}&amp;theme=${DEFAULT_THEME}&amp;glow=${DEFAULT_GLOW}&amp;preview=1`
+    expect(html).toContain(`id="hero-card" class="hero-card" src="${expected}"`)
+    expect(html).toContain(`data-shown="${expected}"`)
+  })
+
+  it('見た目を選ぶと、召喚前でもプレビューが切り替わる', () => {
+    const html = renderLandingPage()
+    // 召喚済みかどうかで早期 return していた頃は、テーマを選んでも何も起きなかった
+    expect(html).not.toMatch(/if \(result\.hidden[^\n]*return/)
+    // 文字は即時、画像取得だけデバウンスの内側
+    expect(html).toMatch(
+      /change', \(\) => \{\s*paintAppearance\(\)[\s\S]*?setTimeout\(\(\) => \{\s*swapImage\(heroCard/,
+    )
+    // ラジオを間接的に動かす経路も必ずプレビューを追従させる
+    expect(html).toContain('function applyAppearance(theme, glow)')
+    expect(html).toContain('syncPreview()')
+  })
+
+  it('ページ上の2枚のカードは同じ差し替え規則を通る（切り替え中に空白を挟まない）', () => {
+    const html = renderLandingPage()
+    // src を直接書き換えると画像が届くまでカードが消える。裏で読んでから差し替える
+    expect(html).toContain('swapImage(heroCard')
+    expect(html).toContain('swapImage(resultCard')
+    // 旧・結果カード専用の重複実装が残っていないこと
+    expect(html).not.toContain('loadedSrc')
+    // ただし別人を召喚したときは前の人のカードを残さない（自分のカードだと誤読される）
+    expect(html).toContain("swapImage(resultCard, cardPath(u), shown.get('user') === u)")
+    expect(html).toContain('.hero-card.loading, .result-card.loading { opacity: .5 }')
+  })
+
+  it('ヒーローの見本取得はギャラリーに記録させない印を付ける', () => {
+    const html = renderLandingPage()
+    // 訪問者が外観を切り替えるたびに飛ぶ取得。召喚として数えると誰でも
+    // 見本ユーザーのギャラリー行を書き換えられる
+    expect(html).toContain("return cardPath(PREVIEW_USER) + '&preview=1'")
+    expect(html).toContain('swapImage(heroCard, previewPath())')
+  })
+
+  it('カード URL の綴りは1箇所（cardPath）に集約されている', () => {
+    const html = renderLandingPage()
+    const occurrences = html.match(/'\/\?user=' \+/g) ?? []
+    expect(occurrences).toHaveLength(1)
   })
 
   it('初期選択は URL パラメータ省略時の既定と一致する', () => {

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import worker from '../api/index'
-import { CARD_THEMES, GLOW_STYLES } from '../src/card/customization'
+import { CARD_THEMES, DEFAULT_GLOW, DEFAULT_THEME, GLOW_STYLES } from '../src/card/customization'
 import { USER_PRIVATE_REPOS_QUERY } from '../src/github/queries'
 import type { GitHubQueryResponse } from '../src/github/types'
 import { themes } from '../src/svg/themes'
@@ -399,9 +399,34 @@ describe('召喚ギャラリー', () => {
       power: number
     }
     expect(meta.at).toBeGreaterThan(0)
-    expect(meta.theme).toBe('light')
-    expect(meta.glow).toBe('soft')
+    expect(meta.theme).toBe(DEFAULT_THEME)
+    expect(meta.glow).toBe(DEFAULT_GLOW)
     expect(typeof meta.power).toBe('number')
+  })
+
+  // LP のヒーローは訪問者が外観を切り替えるたびにこの URL を叩く。これを召喚として
+  // 数えると、誰でも見本ユーザーのギャラリー行の外観と「Recently summoned」の並び順を
+  // 書き換えられてしまう
+  it('preview=1 の取得は召喚ではないのでギャラリーへ書かない', async () => {
+    mockOkOptedIn('octocat')
+    const kv = fakeKv()
+    const { ctx, flush } = fakeCtx()
+    const res = await worker.fetch(req('/?user=octocat&preview=1'), makeEnv(kv), ctx)
+    expect(res.status).toBe(200)
+    expect(res.headers.get('x-cache-state')).toBe('miss')
+    await flush()
+    expect(kv.store.has('gallery:u:octocat')).toBe(false)
+  })
+
+  // '1' 以外を truthy 扱いにすると、印の意図しない綴りで記録が黙って止まる
+  it.each(['0', 'true', '', 'yes'])('preview=%s は記録を止めない', async (value) => {
+    mockOkOptedIn('octocat')
+    const kv = fakeKv()
+    const { ctx, flush } = fakeCtx()
+    const res = await worker.fetch(req(`/?user=octocat&preview=${value}`), makeEnv(kv), ctx)
+    expect(res.status).toBe(200)
+    await flush()
+    expect(kv.store.has('gallery:u:octocat')).toBe(true)
   })
 
   it('fresh hit ではギャラリーへ書かない', async () => {
@@ -452,6 +477,18 @@ describe('召喚ギャラリー', () => {
     await kv.put('gallery:u:octocat', '1', { metadata: { at: Date.now() - 1000 } })
     const { ctx, flush } = fakeCtx()
     await worker.fetch(req('/?user=octocat'), makeEnv(kv), ctx)
+    await flush()
+    expect(kv.store.has('gallery:u:octocat')).toBe(false)
+  })
+
+  // 削除は同意撤回の実装。preview=1 は記録を止めるための印であって、
+  // 同意を撤回した人を残すための抜け穴にしてはいけない
+  it('preview=1 でもオプトアウト済みユーザーの削除は走る', async () => {
+    mockOkPublicOnly('octocat')
+    const kv = fakeKv()
+    await kv.put('gallery:u:octocat', '1', { metadata: { at: Date.now() - 1000 } })
+    const { ctx, flush } = fakeCtx()
+    await worker.fetch(req('/?user=octocat&preview=1'), makeEnv(kv), ctx)
     await flush()
     expect(kv.store.has('gallery:u:octocat')).toBe(false)
   })
@@ -557,6 +594,29 @@ describe('エッジキャッシュ', () => {
     expect(res.status).toBe(200)
     expect(reads).toEqual([])
     expect(graphqlMock.mock.calls.length).toBe(callsAfterFirst)
+  })
+
+  // preview=1 はギャラリー記録を止めるためだけの印。キャッシュキーは user/theme/glow
+  // しか見ないので、見本の取得と通常の取得は同じエントリを共有する（= 分断しない）
+  it('preview=1 は通常のカード要求とエッジキャッシュを共有する', async () => {
+    mockOkPublicOnly('octocat')
+    const kv = fakeKv()
+    const env = makeEnv(kv)
+    const first = fakeCtx()
+    await worker.fetch(req('/?user=octocat&preview=1'), env, first.ctx)
+    await first.flush()
+
+    // GraphQL を踏まないことだけでは証明にならない（KV のデータキャッシュでも踏まない）。
+    // KV を1度も読まなかったことが「エッジで返した」= キーを分断していない証拠
+    const reads: string[] = []
+    const origGet = kv.get.bind(kv)
+    kv.get = (async (key: string) => {
+      reads.push(key)
+      return origGet(key)
+    }) as typeof kv.get
+    const res = await worker.fetch(req('/?user=octocat'), env, fakeCtx().ctx)
+    expect(res.status).toBe(200)
+    expect(reads).toEqual([])
   })
 })
 

@@ -50,6 +50,23 @@ const GLOW_CHOICES = GLOW_STYLES.map((g) =>
   choiceRadio('card-glow', g, GLOW_SPEC[g].title, GLOW_SPEC[g].swatch, g === DEFAULT_GLOW),
 ).join('\n              ')
 
+// ヒーローのカードは飾りではなく、選んだ見た目がそのまま出る実物のプレビュー。
+// src とキャプションをサーバ側でも描くのは最初の1フレームのためだけで、権威は
+// ロード時に必ず走る syncPreview()。ラジオの実状態から描き直すので、リロード後に
+// ブラウザが選択を復元した場合もそこで追いつく。
+export const PREVIEW_USER = 'sakimyto'
+// インラインスクリプトの previewPath() と綴りが一致していること。ずれると初回表示で
+// 同じカードをもう一度取りに行く（data-shown の一致判定を外す）
+const PREVIEW_SRC = `/?user=${PREVIEW_USER}&theme=${DEFAULT_THEME}&glow=${DEFAULT_GLOW}&preview=1`
+const PREVIEW_CAPTION = `${themes[DEFAULT_THEME].label} · ${GLOW_SPEC[DEFAULT_GLOW].title}`
+// ラジオの表示名の写し。DOM に描かれた文字を読み戻すとラジオのマークアップ構造
+// （swatch の <i> が空であること等）に依存してしまうので、THEMES/ELEMENTS と同じく
+// 表示用データとして配色表から起こして渡す
+const CHOICE_LABELS = {
+  'card-theme': Object.fromEntries(CARD_THEMES.map((t) => [t, themes[t].label])),
+  'card-glow': Object.fromEntries(GLOW_STYLES.map((g) => [g, GLOW_SPEC[g].title])),
+}
+
 export function renderLandingPage(): string {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -70,7 +87,13 @@ export function renderLandingPage(): string {
     /* Hero: input + button live inside the first view, card demo alongside */
     .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 320px); gap: 40px; align-items: center }
     .hero-copy { min-width: 0 }
+    .hero-preview { min-width: 0 }
     .hero-card { display: block; width: 100%; max-width: 320px; border-radius: 14px }
+    /* 差し替え待ちの間だけ薄くする。カード自体は前の絵のまま残るので、空白は挟まらない。
+       ヒーローと結果カードは同じ swapImage を通るので、見え方も揃える */
+    .hero-card, .result-card { transition: opacity .18s ease }
+    .hero-card.loading, .result-card.loading { opacity: .5 }
+    .hero-cap { color: var(--muted); font-size: 12px; letter-spacing: .04em; margin-top: 10px; max-width: 320px; text-align: center }
     .row { display: flex; gap: 8px; flex-wrap: wrap }
     input#username-input { flex: 1; min-width: 200px; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 16px }
     input#username-input:focus { outline: none; border-color: var(--accent) }
@@ -119,6 +142,7 @@ export function renderLandingPage(): string {
       .hero, #result { grid-template-columns: 1fr }
       h1 { font-size: 34px }
       .hero-card { max-width: 260px; margin: 4px auto 0 }
+      .hero-cap { max-width: 260px; margin-left: auto; margin-right: auto }
     }
   </style>
 </head>
@@ -148,7 +172,10 @@ export function renderLandingPage(): string {
         </div>
         <p class="hint" id="input-hint"></p>
       </div>
-      <img class="hero-card" src="/?user=sakimyto&theme=dark&glow=holo" alt="Example AI Builder Trading Card with a holographic glow" loading="lazy" />
+      <div class="hero-preview">
+        <img id="hero-card" class="hero-card" src="${escapeAttr(PREVIEW_SRC)}" data-shown="${escapeAttr(PREVIEW_SRC)}" alt="AI Builder Trading Card preview" />
+        <p class="hero-cap" id="hero-caption">${escapeAttr(PREVIEW_CAPTION)}</p>
+      </div>
     </section>
 
     <section id="result" hidden>
@@ -194,7 +221,11 @@ export function renderLandingPage(): string {
       terra: { glyph: '◈', color: '#2ea88f' },
       blaze: { glyph: '✸', color: '#f4652f' },
     }
+    const PREVIEW_USER = ${inlineJson(PREVIEW_USER)}
+    const LABELS = ${inlineJson(CHOICE_LABELS)}
     const input = document.getElementById('username-input')
+    const heroCard = document.getElementById('hero-card')
+    const heroCaption = document.getElementById('hero-caption')
     const hint = document.getElementById('input-hint')
     const result = document.getElementById('result')
     const resultCard = document.getElementById('result-card')
@@ -215,30 +246,105 @@ export function renderLandingPage(): string {
       if (choice) choice.checked = true
     }
 
+    // 「今その要素が実際に表示できている URL」の記録。読み込みに失敗したら消すので、
+    // 同じ URL こそ再試行したい場面で再試行できる
+    function trackShown(el) {
+      el.addEventListener('load', () => { el.dataset.shown = el.getAttribute('src') })
+      el.addEventListener('error', () => { delete el.dataset.shown })
+    }
+
+    // <img> の src を直接書き換えると、新しい画像が届くまでカードがいったん消える。
+    // 裏で読み込み切ってから差し替えることで、前のカードを出したまま切り替わる。
+    // ページ上の2枚（ヒーローのプレビューと結果カード）は同じ規則で差し替える。
+    // keepPrevious=false は「前の絵を残すとむしろ誤解を生む」場合（別人の召喚）用
+    function swapImage(el, url, keepPrevious = true) {
+      // pending は「今欲しい URL」。表示中の URL へ戻す no-op でも必ず更新する。
+      // ここを飛ばすと、A→B と選んで B の到着前に A へ戻したとき、遅れて着いた B の
+      // ハンドラが自分をまだ最新だと思って el.src = B を実行し、ラジオが A なのに
+      // 画像だけ B になる（薄いままにもなる）
+      el.dataset.pending = url
+      if (el.dataset.shown === url) {
+        el.classList.remove('loading')
+        return
+      }
+      // 隠すものが無い、または残してはいけないときは素通しで読ませ、途中経過を見せる
+      if (!el.dataset.shown || !keepPrevious) {
+        el.classList.remove('loading')
+        el.src = url
+        return
+      }
+      el.classList.add('loading')
+      const next = new Image()
+      next.addEventListener('load', () => {
+        if (el.dataset.pending !== url) return // 追い越された古い応答は捨てる
+        el.src = url
+        el.classList.remove('loading')
+      })
+      next.addEventListener('error', () => {
+        if (el.dataset.pending !== url) return
+        el.classList.remove('loading')
+      })
+      next.src = url
+    }
+
+    trackShown(heroCard)
+    trackShown(resultCard)
+
+    // 文字だけの更新はネットワークを待つ理由がないので、デバウンスの外で即座に効かせる
+    function paintAppearance() {
+      const label = LABELS['card-theme'][selected('card-theme')] + ' · ' + LABELS['card-glow'][selected('card-glow')]
+      heroCaption.textContent = label
+      heroCard.alt = 'AI Builder Trading Card preview — ' + label
+    }
+
+    // 見た目の選択を、召喚前でも必ずヒーローのカードに反映する。
+    // 「テーマを選んでも何も起きない」を作らないための唯一の担保
+    function syncPreview() {
+      paintAppearance()
+      swapImage(heroCard, previewPath())
+    }
+
+    // ユーザー操作以外でラジオを動かす唯一の入口。ここを通る限り、
+    // プレビューの追従を呼び忘れることがない
+    function applyAppearance(theme, glow) {
+      setChoice('card-theme', theme, THEMES)
+      setChoice('card-glow', glow, GLOWS)
+      syncPreview()
+    }
+
+    // カード URL の綴りはここ1箇所。パラメータを足すときに探し回らずに済む。
+    // theme/glow を省くと今の選択、渡すとその見た目（ギャラリーは本人が選んだ色で描く）
+    function cardPath(u, theme = selected('card-theme'), glow = selected('card-glow')) {
+      return '/?user=' + encodeURIComponent(u) + '&theme=' + theme + '&glow=' + glow
+    }
+
+    // ヒーローの見本は訪問者が外観を変えるたびに叩かれる。preview=1 が無いと、その取得が
+    // 見本ユーザー本人の召喚として記録され、誰でも他人のギャラリー行の外観と
+    // 「Recently summoned」の並びを書き換えられてしまう。エッジのキャッシュキーは
+    // user/theme/glow だけを見るので、この印がキャッシュを分断することはない
+    function previewPath() {
+      return cardPath(PREVIEW_USER) + '&preview=1'
+    }
+
     function cardUrlFor(u) {
-      return base + '/?user=' + encodeURIComponent(u) + '&theme=' + selected('card-theme') + '&glow=' + selected('card-glow')
+      return base + cardPath(u)
     }
 
     function shareUrlFor(u) {
       return base + '/?theme=' + selected('card-theme') + '&glow=' + selected('card-glow') + '#' + encodeURIComponent(u)
     }
 
-    // 「同じ URL なら再代入しない」は、見た目を切り替えたときの無駄なリクエストを抑えるため。
-    // ただし前回の読み込みが失敗していた場合は、同じ URL こそ再試行したい URL なので、
-    // 成功したことが分かっている src だけを重複判定の対象にする
-    let loadedSrc = null
-    resultCard.addEventListener('load', () => { loadedSrc = resultCard.src })
-    resultCard.addEventListener('error', () => { loadedSrc = null })
-
     function summon(shouldScroll = true) {
       const u = input.value.trim()
       if (!RE.test(u)) { hint.textContent = 'Enter a valid GitHub username.'; input.focus(); return }
       hint.textContent = ''
-      const cardUrl = cardUrlFor(u)
       const shareUrl = shareUrlFor(u)
-      const md = '[![AI Builder Trading Card](' + cardUrl + ')](' + shareUrl + ')'
+      const md = '[![AI Builder Trading Card](' + cardUrlFor(u) + ')](' + shareUrl + ')'
       output.textContent = md
-      if (loadedSrc !== cardUrl) resultCard.src = cardUrl
+      // 同じ人の見た目違いなら前のカードを残したまま差し替える。別人を召喚したときに
+      // 前の人のカードを残すと「これが自分のカードだ」と読めてしまうので、いったん消す
+      const shown = new URLSearchParams((resultCard.dataset.shown || '').split('?')[1] || '')
+      swapImage(resultCard, cardPath(u), shown.get('user') === u)
       repoHint.textContent = u + '/' + u
       newRepoLink.href = 'https://github.com/new?name=' + encodeURIComponent(u)
       shareX.href = 'https://twitter.com/intent/tweet?text=' +
@@ -254,9 +360,12 @@ export function renderLandingPage(): string {
     let previewTimer = null
     for (const choice of document.querySelectorAll('input[name="card-theme"], input[name="card-glow"]')) {
       choice.addEventListener('change', () => {
-        if (result.hidden || !RE.test(input.value.trim())) return
+        paintAppearance() // 押した瞬間の手応え。ここだけは待たせない
         clearTimeout(previewTimer)
-        previewTimer = setTimeout(() => summon(false), 250)
+        previewTimer = setTimeout(() => {
+          swapImage(heroCard, previewPath())
+          if (!result.hidden && RE.test(input.value.trim())) summon(false)
+        }, 250)
       })
     }
     copyBtn.addEventListener('click', async () => {
@@ -286,7 +395,7 @@ export function renderLandingPage(): string {
       img.alt = '@' + entry.user + ' card'
       const entryTheme = THEMES.includes(entry.theme) ? entry.theme : DEFAULTS.theme
       const entryGlow = GLOWS.includes(entry.glow) ? entry.glow : DEFAULTS.glow
-      img.src = '/?user=' + encodeURIComponent(entry.user) + '&theme=' + entryTheme + '&glow=' + entryGlow
+      img.src = cardPath(entry.user, entryTheme, entryGlow)
       if (elem) img.style.borderColor = elem.color + '66' // same-element visual resonance
       card.appendChild(img)
 
@@ -313,8 +422,7 @@ export function renderLandingPage(): string {
 
       card.addEventListener('click', () => {
         input.value = entry.user
-        setChoice('card-theme', entryTheme, THEMES)
-        setChoice('card-glow', entryGlow, GLOWS)
+        applyAppearance(entryTheme, entryGlow)
         location.hash = encodeURIComponent(entry.user)
         summon()
         window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -341,8 +449,7 @@ export function renderLandingPage(): string {
 
     // 事前入力: バッジ/シェアリンク経由の /#username を最優先、次に ?user=（保険）
     const query = new URLSearchParams(location.search)
-    setChoice('card-theme', query.get('theme'), THEMES)
-    setChoice('card-glow', query.get('glow'), GLOWS)
+    applyAppearance(query.get('theme'), query.get('glow'))
     const fromHash = location.hash.length > 1 ? decodeURIComponent(location.hash.slice(1)) : ''
     const fromQuery = query.get('user')
     const prefill = RE.test(fromHash) ? fromHash : (fromQuery && RE.test(fromQuery) ? fromQuery : '')

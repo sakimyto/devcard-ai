@@ -69,7 +69,11 @@ function parseParams(url: URL) {
   const user = userValid ? rawUser : ''
   const theme = normalizeTheme(url.searchParams.get('theme'))
   const glow = normalizeGlow(url.searchParams.get('glow'))
-  return { user, theme, glow, invalidUser: !userValid }
+  // LP のヒーローに出る見本カードの取得。訪問者が外観を切り替えるたびに飛ぶので、
+  // これを召喚として数えると誰でも他人のギャラリー行を書き換えられる。
+  // エッジのキャッシュキーは user/theme/glow だけを見るので、この印では分断されない
+  const preview = url.searchParams.get('preview') === '1'
+  return { user, theme, glow, preview, invalidUser: !userValid }
 }
 
 function badRequestResponse(message: string): Response {
@@ -395,7 +399,7 @@ export default {
     }
 
     // No user param → landing page
-    const { user, theme, glow, invalidUser } = parseParams(url)
+    const { user, theme, glow, preview, invalidUser } = parseParams(url)
     if (invalidUser) return badRequestResponse('Invalid user parameter')
     if (!user && pathname === '/') {
       return new Response(renderLandingPage(), {
@@ -435,8 +439,14 @@ export default {
       // 以上、「描画されたから載せる」では本人の同意なくログイン名と数値が公開ページに並ぶ。
       // includesPrivate = その人自身が GitHub App を自分のアカウントに入れた証明。
       // 逆に App を外した人は、次のキャッシュミス時にギャラリーから外れる（削除依頼が要らない）。
+      // preview=1（LP のヒーローの見本）は召喚ではないので**記録しない**。数えると、
+      // 訪問者が外観を切り替えるたびに見本ユーザーの行の外観と並び順が書き換わる。
+      // 一方で削除は同意撤回の実装であり、止めてよい理由が無い。preview でも必ず走らせる。
+      // 2つの分岐が自分の条件を全部書いているのは意図的 — 記録側に preview を混ぜて
+      // else で受けると、オプトイン済みの人のプレビュー要求が削除側へ落ちる
       if (resolved.value.kind === 'ok' && resolved.value.data) {
-        if (resolved.value.optedIn) {
+        const optedIn = resolved.value.optedIn
+        if (optedIn && !preview) {
           ctx.waitUntil(
             recordGallery(env.DEVCARD_KV, user, {
               at: Date.now(),
@@ -447,7 +457,7 @@ export default {
               epithet: result.epithet,
             }),
           )
-        } else if (cacheState === 'miss') {
+        } else if (!optedIn && cacheState === 'miss') {
           ctx.waitUntil(removeFromGallery(env.DEVCARD_KV, user))
         }
       }
