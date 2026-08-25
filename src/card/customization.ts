@@ -7,15 +7,18 @@ export { CARD_THEMES, type CardTheme }
 export const GLOW_STYLES = ['none', 'soft', 'neon', 'holo'] as const
 export type GlowStyle = (typeof GLOW_STYLES)[number]
 
-export const DEFAULT_THEME: CardTheme = 'light'
+// カードは README の中に置かれるもので、GitHub も宣伝素材もダークが基準。
+// LP のヒーローに出る見本もここから引くので、既定を変えると第一印象ごと変わる
+export const DEFAULT_THEME: CardTheme = 'dark'
 export const DEFAULT_GLOW: GlowStyle = 'soft'
 
 const THEME_SET = new Set<string>(CARD_THEMES)
 const GLOW_SET = new Set<string>(GLOW_STYLES)
 
 // `fallback` は呼び出し側が自分のデフォルトを宣言するための引数。gallery の
-// レガシー行（theme 未記録 = dark 時代の召喚）のように、既定が light ではない
-// 文脈が実在するので、共有ノーマライザの外側で特殊ケースを組むのを防ぐ。
+// レガシー行（theme 未記録 = customization 以前の召喚）のように、「その文脈で
+// 正しい既定」が DEFAULT_THEME の変遷と無関係に決まる場所があるので、共有
+// ノーマライザの外側で特殊ケースを組まずに済むようにしてある。
 export function normalizeTheme(
   value: string | null | undefined,
   fallback: CardTheme = DEFAULT_THEME,
